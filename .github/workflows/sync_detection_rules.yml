@@ -3,9 +3,6 @@ name: Sync Detection Rules
 on:
   schedule:
     - cron: '0 * * * *' # Runs every hour
-  push:
-    branches:
-      - main # Adjust the branch as needed
   workflow_dispatch:
 
 jobs:
