@@ -45,28 +45,34 @@ def clean_output_folder(valid_files):
         if filename not in valid_files:
             print(f"Removing file: {filename}")
             os.remove(file_path)
-
 def main():
+    print("Fetching open pull requests...")
     pull_requests = get_open_pull_requests()
 
     new_files = set()
 
     for pr in pull_requests:
+        if pr['draft']:
+            print(f"Skipping draft PR #{pr['number']}: {pr['title']}")
+            continue
+
         pr_number = pr['number']
         print(f"Processing PR #{pr_number}: {pr['title']}")
         commits = get_commits_for_pull_request(pr_number)
-
+        
         for commit in commits:
             commit_sha = commit['sha']
             commit_url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/commits/{commit_sha}'
             commit_data = requests.get(commit_url, headers=headers).json()
             files = commit_data['files']
-
+            
             for file in files:
                 if file['status'] == 'added' and file['filename'].startswith('detection-rules/'):
+                    print(f"Downloading new file: {file['filename']} from commit {commit_sha}")
                     content = get_file_contents(commit_sha, file['filename'])
                     save_file(file['filename'], content)
                     new_files.add(os.path.basename(file['filename']))
+                    print(f"Saved: {file['filename']}")
 
     clean_output_folder(new_files)
 
