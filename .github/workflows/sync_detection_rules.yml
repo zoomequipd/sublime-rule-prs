@@ -36,6 +36,6 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}
-        git add detection_rules
-        git diff-index --quiet HEAD || git commit -m 'Update detection rules'
+        git add detection-rules
+        git diff-index --quiet HEAD || git commit -m 'Sync detection rules'
         git push
