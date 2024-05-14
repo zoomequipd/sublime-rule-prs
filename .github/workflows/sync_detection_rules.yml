@@ -26,13 +26,16 @@ jobs:
 
     - name: Run the script
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
       run: python scripts/download_detection_rules.py
 
     - name: Commit changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add detection-rules
-        git diff-index --quiet HEAD || git commit -m 'Sync detection rules from PRs'
+        git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}
+        git add detection_rules
+        git diff-index --quiet HEAD || git commit -m 'Update detection rules'
         git push
