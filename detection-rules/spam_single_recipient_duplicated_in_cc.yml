@@ -3,8 +3,8 @@ description: "Detects spam emails where the 'To' and 'CC' fields match, using in
 type: "rule"
 severity: "medium"
 source: |
-   type.inbound
-   
+  type.inbound
+  
   // one recipient and 1 cc
   and length(recipients.to) == 1
   and length(recipients.cc) == 1
@@ -12,7 +12,7 @@ source: |
   // unsolicited
   and not profile.by_sender().solicited
   
-  // recipients to equals cc
+  // recipients email matches the cc email
   and any(recipients.to, any(recipients.cc, .email.email == ..email.email))
   
   // body is short with spam keywords
@@ -57,11 +57,14 @@ source: |
            .authentication_results.compauth.verdict not in ("pass", "softpass")
     )
   
-  // all links display text is null or aka.ms
+    // all links display text is null or aka.ms
     or (
       length(filter(body.links,
                     (
-                      .display_text is null
+                      (
+                        .display_text is null
+                        and .href_url.domain.root_domain != sender.email.domain.root_domain
+                      )
                       or .href_url.domain.root_domain in (
                         "aka.ms",
                         "mimecast.com",
@@ -93,3 +96,4 @@ detection_methods:
   - "Content analysis"
   - "URL analysis"
   - "Sender analysis"
+id: "387cacc9-c696-5a23-aa9d-5d0aa45082ff"
