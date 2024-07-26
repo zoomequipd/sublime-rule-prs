@@ -14,9 +14,9 @@ source: |
   and headers.auth_summary.spf.details.designator == 'docusign.net'
   and headers.auth_summary.dmarc.pass
   
-  // filter out all the links, keeping just the one I want
+  // filter out all the links, keeping only the links of interest
   and any(filter(body.links,
-                 // find the link I want to test, this should be a docusign link
+                 // target the DocuSign link
                  (
                    regex.icontains(.display_text,
                                    "((view|show).completed.document|(?:re)?view doc|view.attached)"
