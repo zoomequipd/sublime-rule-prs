@@ -7,7 +7,7 @@ type: "rule"
 severity: "medium"
 source: |
   type.inbound
-  any(body.links,
+  and any(body.links,
       .href_url.domain.root_domain == "indiatimes.com"
       and strings.icontains(.href_url.path, '/etl.php')
       and strings.icontains(.href_url.query_params, 'url=')
@@ -36,3 +36,4 @@ tactics_and_techniques:
 detection_methods:
   - "Sender analysis"
   - "URL analysis"
+id: "d5e2ca78-ef3a-54f1-9b24-3efca8c8e8ca"
