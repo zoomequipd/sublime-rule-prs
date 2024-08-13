@@ -158,3 +158,5 @@ detection_methods:
   - "Header analysis"
   - "Optical Character Recognition"
 id: "f2fe1294-ca43-5290-84fd-02f8149c5de7"
+tags:
+  - pr_author_zoomequipd

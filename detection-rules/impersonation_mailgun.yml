@@ -52,3 +52,5 @@ detection_methods:
   - "Natural Language Understanding"
   - "Sender analysis"
 id: "59cc84e6-e16c-58e7-94ad-78dad315e5ab"
+tags:
+  - pr_author_peterdj45

@@ -93,3 +93,5 @@ detection_methods:
   - "Whois"
   - "HTML analysis"
 id: "c86288b4-98f3-5d71-850e-c001a628600a"
+tags:
+  - pr_author_zoomequipd

@@ -30,3 +30,5 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
 id: "862d4654-4a32-50c1-a441-b3a5106be174"
+tags:
+  - pr_author_zoomequipd
