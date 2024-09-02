@@ -1,18 +1,18 @@
-name: "Open Redirect: secondstreetapp.com"
+name: "Open Redirect: pmifunds.com"
 description: |
-  Message contains use of the secondstreetapp.com redirect. This has been exploited in the wild.
+  Message contains use of the pmifunds.com redirect. This has been exploited in the wild.
 type: "rule"
 severity: "medium"
 source: |
   type.inbound
   and any(body.links,
-      .href_url.domain.root_domain == "secondstreetapp.com"
-      and strings.icontains(.href_url.query_params, '&redirect=')
-      // not redirects to themselves
-      and not regex.icontains(.href_url.query_params, '&redirect=[^&]*secondstreetapp\.com')
+      .href_url.domain.domain == "trk.pmifunds.com"
+      and strings.icontains(.href_url.query_params, 'l=')
+      // not links where they redirect to pmifunds.com
+      and not regex.icontains(.href_url.query_params, 'l=[^&]*pmifunds\.com')
   )
-  // remove uses that originate from secondstreet
-  and not any(headers.domains, .root_domain == "secondstreetmail.com")
+  // remove uses that originate from pmifunds.com
+  and not any(headers.domains, .root_domain == "pmifunds.com")
   and (
     not profile.by_sender().solicited
     or (
@@ -37,6 +37,6 @@ tactics_and_techniques:
 detection_methods:
   - "Sender analysis"
   - "URL analysis"
-id: "6767888d-c23f-5a7c-ad8f-a6959882d57f"
+id: "fdc91036-967e-57c4-b4cc-89a17b4cd742"
 tags:
   - pr_author_zoomequipd
