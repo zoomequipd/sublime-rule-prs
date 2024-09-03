@@ -1,16 +1,16 @@
-name: "Open Redirect: emlakarsa"
+name: "Open Redirect: eodcnetworkdirect.com"
 description: |
-  Message contains use of the emlakarsa open redirect. This has been exploited in the wild.
+  Message contains use of the eodcnetworkdirect.com redirect. This has been exploited in the wild.
 type: "rule"
 severity: "medium"
 source: |
   type.inbound
   and any(body.links,
-    .href_url.domain.root_domain == "emlakarsa.net"
-    and strings.icontains(.href_url.query_params, "_setLang")
-    and strings.icontains(.href_url.query_params, "redirect=")
+      .href_url.domain.domain == "in.eodcnetworkdirect.com"
+      and strings.icontains(.href_url.query_params, '&url=')
+      and not regex.icontains(.href_url.domain.domain, '&url=[^\&]*eodcnetwork(?:direct\.com|\.org)(?:\&|\/|$)')
   )
-  and sender.email.domain.root_domain != 'emlakarsa.net'
+  and not sender.email.domain.root_domain in ("eodcnetworkdirect.com", "eodcnetwork.org")
   and (
     not profile.by_sender().solicited
     or (
@@ -35,6 +35,6 @@ tactics_and_techniques:
 detection_methods:
   - "Sender analysis"
   - "URL analysis"
-id: "ce5d5b63-ed78-50b6-a996-f7d7f01e7517"
+id: "ef31283e-69ab-5883-9d56-fd04df135347"
 tags:
   - pr_author_zoomequipd
