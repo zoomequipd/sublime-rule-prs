@@ -17,12 +17,33 @@ headers = {
     'Accept': 'application/vnd.github.v3+json'
 }
 
-def get_open_pull_requests():
-    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    return response.json()
+def get_all_open_pull_requests():
+    pull_requests = []
+    page = 1
+    per_page = 100  # Max allowed items per page by GitHub API
+    
+    while True:
+        url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
+        params = {'page': page, 'per_page': per_page}
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        
+        # Extend the list with the pull requests from the current page
+        pull_requests.extend(response.json())
+        
+        # Check if there is a 'Link' header and whether it contains 'rel="next"'
+        if 'Link' in response.headers:
+            links = response.headers['Link'].split(', ')
+            has_next = any('rel="next"' in link for link in links)
+        else:
+            has_next = False
 
+        if not has_next:
+            break  # No more pages, exit loop
+        
+        page += 1  # Move to the next page
+
+    return pull_requests
 
 def get_files_for_pull_request(pr_number):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls/{pr_number}/files'
