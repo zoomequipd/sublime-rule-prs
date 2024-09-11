@@ -17,7 +17,7 @@ headers = {
     'Accept': 'application/vnd.github.v3+json'
 }
 
-def get_all_open_pull_requests():
+def get_open_pull_requests():
     pull_requests = []
     page = 1
     per_page = 100  # Max allowed items per page by GitHub API
