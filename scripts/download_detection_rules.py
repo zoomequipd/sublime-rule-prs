@@ -20,11 +20,12 @@ headers = {
 def get_open_pull_requests():
     pull_requests = []
     page = 1
-    per_page = 100  # Max allowed items per page by GitHub API
+    per_page = 30  # 100 is the max allowed items per page by GitHub API
     
     while True:
         url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
         params = {'page': page, 'per_page': per_page}
+        print(f"fetching page {page} of Pull Requests")
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         
