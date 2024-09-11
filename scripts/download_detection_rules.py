@@ -40,9 +40,15 @@ def get_open_pull_requests():
             has_next = False
 
         if not has_next:
+            print(f"fetched page {page} of Pull Requests, no more pages")
+            print(f"Total PRs: {len(pull_requests)}")
             break  # No more pages, exit loop
         
+        print(f"fetched page {page} of Pull Requests, moving to {page + 1}")
+        print(f"PRs on page {page}: {len(response.json())}")
+        print(f"PRs found so far: {len(pull_requests)}")
         page += 1  # Move to the next page
+        
 
     return pull_requests
 
