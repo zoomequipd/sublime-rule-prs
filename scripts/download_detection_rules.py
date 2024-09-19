@@ -164,7 +164,8 @@ def main():
         files = get_files_for_pull_request(pr_number)
 
         for file in files:
-            if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yaml'):
+            print(f"Status of {file['filename']}: {file['status']}")
+            if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
                 content = get_file_contents(file['contents_url'])
                 if ADD_AUTHOR_TAG:
                     # inject the tags for test rules into the contents
