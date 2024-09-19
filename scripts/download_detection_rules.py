@@ -87,7 +87,7 @@ def rename_modified_rules(content, pr):
     current_name = ""
     lines = content.split('\n')
     for line in lines:
-        if 'name:' in line
+        if 'name:' in line:
             current_name == line.replace('name: ', '')
     # build out the new name to inject the PR number
     new_name = f"PR# {pr['number']} - {current_name}"
