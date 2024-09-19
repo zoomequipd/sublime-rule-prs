@@ -172,7 +172,7 @@ def main():
 
                 if file['status'] in ['modified', 'changed'] and RENAME_MODS:
                     # we're going to rename this rule for the purposes of the Rule PRs Feed
-                    print(f"Saving Modified Rule: {pr['number']")
+                    print(f"Saving Modified Rule: {pr['number']}")
                     content = rename_modified_rules(content, pr)
 
                 save_file(file['filename'], content)
