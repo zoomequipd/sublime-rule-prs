@@ -214,7 +214,7 @@ def handle_closed_prs():
     closed_pull_requests = get_closed_pull_requests()
     
     for closed_pr in closed_pull_requests:
-        pr_number = pr['number']
+        pr_number = closed_pr['number']
         print(f"Processing CLOSED PR #{pr_number}: {pr['title']}")
         
         files = get_files_for_pull_request(pr_number)
