@@ -3,11 +3,13 @@ import base64
 import requests
 
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
 REPO_OWNER = 'sublime-security'
 REPO_NAME = 'sublime-rules'
 OUTPUT_FOLDER = 'detection-rules'
 ADD_AUTHOR_TAG = True
 AUTHOR_TAG_PREFIX = "pr_author_"
+RENAME_MODS = True
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
@@ -80,6 +82,19 @@ def clean_output_folder(valid_files):
             print(f"Removing file: {filename}")
             os.remove(file_path)
 
+def rename_modified_rules(content, pr):
+    #extract the current name
+    current_name = ""
+    lines = content.split('\n')
+    for line in lines:
+        if 'name:' in line
+            current_name == line.replace('name: ', '')
+    # build out the new name to inject the PR number
+    new_name = f"PR# {pr['number']} - {current_name}"
+    # replace it in the content
+    content.replace(current_name, new_name)
+    return content
+    
 
 def add_author_tag(yaml_string, author):
     if "tags:" in yaml_string:
@@ -149,12 +164,17 @@ def main():
         files = get_files_for_pull_request(pr_number)
 
         for file in files:
-            if file['status'] == 'added' and file['filename'].startswith('detection-rules/'):
+            if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yaml'):
                 content = get_file_contents(file['contents_url'])
                 if ADD_AUTHOR_TAG:
                     # inject the tags for test rules into the contents
-                    
                     content = add_author_tag(content, pr['user']['login'])
+
+                if file['status'] in ['modified', 'changed'] and RENAME_MODS:
+                    # we're going to rename this rule for the purposes of the Rule PRs Feed
+                    print(f"Saving Modified Rule: {pr['number']")
+                    content = rename_modified_rules(content, pr)
+
                 save_file(file['filename'], content)
                 new_files.add(os.path.basename(file['filename']))
                 print(f"Saved: {file['filename']}")
