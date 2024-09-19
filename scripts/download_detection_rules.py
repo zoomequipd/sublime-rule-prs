@@ -22,16 +22,18 @@ headers = {
 def search_sublime_rule_feed(rule_name):
 
     rule_name = requests.utils.quote(rule_name)
+    print(f"Searching Sublime for rules with name: {rule_name}")
     url = f"https://platform.sublime.security/v0/rules?limit=50&offset=0&search={rule_name}"
+    
     headers = {
         "accept": "application/json",
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.get(url, headers=headers)
 
-    print(response.text)
-    
-    return response
+    response = response.json()
+    print(f"Count: {response['count']}")
+    return True
 
 def get_closed_pull_requests():
     closed_pull_requests = []
@@ -226,6 +228,7 @@ def handle_closed_prs():
                 rule_name = extract_rule_name(content)
                 # search for the rule name in the SUBLIME_API
                 rules = search_sublime_rule_feed(rule_name)
+                
 
     # if we find the matching rule, we'll delete it. 
     # we don't care why it was closed. 
