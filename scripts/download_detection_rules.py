@@ -19,6 +19,61 @@ headers = {
     'Accept': 'application/vnd.github.v3+json'
 }
 
+def search_sublime_rule_feed(rule_name):
+
+    rule_name = requests.utils.quote(rule_name)
+    url = f"https://platform.sublime.security/v0/rules?limit=50&offset=0&search={rule_name}"
+    headers = {
+        "accept": "application/json",
+        "authorization": f"Bearer {SUBLIME_API_TOKEN}"
+    }
+    response = requests.get(url, headers=headers)
+
+    print(response.text)
+    
+    return response
+
+def get_closed_pull_requests():
+    closed_pull_requests = []
+    page = 1
+    per_page = 30 # 100 is the max allowed items per page by GitHub API
+    max_closed = 30
+    
+    while len(pull_requests) <= max_closed:
+        if len(pull_requests) >= max_closed:
+            print("hit max closed prs length")
+            break
+        
+        url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
+        params = {'page': page, 'per_page': per_page, 'state': 'closed"}
+        print(f"Fetching page {page} of CLOSED Pull Requests")
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        
+        # Extend the list with the pull requests from the current page
+        pull_requests.extend(response.json())
+        
+        # Check if there is a 'Link' header and whether it contains 'rel="next"'
+        if 'Link' in response.headers:
+            links = response.headers['Link'].split(', ')
+            has_next = any('rel="next"' in link for link in links)
+        else:
+            has_next = False
+
+        if not has_next:
+            print(f"Fetched page {page} of Pull Requests")
+            print(f"PRs on page {page}: {len(response.json())}")
+            break  # No more pages, exit loop
+        
+        print(f"Fetched page {page} of CLOSED Pull Requests")
+        print(f"CLOSED PRs on page {page}: {len(response.json())}")
+        print(f"CLOSED PRs found so far: {len(pull_requests)}")
+        print(f"Moving to page {page + 1}")
+        page += 1  # Move to the next page  
+
+    print(f"Total CLOSED PRs: {len(pull_requests)}")
+    return closed_pull_requests
+
 def get_open_pull_requests():
     pull_requests = []
     page = 1
@@ -82,8 +137,7 @@ def clean_output_folder(valid_files):
             print(f"Removing file: {filename}")
             os.remove(file_path)
 
-def rename_modified_rules(content, pr):
-    #extract the current name
+def extract_rule_name(content):
     current_name = ""
     lines = content.split('\n')
     for line in lines:
@@ -91,6 +145,13 @@ def rename_modified_rules(content, pr):
             print(f"Found name line: {line}")
             # replace the quotes and spaces to create a clean filename
             current_name = line.replace('name: ', '').strip('" ')
+            break
+    
+    return current_name
+    
+def rename_modified_rules(content, pr):
+    #extract the current name
+    current_name = extract_rule_name(content)
     # build out the new name to inject the PR number
     new_name = f"PR# {pr['number']} - {current_name}"
     # replace it in the content
@@ -98,7 +159,6 @@ def rename_modified_rules(content, pr):
     print(f"Old Name: {current_name}")
     content = content.replace(current_name, new_name)
     return content
-    
 
 def add_author_tag(yaml_string, author):
     if "tags:" in yaml_string:
@@ -150,8 +210,27 @@ def add_author_tag(yaml_string, author):
 
     return modified_yaml_string
 
+def handle_closed_prs():
+    closed_pull_requests = get_closed_pull_requests()
+    
+    for closed_pr in closed_pull_requests:
+        pr_number = pr['number']
+        print(f"Processing CLOSED PR #{pr_number}: {pr['title']}")
+        
+        files = get_files_for_pull_request(pr_number)
 
-def main():
+        for file in files:
+            print(f"Status of {file['filename']}: {file['status']}")
+            if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
+                content = get_file_contents(file['contents_url'])
+                rule_name = extract_rule_name(content)
+                # search for the rule name in the SUBLIME_API
+                rules = search_sublime_rule_feed(rule_name)
+
+    # if we find the matching rule, we'll delete it. 
+    # we don't care why it was closed. 
+    
+def handle_open_prs():
     pull_requests = get_open_pull_requests()
 
     new_files = set()
@@ -188,4 +267,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # handle_open_prs()
+    handle_closed_prs()
