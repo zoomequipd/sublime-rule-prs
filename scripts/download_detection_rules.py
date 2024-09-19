@@ -39,8 +39,8 @@ def get_closed_pull_requests():
     per_page = 30 # 100 is the max allowed items per page by GitHub API
     max_closed = 30
     
-    while len(pull_requests) <= max_closed:
-        if len(pull_requests) >= max_closed:
+    while len(closed_pull_requests) <= max_closed:
+        if len(closed_pull_requests) >= max_closed:
             print("hit max closed prs length")
             break
         
@@ -51,7 +51,7 @@ def get_closed_pull_requests():
         response.raise_for_status()
         
         # Extend the list with the pull requests from the current page
-        pull_requests.extend(response.json())
+        closed_pull_requests.extend(response.json())
         
         # Check if there is a 'Link' header and whether it contains 'rel="next"'
         if 'Link' in response.headers:
@@ -67,11 +67,11 @@ def get_closed_pull_requests():
         
         print(f"Fetched page {page} of CLOSED Pull Requests")
         print(f"CLOSED PRs on page {page}: {len(response.json())}")
-        print(f"CLOSED PRs found so far: {len(pull_requests)}")
+        print(f"CLOSED PRs found so far: {len(closed_pull_requests)}")
         print(f"Moving to page {page + 1}")
         page += 1  # Move to the next page  
 
-    print(f"Total CLOSED PRs: {len(pull_requests)}")
+    print(f"Total CLOSED PRs: {len(closed_pull_requests)}")
     return closed_pull_requests
 
 def get_open_pull_requests():
