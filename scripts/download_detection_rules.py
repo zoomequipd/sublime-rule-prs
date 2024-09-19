@@ -89,11 +89,13 @@ def rename_modified_rules(content, pr):
     for line in lines:
         if 'name:' in line:
             print(f"Found name line: {line}")
-            current_name == line.replace('name: ', '')
+            # replace the quotes and spaces to create a clean filename
+            current_name = line.replace('name: ', '').strip('" ')
     # build out the new name to inject the PR number
     new_name = f"PR# {pr['number']} - {current_name}"
     # replace it in the content
     print(f"New Name: {new_name}")
+    print(f"Old Name: {current_name}")
     content = content.replace(current_name, new_name)
     return content
     
