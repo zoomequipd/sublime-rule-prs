@@ -32,6 +32,7 @@ jobs:
     - name: Commit changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SUBLIME_API_TOKEN: ${{ secrets.SUBLIME_API_TOKEN }}
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
