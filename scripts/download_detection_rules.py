@@ -63,8 +63,8 @@ def sublime_delete_rule(rule_id):
     response = requests.delete(url, headers=headers)
     print(f"Response Code: {response.status_code}")
     response = response.json()
-    # going to use a static ID for testing
-    return {"rules": [{"name": "PR# 1097 - Suspicious message with fake attachment lure", "id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
+
+    return response.ok
 
 
 def get_closed_pull_requests():
