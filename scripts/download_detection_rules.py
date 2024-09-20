@@ -318,8 +318,6 @@ def handle_open_prs():
 
     new_files = set()
 
-    if ADD_AUTHOR_TAG:
-        print("Injecting PR Author as a tag")
     for pr in pull_requests:
         if pr['draft']:
             print(f"Skipping draft PR #{pr['number']}: {pr['title']}")
@@ -332,7 +330,7 @@ def handle_open_prs():
         # loop through each file in the PR and see if we should include it in this feed
         for file in files:
             
-            print(f"Status of {file['filename']}: {file['status']}")
+            print(f"\tStatus of {file['filename']}: {file['status']}")
             process_file = False
             # has to be added, modified, or changed, within the detection-rules and a yml
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
@@ -344,9 +342,9 @@ def handle_open_prs():
                     # if including modified rules rules is enabled, we'll process this file
                     process_file = True
                 else:
-                    print(f"Skipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- INCLUDE_UPDATES == {INCLUDE_UPDATES}, INCLUDE_ADDED == {INCLUDE_ADDED}")
+                    print(f"\tSkipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- INCLUDE_UPDATES == {INCLUDE_UPDATES}, INCLUDE_ADDED == {INCLUDE_ADDED}")
             else:
-                print(f"Skipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- unmanaged file status")
+                print(f"\tSkipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- unmanaged file status")
             
             # if we can process this file
             if process_file:
@@ -362,14 +360,12 @@ def handle_open_prs():
                     content = add_tag(content, f"{OPEN_PR_TAG}")
                     
                 if INCLUDE_PR_IN_NAME:
-                    # we're going to rename this rule for the purposes of the Rule PRs Feed
-                    print(f"Saving Modified Rule: {pr['number']}")
                     content = rename_rules(content, pr)
                 
                 # finally save it
                 save_file(file['filename'], content)
                 new_files.add(os.path.basename(file['filename']))
-                print(f"Saved: {file['filename']}")
+                print(f"\tSaved: {file['filename']}")
             
     clean_output_folder(new_files)
 
