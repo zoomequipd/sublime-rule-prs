@@ -300,23 +300,29 @@ def handle_open_prs():
         print(f"Processing PR #{pr_number}: {pr['title']}")
         files = get_files_for_pull_request(pr_number)
 
+        # loop through each file in the PR and see if we should include it in this feed
         for file in files:
+            
             print(f"Status of {file['filename']}: {file['status']}")
-            save_file = False
-            # check if we should be saving this file
-
+            process_file = False
+            # has to be added, modified, or changed, within the detection-rules and a yml
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
+                # if including net new rules is enabled, we'll process this file
                 if file['status'] == "added" and INCLUDE_ADDED:
-                    save_file = True
+                    process_file = True
                 else:
-                    print(f"Skipping PR #{pr['number']}: INCLUDE_ADDED == {INCLUDE_ADDED}")
+                    print(f"Skipping {file['filename']} in PR #{pr['number']}: INCLUDE_ADDED == {INCLUDE_ADDED}")
+                # if including modified rules rules is enabled, we'll process this file
                 if file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES: 
-                    save_file = True
+                    process_file = True
                 else:
-                    print(f"Skipping PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDE_UPDATES}")
-            # if we can save the file
+                    print(f"Skipping {file['filename']} in PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDE_UPDATES}")
 
-            if save_file:
+            # if we can process this file
+            if process_file:
+                # go get it
+                content = get_file_contents(file['contents_url'])
+                
                 # check the flags to modify the file
                 if ADD_AUTHOR_TAG:
                     # inject the tags for test rules into the contents
@@ -330,7 +336,7 @@ def handle_open_prs():
                     print(f"Saving Modified Rule: {pr['number']}")
                     content = rename_rules(content, pr)
                 
-                # save it
+                # finally save it
                 save_file(file_name, content)
                 new_files.add(os.path.basename(file['filename']))
                 print(f"Saved: {file['filename']}")
