@@ -34,9 +34,10 @@ headers = {
 
 
 def search_sublime_rule_feed(rule_name):
+    # strip quotes for searching
     rule_name = rule_name.strip("\"\'")
     rule_name = requests.utils.quote(rule_name)
-    print(f"Searching Sublime for rules with name: {rule_name}")
+    # print(f"Searching Sublime for rules with name: {rule_name}")
     url = f"https://platform.sublime.security/v0/rules?limit=50&offset=0&search={rule_name}"
     
     headers = {
@@ -44,11 +45,11 @@ def search_sublime_rule_feed(rule_name):
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.get(url, headers=headers)
-    print(f"Response Code: {response.status_code}")
+    # print(f"Response Code: {response.status_code}")
     response = response.json()
-    print(f"Count: {response['count']}")
+    # print(f"Count: {response['count']}")
     # going to use a static ID for testing
-    return {"rules": [{"id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
+    return response
 
 
 def sublime_delete_rule(rule_id):
@@ -274,7 +275,7 @@ def handle_closed_prs():
         files = get_files_for_pull_request(pr_number)
 
         for file in files:
-            print(f"Status of {file['filename']}: {file['status']}")
+            print(f"\tStatus of {file['filename']}: {file['status']}")
             # get all the rules from the close PR
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
                 # get their contents to extract the rule name for searching
@@ -289,15 +290,14 @@ def handle_closed_prs():
                 
                 # Finally search for the rule name in the SUBLIME_API
                 found_rules = search_sublime_rule_feed(rule_name)
-                
-                # it's possible we have more than one rule, i guess we'll just delete them all if the match
-                # it would be cool if we could include the feed name in the rule details
+                print(f"\tFound {found_rules['count']} matching the filename")
+                # it's possible we have more than one rule, if they match, delete them all
                 for found_rule in found_rules.get('rules'):
-                    # make sure we're dealing with an exact match of the rule name we expect
+                    # make sure we're dealing with an exact match of the rule we expect
                     if found_rule.get('name') == rule_name \
                     and CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags') \
                     and ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
-                        print(f"Found Matching Rule to delete:  {found_rule['id']}")
+                        print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
                         # go delete that rule
                         # deleted = sublime_delete_rule(found_rule['id'])
                         #if deleted:
