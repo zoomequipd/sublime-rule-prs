@@ -309,11 +309,11 @@ def handle_open_prs():
                 if file['status'] == "added" and INCLUDE_ADDED:
                     save_file = True
                 else:
-                    print(f"Skipping PR #{pr['number']}: INCLUDE_ADDED == {INCLUDED_ADDED}")
+                    print(f"Skipping PR #{pr['number']}: INCLUDE_ADDED == {INCLUDE_ADDED}")
                 if file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES: 
                     save_file = True
                 else:
-                    print(f"Skipping PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDED_ADDED}")
+                    print(f"Skipping PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDE_UPDATES}")
             # if we can save the file
 
             if save_file:
