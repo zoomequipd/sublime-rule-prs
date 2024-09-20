@@ -307,17 +307,18 @@ def handle_open_prs():
             process_file = False
             # has to be added, modified, or changed, within the detection-rules and a yml
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
-                # if including net new rules is enabled, we'll process this file
+                
                 if file['status'] == "added" and INCLUDE_ADDED:
+                    # if including net new rules is enabled, we'll process this file
+                    process_file = True
+                elif file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES:
+                    # if including modified rules rules is enabled, we'll process this file
                     process_file = True
                 else:
-                    print(f"Skipping {file['filename']} in PR #{pr['number']}: INCLUDE_ADDED == {INCLUDE_ADDED}")
-                # if including modified rules rules is enabled, we'll process this file
-                if file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES: 
-                    process_file = True
-                else:
-                    print(f"Skipping {file['filename']} in PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDE_UPDATES}")
-
+                    print(f"Skipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- INCLUDE_UPDATES == {INCLUDE_UPDATES}, INCLUDE_ADDED == {INCLUDE_ADDED}")
+            else:
+                print(f"Skipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- unmanaged file status")
+            
             # if we can process this file
             if process_file:
                 # go get it
