@@ -304,12 +304,18 @@ def handle_open_prs():
             print(f"Status of {file['filename']}: {file['status']}")
             save_file = False
             # check if we should be saving this file
+
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
                 if file['status'] == "added" and INCLUDE_ADDED:
                     save_file = True
-                if file['status'] == ['modified', 'changed'] and INCLUDE_UPDATES: 
+                else:
+                    print(f"Skipping PR #{pr['number']}: INCLUDE_ADDED == {INCLUDED_ADDED}")
+                if file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES: 
                     save_file = True
+                else:
+                    print(f"Skipping PR #{pr['number']}: INCLUDE_UPDATES == {INCLUDED_ADDED}")
             # if we can save the file
+
             if save_file:
                 # check the flags to modify the file
                 if ADD_AUTHOR_TAG:
