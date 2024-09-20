@@ -314,10 +314,7 @@ def handle_closed_prs():
                         print("\tFound Rule Name Match")
                         if CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags'):
                             print("\tFound OPEN_PR tag match")
-                        else:
-                            print("\tcreated_from_open_prs not found in: ")
-                            print(found_rule.get('tags'))
-                            
+
                             if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']}" in found_rule.get('tags'):
                                 print("\tFound author tag match")
                                 print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
@@ -332,6 +329,14 @@ def handle_closed_prs():
                                 print(f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']} not found in: ")
                                 print(found_rule.get('tags'))
                         
+                        else:
+                            print("\tcreated_from_open_prs not found in: ")
+                            print(found_rule.get('tags'))
+                    else:
+                        print("\tRule not match not found: ")
+                        print(f"\tFound Rule:    {found_rule.get('name')}")
+                        print(f"\tEtracted Rule: {rule_name.strip('\'\"')}")
+
     
     print(f"Deleted {len(deleted_ids)} Rules from Closed PRs:")
     
