@@ -312,32 +312,26 @@ def handle_closed_prs():
                     # found_rule won't have quotes around it, because it's taken from the json of the rule
                     if found_rule.get('name') == rule_name.strip('\'\"'):
                         print("\tFound Rule Name Match")
-                    else:
-                        print(f"\tFound Rule:     {found_rule.get('name')}")
-                        print(f"\tExtracted Name: {rule_name}")
-
-                    if CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags'):
-                        print("\tFound tag 1 match")
-                    else:
-                        print("\tcreated_from_open_prs not found in: ")
-                        print(found_rule.get('tags'))
-                    
-                    if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']}" in found_rule.get('tags'):
-                        print("\tFound author tag match")
-                        print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
-                    else:
-                        print(f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']} not found in: ")
-                        print(found_rule.get('tags'))
+                        if CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags'):
+                            print("\tFound OPEN_PR tag match")
+                        else:
+                            print("\tcreated_from_open_prs not found in: ")
+                            print(found_rule.get('tags'))
+                            
+                            if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']}" in found_rule.get('tags'):
+                                print("\tFound author tag match")
+                                print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
+                                # go delete that rule
+                                deleted = sublime_delete_rule(found_rule['id'])
+                                if deleted:
+                                    print(f"\tDELETED Matching Rule:  {found_rule['id']}")
+                                    deleted_ids.add(found_rule['id'])
+                                else:
+                                    print(f"\tERROR DELETING Matching Rule:  {found_rule['id']}")
+                            else:
+                                print(f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']} not found in: ")
+                                print(found_rule.get('tags'))
                         
-                        
-                    
-                        # go delete that rule
-                        # deleted = sublime_delete_rule(found_rule['id'])
-                        #if deleted:
-                        #    print(f"DELETED Matching Rule:  {found_rule['id']}")
-                        #    deleted_ids.add(found_rule['id'])
-                        #else:
-                        #    print(f"ERROR DELETING Matching Rule:  {found_rule['id']}")
     
     print(f"Deleted {len(deleted_ids)} Rules from Closed PRs:")
     
