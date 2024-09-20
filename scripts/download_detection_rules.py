@@ -232,7 +232,9 @@ def handle_closed_prs():
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
                 content = get_file_contents(file['contents_url'])
                 rule_name = extract_rule_name(content)
-                rule_name = prepend_pr_details(rule_name, closed_pr)
+                # older closed PRs won't have this name, so prepend it if it's not there already
+                if not rule_name.startswith("PR#{pr_number} - ")
+                    rule_name = prepend_pr_details(rule_name, closed_pr)
                 # search for the rule name in the SUBLIME_API
                 rules = search_sublime_rule_feed(rule_name)
                 
