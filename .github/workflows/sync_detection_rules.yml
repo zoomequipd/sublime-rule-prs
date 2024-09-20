@@ -4,10 +4,6 @@ on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
-  workflow_run:
-    branches:
-      - 'master'
-      - 'handle_updates'
     
 jobs:
   download-and-commit:
