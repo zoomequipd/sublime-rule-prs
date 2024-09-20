@@ -337,7 +337,7 @@ def handle_open_prs():
                     content = rename_rules(content, pr)
                 
                 # finally save it
-                save_file(file_name, content)
+                save_file(file['filename'], content)
                 new_files.add(os.path.basename(file['filename']))
                 print(f"Saved: {file['filename']}")
             
