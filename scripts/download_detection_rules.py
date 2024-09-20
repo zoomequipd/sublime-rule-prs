@@ -9,7 +9,7 @@ REPO_NAME = 'sublime-rules'
 OUTPUT_FOLDER = 'detection-rules'
 ADD_AUTHOR_TAG = True
 AUTHOR_TAG_PREFIX = "pr_author_"
-RENAME_MODS = True
+INCLUDE_PR_IN_NAME = True
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
@@ -266,7 +266,7 @@ def handle_open_prs():
                     # inject the tags for test rules into the contents
                     content = add_author_tag(content, pr['user']['login'])
 
-                if file['status'] in ['modified', 'changed'] and RENAME_MODS:
+                if INCLUDE_PR_IN_NAME:
                     # we're going to rename this rule for the purposes of the Rule PRs Feed
                     print(f"Saving Modified Rule: {pr['number']}")
                     content = rename_modified_rules(content, pr)
@@ -279,5 +279,5 @@ def handle_open_prs():
 
 
 if __name__ == '__main__':
-    # handle_open_prs()
-    handle_closed_prs()
+    handle_open_prs()
+    #handle_closed_prs()
