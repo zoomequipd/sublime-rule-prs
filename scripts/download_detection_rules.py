@@ -30,7 +30,7 @@ def search_sublime_rule_feed(rule_name):
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.get(url, headers=headers)
-
+    print(f"Response Code: {response.status_code}")
     response = response.json()
     print(f"Count: {response['count']}")
     return True
@@ -150,15 +150,21 @@ def extract_rule_name(content):
             break
     
     return current_name
-    
+
+def prepend_pr_details(rule_name, pr)
+    new_name = f"PR# {pr['number']} - {rule_name}"
+    # replace it in the content
+    print(f"New Name: {new_name}")
+    print(f"Old Name: {current_name}")
+
+    return new_name
+
 def rename_modified_rules(content, pr):
     #extract the current name
     current_name = extract_rule_name(content)
     # build out the new name to inject the PR number
-    new_name = f"PR# {pr['number']} - {current_name}"
-    # replace it in the content
-    print(f"New Name: {new_name}")
-    print(f"Old Name: {current_name}")
+    new_name = prepend_pr_details(current_name, pr)
+    
     content = content.replace(current_name, new_name)
     return content
 
@@ -226,6 +232,7 @@ def handle_closed_prs():
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
                 content = get_file_contents(file['contents_url'])
                 rule_name = extract_rule_name(content)
+                rule_name = prepend_pr_details(rule_name, closed_pr)
                 # search for the rule name in the SUBLIME_API
                 rules = search_sublime_rule_feed(rule_name)
                 
