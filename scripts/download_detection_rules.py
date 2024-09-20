@@ -309,7 +309,8 @@ def handle_closed_prs():
                 # it's possible we have more than one rule, if they match, delete them all
                 for found_rule in found_rules.get('rules'):
                     # make sure we're dealing with an exact match of the rule we expect
-                    if found_rule.get('name') == rule_name:
+                    # found_rule won't have quotes around it, because it's taken from the json of the rule
+                    if found_rule.get('name') == rule_name.strip('\'\"'):
                         print("\tFound Rule Name Match")
                     else:
                         print(f"\tFound Rule:     {found_rule.get('name')}")
@@ -320,11 +321,12 @@ def handle_closed_prs():
                     else:
                         print("\tcreated_from_open_prs not found in: ")
                         print(found_rule.get('tags'))
-                    if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
+                    
+                    if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']}" in found_rule.get('tags'):
                         print("\tFound author tag match")
                         print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
                     else:
-                        print(f"{AUTHOR_TAG_PREFIX}{closed_pr['author']} not found in: ")
+                        print(f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']} not found in: ")
                         print(found_rule.get('tags'))
                         
                         
