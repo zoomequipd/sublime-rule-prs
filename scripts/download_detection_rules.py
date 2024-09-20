@@ -309,10 +309,26 @@ def handle_closed_prs():
                 # it's possible we have more than one rule, if they match, delete them all
                 for found_rule in found_rules.get('rules'):
                     # make sure we're dealing with an exact match of the rule we expect
-                    if found_rule.get('name') == rule_name \
-                    and CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags') \
-                    and ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
+                    if found_rule.get('name') == rule_name:
+                        print("\tFound Rule Name Match")
+                    else:
+                        print(f"\tFound Rule:     {found_rule.get('name')}")
+                        print(f"\tExtracted Name: {rule_name}")
+
+                    if CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags'):
+                        print("\tFound tag 1 match")
+                    else:
+                        print("\tcreated_from_open_prs not found in: ")
+                        print(found_rule.get('tags'))
+                    if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
+                        print("\tFound author tag match")
                         print(f"\tFound Matching Rule to delete:  {found_rule['id']}")
+                    else:
+                        print(f"{AUTHOR_TAG_PREFIX}{closed_pr['author']} not found in: ")
+                        print(found_rule.get('tags'))
+                        
+                        
+                    
                         # go delete that rule
                         # deleted = sublime_delete_rule(found_rule['id'])
                         #if deleted:
