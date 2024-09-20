@@ -1,4 +1,4 @@
-name: "VIP impersonation with charitable donation fraud"
+name: "PR# 1512 - VIP impersonation with charitable donation fraud"
 description: "Fake email thread shows a VIP requesting a donation to a charity, usually addressed to Accounts Payable departments. Can result in monetary loss."
 type: "rule"
 severity: "high"

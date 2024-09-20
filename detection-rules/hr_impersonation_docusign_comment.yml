@@ -1,4 +1,4 @@
-name: "HR Impersonation via DocuSign comment"
+name: "PR# 1887 - HR Impersonation via DocuSign comment"
 description: "This rule inspects messages originating from legitimate DocuSign infrastructure, with a DocuSign logo and engaging language in the body that matches HR Impersonation criteria."
 type: "rule"
 severity: "high"

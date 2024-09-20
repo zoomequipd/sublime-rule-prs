@@ -1,4 +1,4 @@
-name: "Brand Impersonation: Stripe"
+name: "PR# 1809 - Brand Impersonation: Stripe"
 description: |
   Impersonation of Stripe, usually for credential theft.
 type: "rule"
