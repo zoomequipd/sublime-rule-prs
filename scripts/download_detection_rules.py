@@ -48,7 +48,6 @@ def search_sublime_rule_feed(rule_name):
     # print(f"Response Code: {response.status_code}")
     response = response.json()
     # print(f"Count: {response['count']}")
-    # going to use a static ID for testing
     return response
 
 
