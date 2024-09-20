@@ -19,7 +19,7 @@ INCLUDE_ADDED = True
 # flag to enable creating a rule in the feed for updated (not net new) rules
 INCLUDE_UPDATES = True
 # flag to enable the removing rules form the platform when the PR is closed
-DELETE_RULES_FROM_CLOSED_PRS = False
+DELETE_RULES_FROM_CLOSED_PRS = True
 # flag to add "created_from_open_prs" tag
 CREATE_OPEN_PR_TAG = True
 OPEN_PR_TAG = "created_from_open_prs"
@@ -297,14 +297,14 @@ def handle_closed_prs():
                     if found_rule.get('name') == rule_name \
                     and CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags') \
                     and ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
-                        print(f"Found Matching Rule:  {found_rule['id']}")
+                        print(f"Found Matching Rule to delete:  {found_rule['id']}")
                         # go delete that rule
-                        deleted = sublime_delete_rule(found_rule['id'])
-                        if deleted:
-                            print(f"DELETED Matching Rule:  {found_rule['id']}")
-                            deleted_ids.add(found_rule['id'])
-                        else:
-                            print(f"ERROR DELETING Matching Rule:  {found_rule['id']}")
+                        # deleted = sublime_delete_rule(found_rule['id'])
+                        #if deleted:
+                        #    print(f"DELETED Matching Rule:  {found_rule['id']}")
+                        #    deleted_ids.add(found_rule['id'])
+                        #else:
+                        #    print(f"ERROR DELETING Matching Rule:  {found_rule['id']}")
     
     print(f"Deleted {len(deleted_ids)} Rules from Closed PRs:")
     
