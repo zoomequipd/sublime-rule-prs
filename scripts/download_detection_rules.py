@@ -9,7 +9,18 @@ REPO_NAME = 'sublime-rules'
 OUTPUT_FOLDER = 'detection-rules'
 ADD_AUTHOR_TAG = True
 AUTHOR_TAG_PREFIX = "pr_author_"
+
+# flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
+# flag to enable creating a rule in the feed for net new rules
+INCLUDE_ADDED = False
+# flag to enable creating a rule in the feed for updated (not net new) rules
+INCLUDE_UPDATES = True
+# flag to enable the removing rules form the platform when the PR is closed
+DELETE_CLOSED_PRS = False
+# flag to add "created_from_open_prs" tag
+CREATE_OPEN_PR_TAG = True
+OPEN_PR_TAG = "created_from_open_prs"
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
@@ -33,7 +44,22 @@ def search_sublime_rule_feed(rule_name):
     print(f"Response Code: {response.status_code}")
     response = response.json()
     print(f"Count: {response['count']}")
-    return True
+    # going to use a static ID for testing
+    return {"rules": [{"id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
+
+def sublime_delete_rule(rule_id):
+
+    url = f"https://platform.sublime.security/v0/rules/{rule_id}"
+    
+    headers = {
+        "accept": "application/json",
+        "authorization": f"Bearer {SUBLIME_API_TOKEN}"
+    }
+    response = requests.delete(url, headers=headers)
+    print(f"Response Code: {response.status_code}")
+    response = response.json()
+    # going to use a static ID for testing
+    return {"rules": [{"name": "PR# 1097 - Suspicious message with fake attachment lure", "id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
 
 def get_closed_pull_requests():
     closed_pull_requests = []
@@ -165,7 +191,7 @@ def prepend_pr_details(rule_name, pr):
 
     return new_name
 
-def rename_modified_rules(content, pr):
+def rename_rules(content, pr):
     #extract the current name
     current_name = extract_rule_name(content)
     # build out the new name to inject the PR number
@@ -174,7 +200,7 @@ def rename_modified_rules(content, pr):
     content = content.replace(current_name, new_name)
     return content
 
-def add_author_tag(yaml_string, author):
+def add_tag(yaml_string, tag):
     if "tags:" in yaml_string:
         # find the tags block
         start_tags = yaml_string.find("tags:")
@@ -210,7 +236,8 @@ def add_author_tag(yaml_string, author):
             
             existing_tags.append(line)
         # add the author tag to the existing tags array
-        existing_tags.append(f"{AUTHOR_TAG_PREFIX}{author}")
+        existing_tags.append(f"{tag}")
+
 
         new_tags_string = "tags:"
         for tag in existing_tags:
@@ -219,12 +246,17 @@ def add_author_tag(yaml_string, author):
         modified_yaml_string = yaml_string.replace(tags_block, new_tags_string)
     else:
         # just add it at the end
-        new_tags_block = f"tags:\n  - {AUTHOR_TAG_PREFIX}{author}"
+        new_tags_block = f"tags:\n  - {tag}"
+        # add additional tag to help filter down to the right rule id later
         modified_yaml_string = yaml_string.strip() + "\n" + new_tags_block
 
     return modified_yaml_string
 
+
 def handle_closed_prs():
+    if not DELETE_CLOSED_PRS:
+        return
+        
     closed_pull_requests = get_closed_pull_requests()
     
     for closed_pr in closed_pull_requests:
@@ -242,11 +274,15 @@ def handle_closed_prs():
                 if not rule_name.startswith("PR#{pr_number} - "):
                     rule_name = prepend_pr_details(rule_name, closed_pr)
                 # search for the rule name in the SUBLIME_API
-                rules = search_sublime_rule_feed(rule_name)
-                
-
-    # if we find the matching rule, we'll delete it. 
-    # we don't care why it was closed. 
+                found_rules = search_sublime_rule_feed(rule_name)
+                # it's possible we have more than one rule, i guess we'll just delete them all.
+                for found_rule in found_rules.get('rules'):
+                    # make sure we're dealing with an exact match of the rule name we expect
+                    if found_rule.get('name') == rule_name 
+                    and 'created_from_open_prs' in found_rule.get('tags') 
+                    and f"pr_author_{closed_pr['author']}" in found_rule.get('tags'):
+                        # go delete that rule
+                        sublime_delete_rule(found_rule['id'])
     
 def handle_open_prs():
     pull_requests = get_open_pull_requests()
@@ -266,24 +302,36 @@ def handle_open_prs():
 
         for file in files:
             print(f"Status of {file['filename']}: {file['status']}")
+            save_file = False
+            # check if we should be saving this file
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
-                content = get_file_contents(file['contents_url'])
+                if file['status'] == "added" and INCLUDE_ADDED:
+                    save_file = True
+                if file['status'] == ['modified', 'changed'] and INCLUDE_UPDATES: 
+                    save_file = True
+            # if we can save the file
+            if save_file:
+                # check the flags to modify the file
                 if ADD_AUTHOR_TAG:
                     # inject the tags for test rules into the contents
-                    content = add_author_tag(content, pr['user']['login'])
-
+                    content = add_tag(content, f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
+                
+                if CREATE_PR_TAG:
+                    content = add_tag(content, f"{OPEN_PR_TAG}")
+                    
                 if INCLUDE_PR_IN_NAME:
                     # we're going to rename this rule for the purposes of the Rule PRs Feed
                     print(f"Saving Modified Rule: {pr['number']}")
-                    content = rename_modified_rules(content, pr)
-
-                save_file(file['filename'], content)
+                    content = rename_rules(content, pr)
+                
+                # save it
+                save_file(file_name, content)
                 new_files.add(os.path.basename(file['filename']))
                 print(f"Saved: {file['filename']}")
-
+            
     clean_output_folder(new_files)
 
 
 if __name__ == '__main__':
     handle_open_prs()
-    #handle_closed_prs()
+    handle_closed_prs()
