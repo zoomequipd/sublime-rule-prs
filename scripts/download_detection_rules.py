@@ -17,7 +17,7 @@ INCLUDE_PR_IN_NAME = True
 # flag to enable creating a rule in the feed for net new rules
 INCLUDE_ADDED = False
 # flag to enable creating a rule in the feed for updated (not net new) rules
-INCLUDE_UPDATES = False
+INCLUDE_UPDATES = True
 # flag to enable the removing rules form the platform when the PR is closed
 DELETE_RULES_FROM_CLOSED_PRS = True
 # flag to add "created_from_open_prs" tag
