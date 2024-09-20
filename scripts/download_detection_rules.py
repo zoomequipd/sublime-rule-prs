@@ -278,7 +278,7 @@ def handle_closed_prs():
                 # it's possible we have more than one rule, i guess we'll just delete them all.
                 for found_rule in found_rules.get('rules'):
                     # make sure we're dealing with an exact match of the rule name we expect
-                    if found_rule.get('name') == rule_name \ 
+                    if found_rule.get('name') == rule_name \
                     and 'created_from_open_prs' in found_rule.get('tags') \
                     and f"pr_author_{closed_pr['author']}" in found_rule.get('tags'):
                         # go delete that rule
