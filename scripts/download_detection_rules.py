@@ -7,17 +7,19 @@ SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
 REPO_OWNER = 'sublime-security'
 REPO_NAME = 'sublime-rules'
 OUTPUT_FOLDER = 'detection-rules'
+# flag to controll adding the author name into the tag, allows for triage rules to be built on a per author basis
+# without having to modify the author value of the rule
 ADD_AUTHOR_TAG = True
 AUTHOR_TAG_PREFIX = "pr_author_"
 
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
 # flag to enable creating a rule in the feed for net new rules
-INCLUDE_ADDED = False
+INCLUDE_ADDED = True
 # flag to enable creating a rule in the feed for updated (not net new) rules
 INCLUDE_UPDATES = True
 # flag to enable the removing rules form the platform when the PR is closed
-DELETE_CLOSED_PRS = False
+DELETE_RULES_FROM_CLOSED_PRS = False
 # flag to add "created_from_open_prs" tag
 CREATE_OPEN_PR_TAG = True
 OPEN_PR_TAG = "created_from_open_prs"
@@ -29,6 +31,7 @@ headers = {
     'Authorization': f'token {GITHUB_TOKEN}',
     'Accept': 'application/vnd.github.v3+json'
 }
+
 
 def search_sublime_rule_feed(rule_name):
 
@@ -47,6 +50,7 @@ def search_sublime_rule_feed(rule_name):
     # going to use a static ID for testing
     return {"rules": [{"id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
 
+
 def sublime_delete_rule(rule_id):
 
     url = f"https://platform.sublime.security/v0/rules/{rule_id}"
@@ -60,6 +64,7 @@ def sublime_delete_rule(rule_id):
     response = response.json()
     # going to use a static ID for testing
     return {"rules": [{"name": "PR# 1097 - Suspicious message with fake attachment lure", "id": "c2b9768d-8299-5033-9eaa-3cd7da0cef7f"}]}
+
 
 def get_closed_pull_requests():
     closed_pull_requests = []
@@ -102,6 +107,7 @@ def get_closed_pull_requests():
     print(f"Total CLOSED PRs: {len(closed_pull_requests)}")
     return closed_pull_requests
 
+
 def get_open_pull_requests():
     pull_requests = []
     page = 1
@@ -137,6 +143,7 @@ def get_open_pull_requests():
 
     print(f"Total PRs: {len(pull_requests)}")
     return pull_requests
+
 
 def get_files_for_pull_request(pr_number):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls/{pr_number}/files'
@@ -176,6 +183,7 @@ def extract_rule_name(content):
             break
     
     return current_name
+
 
 def prepend_pr_details(rule_name, pr):
     # maintain the original quoting around the name
@@ -254,9 +262,9 @@ def add_tag(yaml_string, tag):
 
 
 def handle_closed_prs():
-    if not DELETE_CLOSED_PRS:
+    if not DELETE_RULES_FROM_CLOSED_PRS:
         return
-        
+    deleted_ids = set()
     closed_pull_requests = get_closed_pull_requests()
     
     for closed_pr in closed_pull_requests:
@@ -267,23 +275,44 @@ def handle_closed_prs():
 
         for file in files:
             print(f"Status of {file['filename']}: {file['status']}")
+            # get all the rules from the close PR
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith('detection-rules/') and file['filename'].endswith('.yml'):
+                # get their contents to extract the rule name for searching
                 content = get_file_contents(file['contents_url'])
+                # get the rule name
                 rule_name = extract_rule_name(content)
-                # older closed PRs won't have this name, so prepend it if it's not there already
-                if not rule_name.startswith("PR#{pr_number} - "):
+                
+                # if we are including the PR in the rule name (this helps us make sure we're finding the right one)
+                # then we need to prepend it here, because it own't actually be in the name of the rule in the offiical feed
+                if INCLUDE_PR_IN_NAME and not rule_name.startswith("PR#{pr_number} - "):
                     rule_name = prepend_pr_details(rule_name, closed_pr)
-                # search for the rule name in the SUBLIME_API
+                
+                # Finally search for the rule name in the SUBLIME_API
                 found_rules = search_sublime_rule_feed(rule_name)
-                # it's possible we have more than one rule, i guess we'll just delete them all.
+                
+                # it's possible we have more than one rule, i guess we'll just delete them all if the match
+                # it would be cool if we could include the feed name in the rule details
                 for found_rule in found_rules.get('rules'):
                     # make sure we're dealing with an exact match of the rule name we expect
                     if found_rule.get('name') == rule_name \
-                    and 'created_from_open_prs' in found_rule.get('tags') \
-                    and f"pr_author_{closed_pr['author']}" in found_rule.get('tags'):
+                    and CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags') \
+                    and ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['author']}" in found_rule.get('tags'):
+                        print(f"Found Matching Rule:  {found_rule['id']}")
                         # go delete that rule
-                        sublime_delete_rule(found_rule['id'])
+                        deleted = sublime_delete_rule(found_rule['id'])
+                        if deleted:
+                            print(f"DELETED Matching Rule:  {found_rule['id']}")
+                            deleted_ids.add(found_rule['id'])
+                        else:
+                            print(f"ERROR DELETING Matching Rule:  {found_rule['id']}")
     
+    print(f"Deleted {len(deleted_ids)} Rules from Closed PRs:")
+    
+    for deleted_id in deleted_ids:
+        print(f"\t{deleted_rule}")
+        
+    return deleted_ids
+
 def handle_open_prs():
     pull_requests = get_open_pull_requests()
 
