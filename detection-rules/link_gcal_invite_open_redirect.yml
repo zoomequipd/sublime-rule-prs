@@ -1,4 +1,4 @@
-name: "PR# 1440 - "Link: Google Calendar invite linking to an open redirect from an untrusted freemail sender""
+name: "PR# 1440 - Link: Google Calendar invite linking to an open redirect from an untrusted freemail sender"
 description: "Attackers invite users to view a Google Calendar whose name contains a suspicious link, generally linking to spam content such as crypto giveaways, using open redirects to mask the true destination."
 type: "rule"
 severity: "high"

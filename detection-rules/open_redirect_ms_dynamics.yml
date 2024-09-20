@@ -1,4 +1,4 @@
-name: "PR# 1526 - "Open redirect: Microsoft Dynamics""
+name: "PR# 1526 - Open redirect: Microsoft Dynamics"
 description: "Message contains links using Microsoft Dynamics to redirect to potentially unknown or malicious domains."
 type: "rule"
 severity: "medium"

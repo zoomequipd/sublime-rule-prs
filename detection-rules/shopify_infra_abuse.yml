@@ -1,4 +1,4 @@
-name: "PR# 1632 - "Shopify infrastructure abuse""
+name: "PR# 1632 - Shopify infrastructure abuse"
 description: "Attackers have been observed using myshopify.com links to bypass domain reputation checks."
 type: "rule"
 severity: "medium"

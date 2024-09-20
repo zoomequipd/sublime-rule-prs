@@ -1,4 +1,4 @@
-name: "PR# 1855 - "GitHub Notification Abuse""
+name: "PR# 1855 - GitHub Notification Abuse"
 description: "This detection rule matches GitHub notifications which contain links to free file hosts, free subdomain hosts, and url shortners.  This has been seen in previous campaigns where malicious actors leveraged existing issues on public GitHub repositories by adding comments with links to Info Stealer malware."
 type: "rule"
 severity: "medium"

@@ -1,4 +1,4 @@
-name: "PR# 1917 - "Brand impersonation: Microsoft with low reputation links""
+name: "PR# 1917 - Brand impersonation: Microsoft with low reputation links"
 description: "Detects low reputation links with Microsoft specific indicators in the body."
 type: "rule"
 severity: "medium"

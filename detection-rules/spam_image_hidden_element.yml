@@ -1,4 +1,4 @@
-name: "PR# 1931 - "Spam: Image as content with Hidden HTML Element""
+name: "PR# 1931 - Spam: Image as content with Hidden HTML Element"
 description: "This has been observed in the delivery of emails containing account/membership expiration lure themes of popular online services or delivery notifications."
 type: "rule"
 severity: "low"

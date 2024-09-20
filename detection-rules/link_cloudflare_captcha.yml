@@ -1,4 +1,4 @@
-name: "PR# 1133 - "Link: Gated Cloudflare block page not on Cloudflare infrastructure""
+name: "PR# 1133 - Link: Gated Cloudflare block page not on Cloudflare infrastructure"
 description: "The website is showing a block page that uses Cloudflare's Turnstile, a managed CAPTCHA service. However, the block page itself is not created by Cloudflare."
 type: "rule"
 severity: "low"

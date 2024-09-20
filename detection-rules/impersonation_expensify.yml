@@ -1,4 +1,4 @@
-name: "PR# 1866 - "Brand impersonation: Expensify""
+name: "PR# 1866 - Brand impersonation: Expensify"
 description: "Impersonation of the expense management software Expensify."
 type: "rule"
 severity: "medium"

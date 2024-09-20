@@ -1,4 +1,4 @@
-name: "PR# 1901 - "Display name impersonation using recipient SLD""
+name: "PR# 1901 - Display name impersonation using recipient SLD"
 description: |
   The recipient domain's SLD is used in the sender's display name
   in order to impersonate the organization. 

@@ -1,4 +1,4 @@
-name: "PR# 1841 - "Brand impersonation: DocuSign image attachment lure with no DocuSign links""
+name: "PR# 1841 - Brand impersonation: DocuSign image attachment lure with no DocuSign links"
 description: "Detects DocuSign phishing messages with no DocuSign links, a DocuSign logo attached, from an untrusted sender."
 type: "rule"
 severity: "high"

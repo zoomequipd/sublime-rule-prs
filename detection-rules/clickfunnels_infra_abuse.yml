@@ -1,4 +1,4 @@
-name: "PR# 1385 - "ClickFunnels link infrastructure abuse""
+name: "PR# 1385 - ClickFunnels link infrastructure abuse"
 description: "Email contains a ClickFunnels (mass mailing platform) tracking link but does not originate from ClickFunnels sending infrastructure. The myclickfunnels.com domain has been abused by threat actors to attempt credential phishing."
 type: "rule"
 severity: "high"

@@ -1,4 +1,4 @@
-name: "PR# 1521 - "VIP impersonation: Fake thread with payment pretexting""
+name: "PR# 1521 - VIP impersonation: Fake thread with payment pretexting"
 description: "Email contains a fake forwarded message with a request to the VIP for payment, and the current thread contains a request to pay said invoice. The email is usually sent to an accounts payable inbox or staff member."
 type: "rule"
 severity: "medium"
