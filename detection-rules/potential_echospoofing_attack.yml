@@ -1,4 +1,4 @@
-name: "PR# 1795 - Potential EchoSpoofing Attack"
+name: "PR# 1795 - "Potential EchoSpoofing Attack""
 description: Using misconfiguration between Proofpoint and Outlook, threat actors can created spoofed emails that passes DKIM, DMARC, and SPF checks.
 type: "rule"
 severity: "high"

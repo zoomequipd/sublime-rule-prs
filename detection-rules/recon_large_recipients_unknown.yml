@@ -1,4 +1,4 @@
-name: "PR# 1293 - Reconaissance: Large unknown recipient list"
+name: "PR# 1293 - "Reconaissance: Large unknown recipient list""
 description: |
   Recon messages, a form of deliverability testing, are used to validate whether a recipient address is valid or not, potentially preceding an attack.
 

@@ -1,4 +1,4 @@
-name: "PR# 1559 - Open redirect: weblinkconnect.com"
+name: "PR# 1559 - "Open redirect: weblinkconnect.com""
 description: "Message contains use of the weblinkconnect.com open redirect, but the sender is not weblinkconnect.com. This has been exploited in the wild."
 type: "rule"
 severity: "medium"

@@ -1,4 +1,4 @@
-name: "PR# 1097 - Suspicious message with fake attachment lure"
+name: "PR# 1097 - "Suspicious message with fake attachment lure""
 description: "This rule detects messages with a fake attachment lure with suspicious indicators in the subject or display name from an unsolicited sender."
 type: "rule"
 severity: "high"
