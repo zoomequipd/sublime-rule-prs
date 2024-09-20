@@ -154,9 +154,9 @@ def extract_rule_name(content):
 def prepend_pr_details(rule_name, pr):
     # maintain the original quoting around the name
     if rule_name.startswith('"') and rule_name.endswith('"'):
-        new_name = f"\"PR# {pr['number']} - {rule_name}\""
+        new_name = f"\"PR# {pr['number']} - {rule_name.strip("\" ")}\""
     elif rule_name.startswith('\'') and rule_name.endswith('\''):
-        new_name = f"\'PR# {pr['number']} - {rule_name}\'"
+        new_name = f"\'PR# {pr['number']} - {rule_name.strip("\' ")}\'"
     else:
         new_name = f"PR# {pr['number']} - {rule_name}"
     # replace it in the content
