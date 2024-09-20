@@ -146,13 +146,19 @@ def extract_rule_name(content):
         if 'name:' in line:
             print(f"Found name line: {line}")
             # replace the quotes and spaces to create a clean filename
-            current_name = line.replace('name: ', '').strip('" ')
+            current_name = line.replace('name: ', '').strip()
             break
     
     return current_name
 
 def prepend_pr_details(rule_name, pr):
-    new_name = f"PR# {pr['number']} - {rule_name}"
+    # maintain the original quoting around the name
+    if rule_name.startswith('"') and rule_name.endswith('"'):
+        new_name = f"\"PR# {pr['number']} - {rule_name}\""
+    elif if rule_name.startswith('\'') and rule_name.endswith('\''):
+        new_name = f"\'PR# {pr['number']} - {rule_name}\'"
+    else:
+        new_name = f"PR# {pr['number']} - {rule_name}"
     # replace it in the content
     print(f"New Name: {new_name}")
     print(f"Old Name: {rule_name}")
