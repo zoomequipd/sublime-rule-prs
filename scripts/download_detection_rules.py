@@ -79,7 +79,7 @@ def get_closed_pull_requests():
             break
         
         url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
-        params = {'page': page, 'per_page': per_page, 'state': 'closed'}
+        params = {'page': page, 'per_page': per_page, 'state': 'closed', 'sort': 'updated'}
         print(f"Fetching page {page} of CLOSED Pull Requests")
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
@@ -116,7 +116,7 @@ def get_open_pull_requests():
     
     while True:
         url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/pulls'
-        params = {'page': page, 'per_page': per_page}
+        params = {'page': page, 'per_page': per_page, 'sort': 'updated'}
         print(f"Fetching page {page} of Pull Requests")
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
