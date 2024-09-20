@@ -328,7 +328,7 @@ def handle_open_prs():
                     # inject the tags for test rules into the contents
                     content = add_tag(content, f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
                 
-                if CREATE_PR_TAG:
+                if CREATE_OPEN_PR_TAG:
                     content = add_tag(content, f"{OPEN_PR_TAG}")
                     
                 if INCLUDE_PR_IN_NAME:
