@@ -49,7 +49,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-          ref: handle-updates  # Replace with your other branch name
+          ref: handle_updates  # Replace with your other branch name
 
 
     - name: Set up Python
