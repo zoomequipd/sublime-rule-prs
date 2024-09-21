@@ -60,8 +60,8 @@ def sublime_delete_rule(rule_id):
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.delete(url, headers=headers)
+
     print(f"Response Code: {response.status_code}")
-    response = response.json()
 
     return response.ok
 
