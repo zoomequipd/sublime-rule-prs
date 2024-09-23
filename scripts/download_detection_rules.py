@@ -340,7 +340,7 @@ def handle_closed_prs():
     print(f"Deleted {len(deleted_ids)} Rules from Closed PRs:")
     
     for deleted_id in deleted_ids:
-        print(f"\t{deleted_rule}")
+        print(f"\t{deleted_id}")
         
     return deleted_ids
 
