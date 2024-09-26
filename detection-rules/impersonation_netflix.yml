@@ -1,4 +1,4 @@
-name: "PR# 1949 - Brand impersonation: Netflix"
+name: "PR# 1951 - Brand impersonation: Netflix"
 description: |
   Impersonation of Netflix.
 references:
@@ -45,7 +45,8 @@ source: |
     'netflixanimation.com',
     'envoy.com',
     'lexisnexis.com',
-    'netflix.shop'
+    'netflix.shop',
+    'netflixcontractors.com' // owned by netflix
   )
   and sender.email.email not in $recipient_emails
 
@@ -61,4 +62,4 @@ detection_methods:
 id: "9f39eea5-2edf-524d-b68b-d8d0bdb74273"
 tags:
   - created_from_open_prs
-  - pr_author_bfilar
+  - pr_author_zoomequipd
