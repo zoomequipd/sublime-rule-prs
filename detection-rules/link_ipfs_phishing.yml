@@ -1,4 +1,4 @@
-name: "PR# 1928 - Link: IPFS"
+name: "PR# 1993 - Link: IPFS"
 description: "Detects messages containing links that have 'ipfs' in the domain, or unanalyzed links that contain 'ipfs' in the url. IPFS has been recently observed hosting phishing sites."
 references:
   - "https://securelist.com/ipfs-phishing/109158/"
@@ -9,7 +9,10 @@ source: |
   type.inbound
   and any(body.links,
           // Any body link domains contain "ipfs"
-          strings.icontains(.href_url.domain.domain, "ipfs")
+          (
+            strings.icontains(.href_url.domain.domain, "ipfs")
+            and not .href_url.domain.root_domain == "ipfs.com"
+          )
   
           // Or the path contains ipfs anchored to a leading and trailing '-', '/', '.'
           or (
@@ -47,7 +50,6 @@ source: |
       and not profile.by_sender().any_false_positives
     )
   )
-
   and not profile.by_sender().any_false_positives
 
 attack_types:
@@ -63,4 +65,4 @@ detection_methods:
 id: "19fa6442-83b9-5479-ba04-61906b595929"
 tags:
   - created_from_open_prs
-  - pr_author_aidenmitchell
+  - pr_author_zoomequipd
