@@ -294,17 +294,20 @@ def handle_closed_prs():
         if closed_pr['base']['ref'] != "main":
             print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
 
-        # if the PR has been merged, then we add this delay to allow the PR author to still get alerts
-        merged_at_time = datetime.strptime(closed_pr['merged_at'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-        if not merged_at_time <= datetime.now(tz=timezone.utc) - timedelta(days=DELETE_RULES_FROM_CLOSED_PRS_DELAY):
-            time_remaining = (merged_at_time + timedelta(days=3)) - datetime.now(tz=timezone.utc)
+        # we only care about the delay if it's been merged
+        if closed_pr['merged'] and closed_pr['merged_at'] is not None:
+            merged_at_time = datetime.strptime(closed_pr['merged_at'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+      
+            # if the PR has been merged, then we add this delay to allow the PR author to still get alerts
+            if not merged_at_time <= datetime.now(tz=timezone.utc) - timedelta(days=DELETE_RULES_FROM_CLOSED_PRS_DELAY):
+                time_remaining = (merged_at_time + timedelta(days=3)) - datetime.now(tz=timezone.utc)
+                
+                remaining_days = time_remaining.days
+                remaining_hours, remaining_remainder = divmod(time_remaining.seconds, 3600)
+                remaining_minutes, remaining_seconds = divmod(remaining_remainder, 60)
             
-            remaining_days = time_remaining.days
-            remaining_hours, remaining_remainder = divmod(time_remaining.seconds, 3600)
-            remaining_minutes, remaining_seconds = divmod(remaining_remainder, 60)
-        
-            print(f"DELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']} -- Remaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
-            continue
+                print(f"DELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']} -- Remaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
+                continue
         
         # if it's past the variable, then delete it
         files = get_files_for_pull_request(pr_number)
