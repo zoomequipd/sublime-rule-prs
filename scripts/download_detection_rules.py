@@ -1,7 +1,7 @@
 import os
 import base64
 import requests
-from datetime import datetime, timedetla, timezone
+from datetime import datetime, timedelta, timezone
 
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
