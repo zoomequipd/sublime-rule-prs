@@ -306,7 +306,7 @@ def handle_closed_prs():
                 remaining_hours, remaining_remainder = divmod(time_remaining.seconds, 3600)
                 remaining_minutes, remaining_seconds = divmod(remaining_remainder, 60)
             
-                print(f"DELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']} -- Remaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
+                print(f"DELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']}\n\tRemaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
                 continue
         
         # if it's past the variable, then delete it
