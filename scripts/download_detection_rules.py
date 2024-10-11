@@ -296,7 +296,7 @@ def handle_closed_prs():
 
         # if the PR has been merged, then we add this delay to allow the PR author to still get alerts
         merged_at_time = datetime.strptime(closed_pr['merged_at'], "%Y-%m-%dT%H:%M:%SZ")
-        if not merged_at_time <= datetime.now(tz=timezone.utc) - timedelta(days=DELETE_RULES_FROM_CLOSED_PRS_DELAY)
+        if not merged_at_time <= datetime.now(tz=timezone.utc) - timedelta(days=DELETE_RULES_FROM_CLOSED_PRS_DELAY):
             time_remaining = (merged_at_time + timedelta(days=3)) - datetime.now(tz=timezone.utc)
             
             remaining_days = time_remaining.days
