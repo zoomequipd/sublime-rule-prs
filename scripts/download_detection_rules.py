@@ -292,7 +292,7 @@ def handle_closed_prs():
         print(f"Processing CLOSED PR #{pr_number}: {closed_pr['title']}")
 
         if closed_pr['base']['ref'] != "main":
-            print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
+            print(f"\tSkipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
 
         # we only care about the delay if it's been merged
         if closed_pr['merged_at'] is not None:
@@ -306,7 +306,7 @@ def handle_closed_prs():
                 remaining_hours, remaining_remainder = divmod(time_remaining.seconds, 3600)
                 remaining_minutes, remaining_seconds = divmod(remaining_remainder, 60)
             
-                print(f"DELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']}\n\tRemaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
+                print(f"\tDELAY NOT MET: Skipping PR #{closed_pr['number']}: {closed_pr['title']}\n\tRemaining Time = {remaining_days} days, {remaining_hours} hours, {remaining_minutes} minutes, {remaining_seconds} seconds")
                 continue
         
         # if it's past the variable, then delete it
