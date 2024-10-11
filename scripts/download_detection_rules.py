@@ -389,7 +389,7 @@ def handle_open_prs():
         if pr['draft']:
             print(f"Skipping draft PR #{pr['number']}: {pr['title']}")
             continue
-        if pr['base']['ref'] != 'main'
+        if pr['base']['ref'] != 'main':
             print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
             continue
 
