@@ -1,6 +1,7 @@
 import os
 import base64
 import requests
+from datetime import datetime, timedetla, timezone
 
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
@@ -20,6 +21,10 @@ INCLUDE_ADDED = False
 INCLUDE_UPDATES = True
 # flag to enable the removing rules form the platform when the PR is closed
 DELETE_RULES_FROM_CLOSED_PRS = True
+# variable that controls when the rules from a closed PR should be deleted
+# this is in days
+DELETE_RULES_FROM_CLOSED_PRS_DELAY = 3
+
 # flag to add "created_from_open_prs" tag
 CREATE_OPEN_PR_TAG = True
 OPEN_PR_TAG = "created_from_open_prs"
@@ -70,7 +75,7 @@ def get_closed_pull_requests():
     closed_pull_requests = []
     page = 1
     per_page = 30 # 100 is the max allowed items per page by GitHub API
-    max_closed = 30
+    max_closed = 60
     
     while len(closed_pull_requests) <= max_closed:
         if len(closed_pull_requests) >= max_closed:
@@ -285,7 +290,23 @@ def handle_closed_prs():
     for closed_pr in closed_pull_requests:
         pr_number = closed_pr['number']
         print(f"Processing CLOSED PR #{pr_number}: {closed_pr['title']}")
+
+        if closed_pr['base']['ref'] != "main":
+            print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
+
+        # if the PR has been merged, then we add this delay to allow the PR author to still get alerts
+        merged_at_time = datetime.strptime(closed_pr['merged_at'], "%Y-%m-%dT%H:%M:%SZ")
+        if not merged_at_time <= datetime.now(tz=timezone.utc) - timedelta(days=DELETE_RULES_FROM_CLOSED_PRS_DELAY)
+            time_remaining = (merged_at_time + timedelta(days=3)) - datetime.now(tz=timezone.utc)
+            
+            remaining_days = time_remaining.days
+            remaining_hours, remaining_remainder = divmod(time_remaining.seconds, 3600)
+            remaining_minutes, seconds = divmod(remaining_remainder, 60)
         
+            print(f"DELAY NOT MET: Skipping PR #{pr['number']}: {pr['title']} -- Remaining Time = {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
+            continue
+        
+        # if it's past the variable, then delete it
         files = get_files_for_pull_request(pr_number)
 
         for file in files:
@@ -367,6 +388,9 @@ def handle_open_prs():
     for pr in pull_requests:
         if pr['draft']:
             print(f"Skipping draft PR #{pr['number']}: {pr['title']}")
+            continue
+        if pr['base']['ref'] != 'main'
+            print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
             continue
 
         pr_number = pr['number']
