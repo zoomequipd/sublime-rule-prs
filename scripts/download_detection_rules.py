@@ -295,7 +295,7 @@ def handle_closed_prs():
             print(f"Skipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
 
         # we only care about the delay if it's been merged
-        if closed_pr['merged'] and closed_pr['merged_at'] is not None:
+        if closed_pr['merged_at'] is not None:
             merged_at_time = datetime.strptime(closed_pr['merged_at'], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
       
             # if the PR has been merged, then we add this delay to allow the PR author to still get alerts
