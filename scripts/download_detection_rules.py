@@ -165,7 +165,6 @@ def get_file_contents(contents_url):
 
 
 def save_file(path, content):
-    print(f"function: save_file, path = {path}, basename = {os.path.basename(path)}")
     file_path = os.path.join(OUTPUT_FOLDER, os.path.basename(path))
     with open(file_path, 'w') as file:
         file.write(content)
