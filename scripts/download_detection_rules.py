@@ -328,7 +328,7 @@ def handle_closed_prs():
                 
                 # Finally search for the rule name in the SUBLIME_API
                 found_rules = search_sublime_rule_feed(rule_name)
-                print(f"\tFound {found_rules['count']} matching the filename")
+                print(f"\tFound {found_rules['count']} matching the rule name")
                 # it's possible we have more than one rule, if they match, delete them all
                 for found_rule in found_rules.get('rules'):
                     # make sure we're dealing with an exact match of the rule we expect
@@ -436,9 +436,10 @@ def handle_open_prs():
                     content = rename_rules(content, pr)
                 
                 # finally save it
-                save_file(file['filename'], content)
-                new_files.add(os.path.basename(file['filename']))
-                print(f"\tSaved: {file['filename']}")
+                # include the pr number in the filename to avoid duplicates
+                save_file(f"{pr['number']}_{file['filename']}, content)
+                new_files.add(os.path.basename(f"{pr['number']}_{file['filename']}))
+                print(f"\tSaved: {pr['number']}_{file['filename']}")
             
     clean_output_folder(new_files)
 
