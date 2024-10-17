@@ -438,9 +438,10 @@ def handle_open_prs():
                 # finally save it
                 # include the pr number in the filename to avoid duplicates
                 # use os.path.basename to drop the folder of the file, save_file uses OUTPUT_FOLDER anyway.
-                save_file(f"{pr['number']}_{os.path.basename(file['filename'])}", content)
-                new_files.add(os.path.basename(f"{pr['number']}_{file['filename']}"))
-                print(f"\tSaved: {pr['number']}_{file['filename']}")
+                target_save_filename = f"{pr['number']}_{os.path.basename(file['filename'])}"
+                save_file(target_save_filename", content)
+                new_files.add(target_save_filename)
+                print(f"\tSaved: {target_save_filename}")
             
     clean_output_folder(new_files)
 
