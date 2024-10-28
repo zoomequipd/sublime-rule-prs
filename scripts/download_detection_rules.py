@@ -292,7 +292,7 @@ def handle_closed_prs():
         print(f"Processing CLOSED PR #{pr_number}: {closed_pr['title']}")
 
         if closed_pr['base']['ref'] != "main":
-            print(f"\tSkipping non-main branch PR #{pr['number']}: {pr['title']} -- dest branch: {pr['base']['ref']}")
+            print(f"\tSkipping non-main branch PR #{closed_pr['number']}: {closed_pr['title']} -- dest branch: {closed_pr['base']['ref']}")
 
         # we only care about the delay if it's been merged
         if closed_pr['merged_at'] is not None:
