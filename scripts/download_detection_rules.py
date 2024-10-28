@@ -50,9 +50,9 @@ def search_sublime_rule_feed(rule_name):
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.get(url, headers=headers)
-    #print(f"Response Code: {response.status_code}")
+    print(f"Response Code: {response.status_code}")
     response = response.json()
-    #print(f"Count: {response['count']}")
+    print(f"Count: {response['count']}")
     return response
 
 
