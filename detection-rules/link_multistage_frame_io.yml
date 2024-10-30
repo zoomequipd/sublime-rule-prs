@@ -1,5 +1,5 @@
 name: "Link: Multistage Landing - Abused Adobe frame.io"
-description: "The detection rule matches on message groups which make use of Adobe's frame.io as a landing page. The landing page contains links which are newly registered, use free file or subdomain hosts, url shortners or when visited are phishing pages, lead to a captcha or redirect to a top website"
+description: "The detection rule matches on message groups which make use of Adobe's frame.io as a landing page. The landing page contains links which are newly registered, use free file or subdomain hosts, url shortners or when visited are phishing pages, lead to a captcha or redirect to a well-known domain, seen in evasion tactics."
 type: "rule"
 severity: "high"
 source: |
@@ -13,7 +13,7 @@ source: |
   // negate where internal employees might have sent the message
   and not any($org_display_names, strings.istarts_with(subject.subject, .))
   
-  // the subject conatins the name of the file that has been shared
+  // the subject contains the name of the file that has been shared
   // the body does not contain the name shared depending on how it's shared, 
   // let us use the suspicious file shares from sharepoint here
   // https://github.com/sublime-security/sublime-rules/blob/main/detection-rules/link_sharepoint_sus_name.yml
@@ -152,7 +152,7 @@ source: |
                     // some samples have a pdf uploaded that contains a Sharepoint File Share lure.
                     // we can use ocr to detect this
                     or strings.icontains(.scan.ocr.raw,
-                                         'This email contains a secure lik to sharepoint'
+                                         'This email contains a secure link to sharepoint'
                     )
                   )
            )
