@@ -44,6 +44,9 @@ source: |
            .email.domain.root_domain in $sender_domains
     )
   )
+tags:
+  - "Attack surface reduction"
+  - pr_author_zoomequipd
 attack_types:
   - "Callback Phishing"
   - "BEC/Fraud"
@@ -55,5 +58,3 @@ detection_methods:
   - "Header analysis"
   - "Content analysis"
 id: "50a1499f-bb59-5ee0-b4f4-e3cc84a5c41e"
-tags:
-  - pr_author_zoomequipd

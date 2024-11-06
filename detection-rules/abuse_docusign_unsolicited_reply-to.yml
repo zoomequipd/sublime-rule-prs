@@ -46,6 +46,9 @@ source: |
            .email.domain.root_domain in $sender_domains
     )
   )
+tags:
+  - "Attack surface reduction"
+  - pr_author_zoomequipd
 attack_types:
   - "Credential Phishing"
 tactics_and_techniques:
@@ -57,5 +60,3 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
 id: "2f12d616-f47a-5259-8946-ac2e01940f6f"
-tags:
-  - pr_author_zoomequipd
