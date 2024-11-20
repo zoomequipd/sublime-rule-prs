@@ -1,5 +1,5 @@
 name: "Non-RFC Compliant Calendar Files from unsolicited sender"
-description: "Detects calendar (.ics) files that do not follow RFC standards by lacking required UID identifiers while containing specific calendar components (VTODO, VJOURNAL, VFREEBUSY, or VEVENT)."
+description: "Detects calendar (.ics) files that do not follow RFC standards by lacking required UID identifiers while containing specific calendar components (VTODO, VJOURNAL, VFREEBUSY, or VEVENT). Forged ICS calendar invites can be spoofed to seemingly originate from any sender."
 type: "rule"
 severity: "medium"
 references:
@@ -8,7 +8,7 @@ source: |
   type.inbound
   and any(attachments,
           (
-            .file_type in $file_extensions_common_archives
+            .file_extension in $file_extensions_common_archives
             or .file_extension == "ics"
             or .content_type == "text/calendar"
           )
