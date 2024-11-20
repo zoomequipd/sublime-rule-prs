@@ -1,5 +1,5 @@
-name: "VIP / Executive local or spoof impersonation from unsolicited sender"
-description: "This rule identifies potential impersonation attempts involving the local part of an $org_vip email address. Specifically, it checks for cases where the local part of an $org_vip email (e.g., local_part@domain.com) appears with a different domain (e.g., local_part@foreigndomain.com). Additionally, the rule flags emails that match an $org_vip address exactly but fail authentication."
+name: "VIP local_part impersonation from unsolicited sender"
+description: "This rule identifies potential impersonation attempts involving the local part of an $org_vip email address. Specifically, it checks for cases where the local part of an $org_vip email (e.g., local_part@domain.com) appears with a different domain (e.g., local_part@foreigndomain.com). Additionally, the rule flags messages that match an $org_vip address exactly but fail authentication."
 type: "rule"
 severity: "high"
 source: |
@@ -29,17 +29,6 @@ source: |
                        "*administrator*"
   )
   
-  and (
-    (
-      profile.by_sender().prevalence in ("new", "outlier")
-      and not profile.by_sender().solicited
-    )
-    or (
-      profile.by_sender().any_messages_malicious_or_spam
-      and not profile.by_sender().any_false_positives
-    )
-  )
-  
   // negate org domains unless they fail DMARC authentication
   and (
     (
@@ -57,7 +46,7 @@ source: |
     )
     or sender.email.domain.root_domain not in $high_trust_sender_root_domains
   )
-
+  and not profile.by_sender().solicited
 tags:
   - "Attack surface reduction"
   - pr_author_morriscode
