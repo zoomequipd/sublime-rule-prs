@@ -1,0 +1,17 @@
+name: "PR# 2141 - New sender domain (<=10d) from untrusted sender"
+description: |
+  Detects inbound emails where the sender domain is less than 10 days old from untrusted senders.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and network.whois(sender.email.domain).days_old <= 10
+  and not profile.by_sender().solicited
+tags:
+  - "Attack surface reduction"
+  - pr_author_jkamdjou
+  - created_from_open_prs
+detection_methods:
+  - "Sender analysis"
+  - "Whois"
+id: "d87fa543-aabb-55f5-9660-23c9e7a85b2a"
