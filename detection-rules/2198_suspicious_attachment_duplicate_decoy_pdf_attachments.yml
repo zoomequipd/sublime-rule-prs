@@ -1,0 +1,44 @@
+name: "PR# 2198 - Suspicious Attachment: Duplicate decoy PDF files"
+description: "This rule identifies messages that contain duplicate PDF attachments, defined as either having identical filenames or matching MD5 hash values. Furthermore, the PDF files in question must lack any readable text and must not include hyperlinks."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and length(filter(attachments, .file_type == "pdf")) > 1
+  and (
+    // the number of pdf attachments is greater than the number of distant filenames for the pdf attachments
+    // this indicates at least two of the attachments contain the same name
+    length(
+        filter(attachments, .file_type == "pdf")
+    ) > 
+    length(
+        distinct(filter(attachments, .file_type == "pdf"), .file_name)
+    )
+    or
+    // all PDFs are the same MD5
+    length(distinct(filter(attachments, .file_type == "pdf"), .md5)) == 1
+  )
+  // there must be at least one link either in the PDF or in the body
+  and
+  (
+    any(filter(attachments, .file_type == "pdf"),
+        any(filter(file.explode(.), .depth == 0),
+            length(.scan.url.urls) > 0 or length(.scan.pdf.urls) > 0
+        )
+    )
+    // in some cases the PDF is blank/contains no links
+    // but there must be a CTA somewhere, so check 
+    or length(body.links) > 0
+  )
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+  - "PDF"
+detection_methods:
+  - "File analysis"
+  - "Optical Character Recognition"
+id: "79b9b2e7-295f-59d2-97fb-4f5fe13bc869"
+tags:
+  - created_from_open_prs
+  - pr_author_zoomequipd
