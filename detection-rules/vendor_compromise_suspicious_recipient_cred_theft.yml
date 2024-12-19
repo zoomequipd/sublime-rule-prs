@@ -1,7 +1,7 @@
 name: "Vendor Compromise: Suspicious Recipient Pattern With Credential Theft Indicators"
 description: "A known sender in your environment is using suspicious recipients pattern, credential theft language, and links to a phishing page."
 type: "rule"
-severity: "high"
+severity: "low"
 source: |
   type.inbound
   and profile.by_sender().prevalence in ("common", "uncommon") // vendor compromise
@@ -34,6 +34,9 @@ source: |
           and ml.link_analysis(.).credphish.disposition == "phishing"
   )
 
+tags:
+  - "Attack surface reduction"
+  - pr_author_aidenmitchell
 attack_types:
   - "Credential Phishing"
 tactics_and_techniques:
@@ -46,5 +49,3 @@ detection_methods:
   - "URL analysis"
   - "URL screenshot"
 id: "9c1f582a-1b04-5e45-a2f2-e59bc40888f5"
-tags:
-  - pr_author_aidenmitchell
