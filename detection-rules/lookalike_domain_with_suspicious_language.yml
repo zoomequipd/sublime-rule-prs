@@ -34,7 +34,9 @@ source: |
                  )
           )
   )
-
+tags:
+  - "Attack surface reduction"
+  - pr_author_morriscode
 attack_types:
   - "BEC/Fraud"
 tactics_and_techniques:
@@ -47,5 +49,3 @@ detection_methods:
   - "Sender analysis"
   - "Whois"
 id: "3674ced0-691c-5faa-9ced-922e7201dc29"
-tags:
-  - pr_author_morriscode
