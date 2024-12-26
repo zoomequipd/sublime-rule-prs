@@ -49,8 +49,9 @@ def search_sublime_rule_feed(rule_name):
         "accept": "application/json",
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
-    response = requests.get(url, headers=headers)
-    response.raise_for_status() 
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status() 
     except requests.exceptions.HTTPError as err:
         print(f"HTTP error occurred: {err}")
         # the calling function handles None
