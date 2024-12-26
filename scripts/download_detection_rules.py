@@ -50,10 +50,20 @@ def search_sublime_rule_feed(rule_name):
         "authorization": f"Bearer {SUBLIME_API_TOKEN}"
     }
     response = requests.get(url, headers=headers)
-    print(f"Response Code: {response.status_code}")
-    response = response.json()
-    print(f"Count: {response['count']}")
-    return response
+    response.raise_for_status() 
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+        # the calling function handles None
+        return None
+    except request.exceptions.ConnectionError as err:
+        print(f"Connection error occurred: {err}")
+        # the calling function handles None
+        return None
+    else:
+        print(f"Response Code: {response.status_code}")
+        response = response.json()
+        print(f"Count: {response['count']}")
+        return response
 
 
 def sublime_delete_rule(rule_id):
@@ -323,14 +333,17 @@ def handle_closed_prs():
                 
                 # if we are including the PR in the rule name (this helps us make sure we're finding the right one)
                 # then we need to prepend it here, because it own't actually be in the name of the rule in the offiical feed
-                if INCLUDE_PR_IN_NAME and not rule_name.startswith("PR#{pr_number} - "):
+                if INCLUDE_PR_IN_NAME and not rule_name.startswith(f"PR#{pr_number} - "):
                     rule_name = prepend_pr_details(rule_name, closed_pr)
                 
                 # Finally search for the rule name in the SUBLIME_API
                 found_rules = search_sublime_rule_feed(rule_name)
+                if found_rules = None:
+                    print(f"\tError Finding Rules in Platform for PR#{pr_number} - {rule_name}")
+                    continue
                 print(f"\tFound {found_rules['count']} matching the rule name")
                 # it's possible we have more than one rule, if they match, delete them all
-                for found_rule in found_rules.get('rules'):
+                for found_rule in found_rules.get('rules', []):
                     # make sure we're dealing with an exact match of the rule we expect
                     # found_rule won't have quotes around it, because it's taken from the json of the rule
                     if found_rule.get('name') == rule_name.strip('\'\"'):
