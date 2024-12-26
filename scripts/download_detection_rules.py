@@ -339,7 +339,7 @@ def handle_closed_prs():
                 
                 # Finally search for the rule name in the SUBLIME_API
                 found_rules = search_sublime_rule_feed(rule_name)
-                if found_rules = None:
+                if found_rules is None:
                     print(f"\tError Finding Rules in Platform for PR#{pr_number} - {rule_name}")
                     continue
                 print(f"\tFound {found_rules['count']} matching the rule name")
