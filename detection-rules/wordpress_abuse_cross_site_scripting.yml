@@ -60,5 +60,6 @@ tactics_and_techniques:
 detection_methods:
   - "Content analysis"
   - "Sender analysis"
+id: "9c21225b-2dcf-5f72-b061-1c847129c319"
 tags:
   - pr_author_morriscode
