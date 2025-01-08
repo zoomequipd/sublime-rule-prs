@@ -1,4 +1,4 @@
-name: "PR# 2273 - Credential Phishing: Fake Storage alerts (unsolicited)"
+name: "PR# 2274 - Credential Phishing: Fake Storage alerts (unsolicited)"
 description: "This rule targets credential phishing attempts disguised as storage space alerts, activating for inbound emails with specific storage-related keywords and evaluating sender trustworthiness and history."
 type: "rule"
 severity: "medium"
@@ -88,7 +88,7 @@ source: |
     )
     or sender.email.email != "no-reply@sharepointonline.com"
   )
-  
+
   // negate legitimate iCloud China storage alerts
   and (
     (
@@ -104,6 +104,19 @@ source: |
       )
     )
     or sender.email.email != "noreply@icloud.com.cn"
+  )
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+  and (
+    not profile.by_sender().solicited
+    or profile.by_sender().any_messages_malicious_or_spam
   )
 attack_types:
   - "Credential Phishing"
