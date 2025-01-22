@@ -81,19 +81,16 @@ source: |
       or strings.icontains(body.current_thread.text, "suspicious activity detected")
       or strings.icontains(body.current_thread.text, "temporarily locked out")
       or regex.icontains(body.current_thread.text,
-                         '(?:invalid|unrecognized|unauthorized|fail(?:ed|ure)?|suspicious|unusual|attempt(?:ed)?|tried to)\s*(?:\w+\s+){0,3}\s*(?:log(?:.?in)?|sign(?:.?in)?|account|access|activity)',
-                         '(?:log(?:.?in)?|sign(?:.?in)?|account|access|activity)\s*(?:\w+\s+){0,3}\s*(?:invalid|unrecognized|fail(?:ed|ure)?|suspicious|unusual|attempt(?:ed)?)'
+                         '(?:invalid|unrecognized|unauthorized|fail(?:ed|ure)?|suspicious|unusual|attempt(?:ed)?\b|tried to)\s*(?:\w+\s+){0,3}\s*(?:log(?:.?in)?|sign(?:.?in)?|account|access|activity)',
+                         '(?:log(?:.?in)?|sign(?:.?in)?|account|access|activity)\s*(?:\w+\s+){0,3}\s*(?:invalid|unrecognized|fail(?:ed|ure)?|suspicious|unusual|attempt(?:ed)?\b)'
       )
     )
     // // account locked
     or (
       strings.icontains(body.current_thread.text, "been suspend")
-      or strings.icontains(body.current_thread.text, "to restore access")
       or strings.icontains(body.current_thread.text, "will be restored")
       or strings.icontains(body.current_thread.text, "security reasons")
-      or strings.icontains(body.current_thread.text,
-                           "temporarily restricted access"
-      )
+      or strings.icontains(body.current_thread.text, "temporarily restricted access")
       or regex.icontains(body.current_thread.text,
                          'acc(?:ou)?n?t\s*(?:\w+\s+){0,3}\s*(?:authenticat(?:e|ion)|activity|\bho[li]d\b|terminat|[il1]{2}m[il1]t(?:s|ed|ation)|b?locked|de-?activat|suspen(?:ed|sion)|restrict(?:ed|ion)?|expir(?:ed?|ing)|v[il]o[li]at|verif(?:y|ication))',
                          '(?:authenticat(?:e|ion)|activity|\bho[li]d\b|terminat|[il1]{2}m[il1]t(?:s|ed|ation)|b?locked|de-?activat|suspen(?:ed|sion)|restrict(?:ed|ion)?|expir(?:ed?|ing)|v[il]o[li]at|verif(?:y|ication))\s*(?:\w+\s+){0,3}\s*acc(?:ou)?n?t\b'
