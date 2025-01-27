@@ -8,10 +8,15 @@ SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
 REPO_OWNER = 'sublime-security'
 REPO_NAME = 'sublime-rules'
 OUTPUT_FOLDER = 'detection-rules'
-# flag to controll adding the author name into the tag, allows for triage rules to be built on a per author basis
+# flag to control adding the author name into the tag, allows for triage rules to be built on a per author basis
 # without having to modify the author value of the rule
 ADD_AUTHOR_TAG = True
 AUTHOR_TAG_PREFIX = "pr_author_"
+
+# flag to control of an additional tag is created which 
+# indicates the file status (modified vs added)
+ADD_RULE_STATUS_TAG = True
+RULE_STATUS_PREFIX = "rule_status_"
 
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
@@ -445,6 +450,9 @@ def handle_open_prs():
                 
                 if CREATE_OPEN_PR_TAG:
                     content = add_tag(content, f"{OPEN_PR_TAG}")
+                
+                if ADD_RULE_STATUS_TAG:
+                    content = add_tag(content, f"{RULE_STATUS_PREFIX}{file['status']}")
                     
                 if INCLUDE_PR_IN_NAME:
                     content = rename_rules(content, pr)
