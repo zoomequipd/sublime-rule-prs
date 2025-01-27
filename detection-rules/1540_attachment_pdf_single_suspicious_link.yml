@@ -121,4 +121,5 @@ detection_methods:
 id: "82430ad8-6f03-5f2a-807e-21aeb24f8c29"
 tags:
   - created_from_open_prs
+  - rule_status_added
   - pr_author_morriscode

@@ -276,6 +276,7 @@ tags:
   - "Attack surface reduction"
   - pr_author_morriscode
   - created_from_open_prs
+  - rule_status_modified
 attack_types:
   - "Credential Phishing"
 detection_methods:

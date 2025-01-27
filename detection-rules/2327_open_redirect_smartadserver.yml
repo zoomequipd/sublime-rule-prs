@@ -33,4 +33,5 @@ detection_methods:
 id: "27e5a585-891d-549d-af34-e2b8dff6d64e"
 tags:
   - created_from_open_prs
+  - rule_status_added
   - pr_author_zoomequipd

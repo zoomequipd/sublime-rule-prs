@@ -132,4 +132,5 @@ detection_methods:
 id: "10a3a446-c70f-5843-a4e4-4d815d33fcb1"
 tags:
   - created_from_open_prs
+  - rule_status_modified
   - pr_author_morriscode
