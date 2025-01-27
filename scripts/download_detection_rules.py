@@ -20,7 +20,7 @@ INCLUDE_ADDED = True
 # flag to enable creating a rule in the feed for updated (not net new) rules
 INCLUDE_UPDATES = True
 # flag to enable the removing rules from the platform when the PR is closed
-DELETE_RULES_FROM_CLOSED_PRS = True
+DELETE_RULES_FROM_CLOSED_PRS = False
 # variable that controls when the rules from a closed PR should be deleted
 # this is in days
 DELETE_RULES_FROM_CLOSED_PRS_DELAY = 3
