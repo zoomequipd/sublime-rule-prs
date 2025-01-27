@@ -16,7 +16,7 @@ AUTHOR_TAG_PREFIX = "pr_author_"
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
 # flag to enable creating a rule in the feed for net new rules
-INCLUDE_ADDED = False
+INCLUDE_ADDED = True
 # flag to enable creating a rule in the feed for updated (not net new) rules
 INCLUDE_UPDATES = True
 # flag to enable the removing rules from the platform when the PR is closed
