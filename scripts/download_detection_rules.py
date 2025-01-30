@@ -66,9 +66,9 @@ def search_sublime_rule_feed(rule_name):
         # the calling function handles None
         return None
     else:
-        print(f"Response Code: {response.status_code}")
+        print(f"\tSearch Feed Response Code: {response.status_code}")
         response = response.json()
-        print(f"Count: {response['count']}")
+        print(f"\tSearch Feed Found Count: {response['count']}")
         return response
 
 
@@ -82,7 +82,7 @@ def sublime_delete_rule(rule_id):
     }
     response = requests.delete(url, headers=headers)
 
-    print(f"Response Code: {response.status_code}")
+    print(f"\tDelete Rule Response Code: {response.status_code}")
 
     return response.ok
 
