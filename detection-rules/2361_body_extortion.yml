@@ -3,6 +3,7 @@ description: |
   Detects extortion and sextortion attempts by analyzing the email body text from an untrusted sender.
 references:
   - "https://krebsonsecurity.com/2018/07/sextortion-scam-uses-recipients-hacked-passwords/"
+  - https://github.com/sublime-security/sublime-rules/pull/2361
 type: "rule"
 severity: "low"
 source: |
@@ -118,5 +119,3 @@ tags:
   - created_from_open_prs
   - rule_status_modified
   - pr_author_morriscode
-reference:
-  - https://github.com/sublime-security/sublime-rules/pull/2361
