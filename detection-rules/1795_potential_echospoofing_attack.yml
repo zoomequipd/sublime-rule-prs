@@ -40,3 +40,5 @@ tags:
   - rule_status_added
   
 id: "8c2d200f-7bb6-5414-972d-66c6fa71fca2"
+reference:
+  - https://github.com/sublime-security/sublime-rules/pull/1795
