@@ -24,3 +24,5 @@ detection_methods:
   - "Topic analysis"
   - "Sender analysis"
 id: "e2b9c989-eab7-588a-8df1-ee2fe0ab2dbe"
+reference:
+  - https://api.github.com/repos/sublime-security/sublime-rules/pulls/2360

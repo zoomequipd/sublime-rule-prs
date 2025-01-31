@@ -49,3 +49,5 @@ tags:
   - created_from_open_prs
   - rule_status_added
   - pr_author_aidenmitchell
+reference:
+  - https://api.github.com/repos/sublime-security/sublime-rules/pulls/2292
