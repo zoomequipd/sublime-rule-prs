@@ -19,7 +19,7 @@ ADD_RULE_STATUS_TAG = True
 RULE_STATUS_PREFIX = "rule_status_"
 
 # flag to control if a reference is added which links to the PR in the repo
-ADD_PR_REFERENCE = TRUE
+ADD_PR_REFERENCE = True
 
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
