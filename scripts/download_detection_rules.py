@@ -18,6 +18,9 @@ AUTHOR_TAG_PREFIX = "pr_author_"
 ADD_RULE_STATUS_TAG = True
 RULE_STATUS_PREFIX = "rule_status_"
 
+# flag to control if a reference is added which links to the PR in the repo
+ADD_PR_REFERENCE = TRUE
+
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
 # flag to enable creating a rule in the feed for net new rules
@@ -229,55 +232,65 @@ def rename_rules(content, pr):
     content = content.replace(current_name, new_name)
     return content
 
-def add_tag(yaml_string, tag):
-    if "tags:" in yaml_string:
-        # find the tags block
-        start_tags = yaml_string.find("tags:")
+def add_reference(yaml_string, reference)
 
-        #  the end of the 'tags' block by locating the next section or end of the string
-        end_tags = start_tags
+def add_block(yaml_string, block_name, value):
+    # throw an error if the block name isn't known
+    if block_name not in ['tags', 'reference', 'tags:', 'reference:']
+        raise ValueError(f'Block Name: {block_name} is unsupported')
+    # if it doesn't have the : needed, add it.
+    
+    if not block_name.ends_with(':'):    
+        block_name == f"{block_name}:"
+    
+    if block_name in yaml_string:
+        # find the tags block
+        start_block = yaml_string.find(block_name)
+
+        #  the end of the block by locating the next section or end of the string
+        end_block = start_block
         
         while True:
-            next_line_start = yaml_string.find("\n", end_tags + 1)
+            next_line_start = yaml_string.find("\n", end_block + 1)
             ## if there isn't a new line found, we've hit the end of the file
             ## or if the next line doesn't start with a space (which indicates it's still within the tag section)
             if next_line_start == -1 or not yaml_string[next_line_start + 1].isspace():
                 if next_line_start != -1:
-                    end_tags = next_line_start 
+                    end_block = next_line_start 
                 else:
                     len(yaml_string)
                 break
-            end_tags = next_line_start
+            end_block = next_line_start
 
-        # get the original tags block
-        tags_block = yaml_string[start_tags:end_tags].strip()
+        # get the original block
+        block = yaml_string[start_tags:end_tags].strip()
 
-        existing_tags = []
+        existing_block_entries = []
         # Split the tags into a list
-        for line in tags_block.splitlines():
+        for line in block.splitlines():
             # within the tags_block is the tag section header, skip that one
-            if line.strip() == "tags:":
+            if line.strip() == block_name:
                 continue
             line = line.strip()
             line = line.lstrip('-')
             # strip leading spaces after the - too
             line = line.strip()
             
-            existing_tags.append(line)
+            existing_block_entries.append(line)
         # add the author tag to the existing tags array
-        existing_tags.append(f"{tag}")
+        existing_block_entries.append(f"{value}")
 
 
-        new_tags_string = "tags:"
-        for tag in existing_tags:
-            new_tags_string += f"\n  - {tag}"
+        new_block_string = block_name
+        for entry in existing_block_entries:
+            new_entry_string += f"\n  - {entry}"
         # replace the old with the new
-        modified_yaml_string = yaml_string.replace(tags_block, new_tags_string)
+        modified_yaml_string = yaml_string.replace(block, new_block_string)
     else:
         # just add it at the end
-        new_tags_block = f"tags:\n  - {tag}"
+        new_block_string = f"{block_name}\n  - {value}"
         # add additional tag to help filter down to the right rule id later
-        modified_yaml_string = yaml_string.strip() + "\n" + new_tags_block
+        modified_yaml_string = yaml_string.strip() + "\n" + new_block_string
 
     return modified_yaml_string
 
@@ -446,13 +459,13 @@ def handle_open_prs():
                 # check the flags to modify the file
                 if ADD_AUTHOR_TAG:
                     # inject the tags for test rules into the contents
-                    content = add_tag(content, f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
+                    content = add_block(content, 'tags', f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
                 
                 if CREATE_OPEN_PR_TAG:
-                    content = add_tag(content, f"{OPEN_PR_TAG}")
+                    content = add_block(content, 'tags', f"{OPEN_PR_TAG}")
                 
                 if ADD_RULE_STATUS_TAG:
-                    content = add_tag(content, f"{RULE_STATUS_PREFIX}{file['status']}")
+                    content = add_block(content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
                     
                 if INCLUDE_PR_IN_NAME:
                     content = rename_rules(content, pr)
