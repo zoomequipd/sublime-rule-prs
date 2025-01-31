@@ -112,4 +112,4 @@ detection_methods:
   - "Sender analysis"
 id: "69715b62-7747-5f85-a399-dc72c3f8cb7d"
 reference:
-  - https://api.github.com/repos/sublime-security/sublime-rules/pulls/2359
+  - https://github.com/sublime-security/sublime-rules/pull/2359

@@ -52,4 +52,4 @@ detection_methods:
   - "URL screenshot"
 id: "9c1f582a-1b04-5e45-a2f2-e59bc40888f5"
 reference:
-  - https://api.github.com/repos/sublime-security/sublime-rules/pulls/2098
+  - https://github.com/sublime-security/sublime-rules/pull/2098
