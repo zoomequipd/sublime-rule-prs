@@ -281,7 +281,7 @@ def add_block(yaml_string, block_name, value):
 
         new_block_string = block_name
         for entry in existing_block_entries:
-            new_entry_string += f"\n  - {entry}"
+            new_block_string += f"\n  - {entry}"
         # replace the old with the new
         modified_yaml_string = yaml_string.replace(block, new_block_string)
     else:
