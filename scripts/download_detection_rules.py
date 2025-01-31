@@ -232,8 +232,6 @@ def rename_rules(content, pr):
     content = content.replace(current_name, new_name)
     return content
 
-def add_reference(yaml_string, reference)
-
 def add_block(yaml_string, block_name, value):
     # throw an error if the block name isn't known
     if block_name not in ['tags', 'reference', 'tags:', 'reference:']
