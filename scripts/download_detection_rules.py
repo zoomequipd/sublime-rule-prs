@@ -238,7 +238,7 @@ def add_block(yaml_string, block_name, value):
         raise ValueError(f'Block Name: {block_name} is unsupported')
     # if it doesn't have the : needed, add it.
     
-    if not block_name.ends_with(':'):    
+    if not block_name.endswith(':'):    
         block_name == f"{block_name}:"
     
     if block_name in yaml_string:
