@@ -42,7 +42,7 @@ detection_methods:
   - "Sender analysis"
   - "Header analysis"
 id: "e456974c-a62d-590a-b0d7-f659c9f60c8c"
-tags
+tags:
   - created_from_open_prs
   - rule_status_added
   - pr_author_aidenmitchell

@@ -33,7 +33,7 @@ detection_methods:
   - "Content analysis"
   - "Sender analysis"
 id: "2a40b043-52dc-59ca-8519-3793e8817d07"
-tags
+tags:
   - created_from_open_prs
   - rule_status_added
   - pr_author_morriscode

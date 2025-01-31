@@ -34,8 +34,7 @@ source: |
           and ml.link_analysis(.).credphish.disposition == "phishing"
   )
 
-tags
-  - tags:
+tags:
   - "Attack surface reduction"
   - pr_author_aidenmitchell
   - created_from_open_prs

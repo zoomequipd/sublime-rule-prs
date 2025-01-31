@@ -67,24 +67,20 @@ source: |
         )
       ),
       // payment tag high confidence 
-      any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).tags
-  - tags,
-  - .name == "payment" and .confidence == "high"
-  - ),
-  - // invoicing language
-  - any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).tags,
-  - .name == "invoice"
-  - ),
-  - 
-  - // urgency request
-  - any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).entities,
-  - .name == "urgency"
-  - )
-  - )
-  - )
-  - pr_author_morriscode
-  - created_from_open_prs
-  - rule_status_modified
+      any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).tags,
+          .name == "payment" and .confidence == "high"
+      ),
+      // invoicing language
+      any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).tags,
+          .name == "invoice"
+      ),
+  
+      // urgency request
+      any(ml.nlu_classifier(coalesce(body.plain.raw, body.current_thread.text)).entities,
+          .name == "urgency"
+      )
+    )
+  )
 attack_types:
   - "BEC/Fraud"
 tactics_and_techniques:
@@ -100,3 +96,7 @@ detection_methods:
   - "URL analysis"
   - "Whois"
 id: "63d8b1ce-7409-58d9-aa78-fffba12bba29"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_morriscode

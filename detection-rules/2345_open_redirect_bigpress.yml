@@ -31,7 +31,7 @@ detection_methods:
   - "Sender analysis"
   - "URL analysis"
 id: "7a994083-13a0-51db-a9b3-b08c6f5897dc"
-tags
+tags:
   - created_from_open_prs
   - rule_status_added
   - pr_author_zoomequipd
