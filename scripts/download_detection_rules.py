@@ -466,7 +466,7 @@ def handle_open_prs():
                     content = add_block(content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
                     
                 if ADD_PR_REFERENCE:
-                    content = add_block(content, 'reference', pr['url'])
+                    content = add_block(content, 'reference', pr['html_url'])
                     
                 if INCLUDE_PR_IN_NAME:
                     content = rename_rules(content, pr)
