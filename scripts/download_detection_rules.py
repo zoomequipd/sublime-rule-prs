@@ -263,7 +263,7 @@ def add_block(yaml_string, block_name, value):
             end_block = next_line_start
 
         # get the original block
-        block = yaml_string[start_tags:end_tags].strip()
+        block = yaml_string[start_block:end_block].strip()
 
         existing_block_entries = []
         # Split the tags into a list
