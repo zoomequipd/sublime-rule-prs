@@ -19,7 +19,7 @@ ADD_RULE_STATUS_TAG = True
 RULE_STATUS_PREFIX = "rule_status_"
 
 # flag to control if a reference is added which links to the PR in the repo
-ADD_PR_REFERENCE = TRUE
+ADD_PR_REFERENCE = True
 
 # flag to modify the name of each rule to include the PR#
 INCLUDE_PR_IN_NAME = True
@@ -232,17 +232,15 @@ def rename_rules(content, pr):
     content = content.replace(current_name, new_name)
     return content
 
-def add_reference(yaml_string, reference)
-
 def add_block(yaml_string, block_name, value):
     # throw an error if the block name isn't known
-    if block_name not in ['tags', 'reference', 'tags:', 'reference:']
+    if block_name not in ['tags', 'reference', 'tags:', 'reference:']:
         raise ValueError(f'Block Name: {block_name} is unsupported')
     # if it doesn't have the : needed, add it.
-    
-    if not block_name.ends_with(':'):    
-        block_name == f"{block_name}:"
-    
+
+    if not block_name.endswith(':'):
+        block_name = f"{block_name}:"
+        
     if block_name in yaml_string:
         # find the tags block
         start_block = yaml_string.find(block_name)
@@ -263,7 +261,7 @@ def add_block(yaml_string, block_name, value):
             end_block = next_line_start
 
         # get the original block
-        block = yaml_string[start_tags:end_tags].strip()
+        block = yaml_string[start_block:end_block].strip()
 
         existing_block_entries = []
         # Split the tags into a list
@@ -283,7 +281,7 @@ def add_block(yaml_string, block_name, value):
 
         new_block_string = block_name
         for entry in existing_block_entries:
-            new_entry_string += f"\n  - {entry}"
+            new_block_string += f"\n  - {entry}"
         # replace the old with the new
         modified_yaml_string = yaml_string.replace(block, new_block_string)
     else:
@@ -467,8 +465,13 @@ def handle_open_prs():
                 if ADD_RULE_STATUS_TAG:
                     content = add_block(content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
                     
+                if ADD_PR_REFERENCE:
+                    content = add_block(content, 'reference', pr['html_url'])
+                    
                 if INCLUDE_PR_IN_NAME:
                     content = rename_rules(content, pr)
+
+                
                 
                 # finally save it
                 # include the pr number in the filename to avoid duplicates
