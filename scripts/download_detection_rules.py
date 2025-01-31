@@ -234,7 +234,7 @@ def rename_rules(content, pr):
 
 def add_block(yaml_string, block_name, value):
     # throw an error if the block name isn't known
-    if block_name not in ['tags', 'reference', 'tags:', 'reference:']
+    if block_name not in ['tags', 'reference', 'tags:', 'reference:']:
         raise ValueError(f'Block Name: {block_name} is unsupported')
     # if it doesn't have the : needed, add it.
     
