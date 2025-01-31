@@ -100,7 +100,8 @@ source: |
   
   and not profile.by_sender().solicited
   and not profile.by_sender().any_false_positives
-tags:
+tags
+  - tags:
   - "Attack surface reduction"
   - pr_author_aidenmitchell
   - created_from_open_prs

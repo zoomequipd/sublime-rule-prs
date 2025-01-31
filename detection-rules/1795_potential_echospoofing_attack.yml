@@ -33,7 +33,8 @@ source: |
       and strings.icontains(.received.server.raw, ".pphosted.com")
   )
   
-tags:
+tags
+  - tags:
   - "Brand impersonation"
   - pr_author_joakim-intezer
   - created_from_open_prs
