@@ -234,7 +234,7 @@ def rename_rules(content, pr):
 
 def add_block(yaml_string, block_name, value):
     # throw an error if the block name isn't known
-    if block_name not in ['tags', 'reference', 'tags:', 'reference:']:
+    if block_name not in ['tags', 'references', 'tags:', 'references:']:
         raise ValueError(f'Block Name: {block_name} is unsupported')
     # if it doesn't have the : needed, add it.
 
@@ -466,7 +466,7 @@ def handle_open_prs():
                     content = add_block(content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
                     
                 if ADD_PR_REFERENCE:
-                    content = add_block(content, 'reference', pr['html_url'])
+                    content = add_block(content, 'references', pr['html_url'])
                     
                 if INCLUDE_PR_IN_NAME:
                     content = rename_rules(content, pr)
