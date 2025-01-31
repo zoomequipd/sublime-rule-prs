@@ -237,10 +237,10 @@ def add_block(yaml_string, block_name, value):
     if block_name not in ['tags', 'reference', 'tags:', 'reference:']:
         raise ValueError(f'Block Name: {block_name} is unsupported')
     # if it doesn't have the : needed, add it.
-    
-    if not block_name.endswith(':'):    
-        block_name == f"{block_name}:"
-    
+
+    if not block_name.endswith(':'):
+        block_name = f"{block_name}:"
+        
     if block_name in yaml_string:
         # find the tags block
         start_block = yaml_string.find(block_name)
