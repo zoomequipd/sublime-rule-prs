@@ -64,7 +64,7 @@ def search_sublime_rule_feed(rule_name):
         print(f"HTTP error occurred: {err}")
         # the calling function handles None
         return None
-    except request.exceptions.ConnectionError as err:
+    except requests.exceptions.ConnectionError as err:
         print(f"Connection error occurred: {err}")
         # the calling function handles None
         return None
