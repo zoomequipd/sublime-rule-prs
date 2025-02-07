@@ -1,0 +1,31 @@
+name: "PR# 2394 - Suspicious subject with long procedurally generated text blob"
+description: "This rule identifies subjects containing long strings of nonsensical or procedurally generated characters, which are often used in phishing or spam campaigns for campaign tracking and identification, as well as to bypass detection filters."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  // "#" symbol, and then letters, numbers or more symbols (-#)
+  and regex.imatch(subject.subject, ".*#[a-z0-9-#]+$")
+  // not JUST numbers
+  and not regex.imatch(subject.subject, ".*#[0-9-]+$")
+  // to be safe, negate common benign keywords
+  and not regex.icontains(subject.subject, "order (confirmation|number)|inv")  
+  // standard negations
+  and not profile.by_sender_email().any_false_positives
+  and not profile.by_sender_email().solicited
+tags:
+  - "Attack surface reduction"
+  - pr_author_aidenmitchell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+  - "Spam"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "Content analysis"
+  - "Sender analysis"
+id: "e819593d-b60d-5b57-8bf5-837be4111c3f"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2394
