@@ -62,7 +62,7 @@ source: |
   // Request and Urgency
   and (
     (
-      (length(body.current_thread.text) > 100)
+      length(body.current_thread.text) > 100
       and any(ml.nlu_classifier(body.current_thread.text).entities,
               .name == "request"
       )
@@ -113,8 +113,8 @@ source: |
               "Newsletters and Digests",
               "Advertising and Promotions",
               "Educational and Research",
-              //"Events and Webinars"
             )
+            and .confidence == "high"
   )
   and (
     profile.by_sender().prevalence in ("new", "outlier")
