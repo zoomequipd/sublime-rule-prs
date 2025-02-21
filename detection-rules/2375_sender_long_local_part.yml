@@ -1,4 +1,4 @@
-name: "PR# 2375 - Unusaually Long Local Part From Untrusted Sender Address"
+name: "PR# 2375 - Unusually Long Local Part From Untrusted Sender Address"
 description: "Detects messages with unusually long local address parts (before the @) from senders outside trusted domains and without verified authentication."
 type: "rule"
 severity: "low"
