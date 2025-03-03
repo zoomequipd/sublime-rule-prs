@@ -1,4 +1,4 @@
-name: "PR# 2452 - Link to auto-download of a suspicious file type (unsolicited)"
+name: "PR# 2453 - Link to auto-download of a suspicious file type (unsolicited)"
 description: |
   A link in the body of the email downloads a suspicious file type (or embedded file) such as an LNK, JS, or VBA.
 
@@ -12,7 +12,7 @@ references:
   - "https://www.microsoft.com/en-us/security/blog/2021/11/11/html-smuggling-surges-highly-evasive-loader-technique-increasingly-used-in-banking-malware-targeted-attacks/"
   - "https://twitter.com/MsftSecIntel/status/1418706920152522753"
   - "https://sandbox.sublimesecurity.com?id=e586c888-4426-41dd-a1be-5a13852075ef"
-  - https://github.com/sublime-security/sublime-rules/pull/2452
+  - https://github.com/sublime-security/sublime-rules/pull/2453
 severity: "medium"
 source: |
   type.inbound

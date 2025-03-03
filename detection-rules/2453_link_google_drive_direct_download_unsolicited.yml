@@ -1,4 +1,4 @@
-name: "PR# 2452 - Google Drive direct download link from unsolicited sender"
+name: "PR# 2453 - Google Drive direct download link from unsolicited sender"
 description: |
   This rule detects Google Drive links that use the direct download URL pattern which automatically downloads files when clicked. This pattern is frequently used by threat actors to distribute malware.
   
@@ -55,4 +55,4 @@ detection_methods:
   - "Content analysis"
 id: "78a19343-cfe7-5fd5-9816-dcb4293b705d"
 references:
-  - https://github.com/sublime-security/sublime-rules/pull/2452
+  - https://github.com/sublime-security/sublime-rules/pull/2453
