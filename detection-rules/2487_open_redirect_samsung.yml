@@ -1,4 +1,4 @@
-name: "PR# 2487 - Open redirect: Samsung"
+name: "PR# 2487 - Open Redirect: Samsung"
 description: |
   Message contains use of the Samsung open redirect, but the sender is not Samsung.
 references:
