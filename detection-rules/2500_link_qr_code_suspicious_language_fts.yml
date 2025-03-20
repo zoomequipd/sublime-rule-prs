@@ -84,7 +84,7 @@ detection_methods:
   - "QR code analysis"
   - "Sender analysis"
   - "URL analysis"
-id: "25a84d1c-9578-53e3-98a7-ca9b43abb28b"
+id: "4e54b9fb-63aa-5a49-8623-b9f31a9b3f9a"
 tags:
   - created_from_open_prs
   - rule_status_modified

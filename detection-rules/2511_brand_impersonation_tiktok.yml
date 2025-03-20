@@ -72,7 +72,7 @@ detection_methods:
   - "Natural Language Understanding"
   - "Optical Character Recognition"
   - "Sender analysis"
-id: "aaacc8b7-fbbd-596d-9268-d90b92bdfcd7"
+id: "c4d6823d-2d67-5471-b414-8cd8f8ca91c6"
 tags:
   - created_from_open_prs
   - rule_status_added

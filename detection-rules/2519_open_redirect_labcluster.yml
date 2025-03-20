@@ -31,7 +31,7 @@ tactics_and_techniques:
 detection_methods:
   - "Sender analysis"
   - "URL analysis"
-id: "d4a65b59-03ec-5179-80ab-371efa821842"
+id: "98901c25-bd60-5c41-ba37-8d8b003fe238"
 tags:
   - created_from_open_prs
   - rule_status_added

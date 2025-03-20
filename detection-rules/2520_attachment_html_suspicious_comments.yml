@@ -55,6 +55,6 @@ detection_methods:
   - "File analysis"
   - "HTML analysis"
   - "Content analysis"
-id: "93061d17-730a-5b33-955d-8f8f6cc5cca9"
+id: "e8f283e9-a23f-5c6d-acdf-1d5b432e0a23"
 references:
   - https://github.com/sublime-security/sublime-rules/pull/2520

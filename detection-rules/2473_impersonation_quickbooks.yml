@@ -145,7 +145,7 @@ detection_methods:
   - "Content analysis"
   - "Header analysis"
   - "Sender analysis"
-id: "4fd791d1-a053-5c2d-80dd-c6dcdc112a62"
+id: "b605c8f2-c142-5ae2-b3d7-157ce8e3df26"
 tags:
   - created_from_open_prs
   - rule_status_modified
