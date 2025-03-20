@@ -3,6 +3,7 @@ import os
 import uuid
 from datetime import datetime, timedelta, timezone
 import re
+from urllib.parse import quote
 
 import requests
 
@@ -106,7 +107,7 @@ def add_id_to_yaml(content, filename):
 def search_sublime_rule_feed(rule_name):
     # strip quotes for searching
     rule_name = rule_name.strip("\"\'")
-    rule_name = requests.utils.requote_uri(rule_name)
+    rule_name = quote(rule_name)
     # print(f"Searching Sublime for rules with name: {rule_name}")
     url = f"https://platform.sublime.security/v0/rules?limit=50&offset=0&search={rule_name}"
 
