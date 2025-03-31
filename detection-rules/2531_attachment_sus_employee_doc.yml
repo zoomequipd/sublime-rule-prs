@@ -1,5 +1,5 @@
 name: "PR# 2531 - Attachment: Suspicious Employee Policy Update Document Lure"
-description: "Inbound message containing subject line and attachments related to handbook, compensation, or policy updates. Attachments are limited to common document formats (PDF, DOC, DOCX) and match similar update-related terminology.  This pattern has been observed used to delivery credential phishing via QR codes."
+description: "Inbound message containing subject line and attachments related to handbook, compensation, or policy updates. Attachments are limited to Microsoft Word documents and match similar update-related terminology.  This pattern has been observed used to delivery credential phishing via QR codes."
 type: "rule"
 severity: "medium"
 source: |
@@ -36,7 +36,7 @@ source: |
   )
   and 0 < length(attachments) <= 3
   and any(attachments,
-          .file_extension in ("doc", "docx")
+          .file_extension in ("doc", "docx", "docm")
           and (
             strings.icontains(.file_name, 'salary')
             or regex.icontains(.file_name, '\bpay(?:roll|\b)')
