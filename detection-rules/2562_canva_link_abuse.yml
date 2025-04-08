@@ -1,0 +1,50 @@
+name: "PR# 2562 - Canva Link Abuse"
+description: "Detects when a sender outside of Canva shares a single Canva link, where the sender has low historical sending volume."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          strings.icontains(.href_url.domain.root_domain, 'canva.com')
+          or strings.icontains(.href_url.query_params, 'canva.com')
+  )
+  
+  // there is one unique Canva link in the message
+  and length(distinct(filter(body.links,
+                             strings.icontains(.href_url.domain.root_domain,
+                                               'canva.com'
+                             )
+                             or strings.icontains(.href_url.query_params,
+                                                  'canva.com'
+                             )
+                      ),
+                      .href_url.url
+             )
+  ) <= 1
+  
+  and not (
+    sender.email.domain.root_domain == "canva.com"
+    and headers.auth_summary.dmarc.pass
+  )
+  and profile.by_sender_email().prevalence != "common"
+tags:
+  - "Attack surface reduction"
+  - pr_author_aidenmitchell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "BEC/Fraud"
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Free file host"
+  - "Impersonation: Brand"
+  - "Social engineering"
+  - "Evasion"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
+id: "0eff7129-d96e-5752-9679-2c3be57e035d"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2562
