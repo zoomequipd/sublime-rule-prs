@@ -91,7 +91,7 @@ def add_id_to_yaml(content, filename):
         # This pattern matches 'id:' followed by any characters until end of line
         pattern = r'^\s*id:\s*[^\n]*'
         # Replace with the new ID
-        modified_content = re.sub(pattern, f'id: \"{new_uuid}\"', content)
+        modified_content = re.sub(pattern, f'id: \"{new_uuid}\"', content, flags=re.MULTILINE)
         return modified_content
     else:
         # If it doesn't exist, add it to the very end of the YAML file
