@@ -85,7 +85,7 @@ source: |
                   and any(regex.extract(.content_id, '^\<(.*)\>$'),
                           any(.groups,
                               strings.icontains(body.html.raw,
-                                                strings.concat('src="cid: "b9f0292b-7215-511b-b6f8-893db56725d2"
+                                                strings.concat('src="cid:',
                                                                .,
                                                                '"'
                                                 )
@@ -142,7 +142,7 @@ detection_methods:
   - "Optical Character Recognition"
   - "Sender analysis"
   - "URL analysis"
-id: "b9f0292b-7215-511b-b6f8-893db56725d2"
+id: "2a96b90a-64bf-52ad-b4e4-6f1e8c1dcba6"
 tags:
   - created_from_open_prs
   - rule_status_modified

@@ -49,7 +49,7 @@ source: |
                             "*sad announcement*",
                             "*new pics*"
           )
-          and not strings.icontains(body.plain.raw, "[cid: "a4c177b2-f869-5929-b077-46257c91f06a"
+          and not strings.icontains(body.plain.raw, "[cid:image")
         )
         or (
           length(body.current_thread.text) < 500
@@ -92,7 +92,7 @@ source: |
                           "*sad announcement*",
                           "*pics*"
         )
-        and not strings.istarts_with(body.plain.raw, "[cid: "a4c177b2-f869-5929-b077-46257c91f06a"
+        and not strings.istarts_with(body.plain.raw, "[cid:image")
         and strings.icontains(subject.subject, sender.display_name)
       )
     )
@@ -146,7 +146,7 @@ detection_methods:
   - "Sender analysis"
   - "URL analysis"
   - "Whois"
-id: "a4c177b2-f869-5929-b077-46257c91f06a"
+id: "eb086f7d-3ad7-52cd-8e16-3ce08726b9ea"
 tags:
   - created_from_open_prs
   - rule_status_modified

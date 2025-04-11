@@ -67,6 +67,6 @@ detection_methods:
   - "HTML analysis"
   - "Sender analysis"
   - "Header analysis"
-id: "d672f437-114f-562d-95ce-447db410e7a0"
+id: "68ca0753-207f-56a0-9dba-3bbbad002bbf"
 references:
   - https://github.com/sublime-security/sublime-rules/pull/2548
