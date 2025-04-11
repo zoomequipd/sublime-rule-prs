@@ -85,6 +85,6 @@ detection_methods:
   - "File analysis"
   - "Natural Language Understanding"
   - "Optical Character Recognition"
-id: "96b8b285-2116-5e45-b0ca-57b81dc87b94"
+id: "56e7052b-b43d-5394-9e3c-8ed4f862901c"
 references:
   - https://github.com/sublime-security/sublime-rules/pull/2566

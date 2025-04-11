@@ -142,7 +142,7 @@ detection_methods:
   - "Optical Character Recognition"
   - "Sender analysis"
   - "URL analysis"
-id: "2a96b90a-64bf-52ad-b4e4-6f1e8c1dcba6"
+id: "b9f0292b-7215-511b-b6f8-893db56725d2"
 tags:
   - created_from_open_prs
   - rule_status_modified

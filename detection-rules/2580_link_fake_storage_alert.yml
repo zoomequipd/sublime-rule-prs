@@ -142,8 +142,7 @@ tactics_and_techniques:
 detection_methods:
   - "Content analysis"
   - "Sender analysis"
-
-id: "750f04d6-f68a-564c-9e41-c1e5a58df28f"
+id: "83939392-089f-54a0-adfd-581b70ae3275"
 tags:
   - created_from_open_prs
   - rule_status_modified

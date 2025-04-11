@@ -53,7 +53,7 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
   - "URL analysis"
-id: "f3d46cfc-0ac3-5c09-ba89-3aafe150ad12"
+id: "1be532c2-1e67-5abe-b9cf-e33e03f314ea"
 tags:
   - created_from_open_prs
   - rule_status_added

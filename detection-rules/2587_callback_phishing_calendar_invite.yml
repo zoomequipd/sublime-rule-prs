@@ -40,7 +40,7 @@ detection_methods:
   - "Header analysis"
   - "Natural Language Understanding"
   - "Sender analysis"
-id: "95c84360-d5a5-5396-b9ce-c61016cb178f"
+id: "3e0222c0-36a7-5061-b2c4-c238efec5fc1"
 tags:
   - created_from_open_prs
   - rule_status_added

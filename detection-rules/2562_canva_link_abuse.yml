@@ -45,6 +45,6 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
   - "URL analysis"
-id: "f871f6c5-c8dc-5c69-a283-ad2bee53262c"
+id: "0eff7129-d96e-5752-9679-2c3be57e035d"
 references:
   - https://github.com/sublime-security/sublime-rules/pull/2562
