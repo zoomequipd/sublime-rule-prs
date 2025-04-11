@@ -121,7 +121,10 @@ source: |
       'avaya.com',
       'egoldfax.com',
       'efax.com',
-      'hellofax.com'
+      'hellofax.com',
+      'mfax.io',
+      'goto.com',
+      'faxmessage.net'
     )
     and headers.auth_summary.dmarc.pass
   )
