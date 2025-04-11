@@ -89,7 +89,7 @@ def add_id_to_yaml(content, filename):
     if 'id:' in content:
         # Use regex to replace the existing ID value
         # This pattern matches 'id:' followed by any characters until end of line
-        pattern = r'id:\s*[^\n]*'
+        pattern = r'^\s*id:\s*[^\n]*'
         # Replace with the new ID
         modified_content = re.sub(pattern, f'id: \"{new_uuid}\"', content)
         return modified_content
