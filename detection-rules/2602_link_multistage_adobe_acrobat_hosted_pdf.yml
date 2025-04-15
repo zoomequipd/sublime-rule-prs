@@ -1,5 +1,5 @@
-name: "PR# 2602 - Adobe Acrobat Links with Brand Lures"
-description: "Detects single-page Adobe Acrobat links containing file sharing brand logos and suspicious OCR text patterns from non-Adobe senders."
+name: "PR# 2602 - Link: Multistage Landing - Abuse Adobe Acrobat hosted PDF"
+description: "Detects an inbound message containing an Adobe Acrobat link that leads to a single page PDF document with suspicious indicators, including minimal text, brand logos, and document viewer language. The sender is not from Adobe.com and the message is not a reply."
 type: "rule"
 severity: "medium"
 source: |
@@ -68,7 +68,7 @@ detection_methods:
   - "URL analysis"
   - "Header analysis"
   - "Sender analysis"
-id: "8467eadc-2677-5273-a892-975119da1723"
+id: "bd29e213-5866-51e3-82ef-3a0c78c48e65"
 tags:
   - created_from_open_prs
   - rule_status_added
