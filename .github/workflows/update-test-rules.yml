@@ -46,6 +46,13 @@ jobs:
         COMMENT_TRIGGER: '/update-test-rules'
         SKIP_FILES_WITH_TEXT: 'true'
         SKIP_TEXT: 'ml.link_analysis'
+        # Disable adding tags that aren't useful
+        ADD_RULE_STATUS_TAG: 'false'
+        ADD_PR_REFERENCE: 'false'
+        INCLUDE_PR_IN_NAME: 'false'
+        ADD_AUTHOR_TAG: 'false'
+        CREATE_OPEN_PR_TAG: 'false'
+
       run: python scripts/download_detection_rules.py
 
     - name: Commit changes
