@@ -62,6 +62,9 @@ tactics_and_techniques:
 detection_methods:
   - "Sender analysis"
 id: "0cdc0e74-4bfe-5066-907c-6ee990ec4634"
+og_id: "76f54e5f-c937-5693-b8e7-3ced7dac61f9"
+testing_pr: 2168
+testing_sha: da41dd0b575efb8a96b139dbfe2408322d2fa35e
 tags:
   - created_from_open_prs
   - rule_status_added

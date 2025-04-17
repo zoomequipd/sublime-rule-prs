@@ -91,6 +91,9 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
 id: "99e262ed-5110-5360-8922-bb36c2510eb0"
+og_id: "13fc967d-4cc6-501d-9637-8c0761a1a354"
+testing_pr: 2615
+testing_sha: bbc0d12eef558f2dcd77822f62a92d98bddde643
 tags:
   - created_from_open_prs
   - rule_status_modified

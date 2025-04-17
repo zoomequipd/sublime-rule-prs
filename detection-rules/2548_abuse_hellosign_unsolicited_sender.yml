@@ -84,5 +84,8 @@ detection_methods:
   - "Sender analysis"
   - "Header analysis"
 id: "d672f437-114f-562d-95ce-447db410e7a0"
+og_id: "68ca0753-207f-56a0-9dba-3bbbad002bbf"
+testing_pr: 2548
+testing_sha: 1bb668c47ac44047014da5207ab5404cbfcb4763
 references:
   - https://github.com/sublime-security/sublime-rules/pull/2548

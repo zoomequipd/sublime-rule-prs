@@ -117,6 +117,9 @@ detection_methods:
   - "Sender analysis"
   - "URL analysis"
 id: "b50a0b08-47e8-52bc-9246-b716227b7015"
+og_id: "7eb4516d-f358-5c22-b527-34db0a532df9"
+testing_pr: 2610
+testing_sha: 41cadc6f7c79abe697be4e21832953f6e26f73ea
 tags:
   - created_from_open_prs
   - rule_status_modified

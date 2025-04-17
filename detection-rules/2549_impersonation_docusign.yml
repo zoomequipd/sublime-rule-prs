@@ -224,6 +224,9 @@ detection_methods:
   - "Sender analysis"
   - "URL analysis"
 id: "7d67690c-0d5c-5903-ab0b-65977eb5ca5c"
+og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
+testing_pr: 2549
+testing_sha: 4310c9bbcfd5dff194f38b96525014c64575d0b6
 tags:
   - created_from_open_prs
   - rule_status_modified

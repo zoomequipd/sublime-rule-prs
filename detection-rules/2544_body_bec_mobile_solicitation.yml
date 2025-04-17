@@ -64,6 +64,9 @@ detection_methods:
   - "Natural Language Understanding"
   - "Sender analysis"
 id: "091a69ca-b20c-5e26-aad7-a69a7f60e2c1"
+og_id: "514ffd68-a663-5b83-8a25-e380f0a7f1a7"
+testing_pr: 2544
+testing_sha: 501c41b75252ff9b110896e6831f2de11d4a2856
 tags:
   - created_from_open_prs
   - rule_status_modified

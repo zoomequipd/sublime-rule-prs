@@ -37,6 +37,9 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
 id: "435244d1-d3f8-50ad-9546-528dfce056e4"
+og_id: "d00893ba-a65a-5b04-88d1-f35512eae291"
+testing_pr: 2611
+testing_sha: 2fa580888b6198cfe91d9c6feb45868cebf2733a
 tags:
   - created_from_open_prs
   - rule_status_added

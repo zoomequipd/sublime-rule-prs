@@ -97,6 +97,9 @@ detection_methods:
   - "Sender analysis"
   - "XML analysis"
 id: "1fbd42bb-0a1a-5540-94fe-d9add9a5f5a0"
+og_id: "f70293bc-b6da-5dbd-8756-e3ca282aba35"
+testing_pr: 2621
+testing_sha: cf8aedb4be0159a8edbc3f7cd6a6cae68581ea8d
 tags:
   - created_from_open_prs
   - rule_status_modified

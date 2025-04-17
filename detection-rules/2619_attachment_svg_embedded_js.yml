@@ -61,6 +61,9 @@ detection_methods:
   - "Sender analysis"
   - "XML analysis"
 id: "04e2ad0a-e9da-58bc-aa97-cba3fe0d1cff"
+og_id: "f70293bc-b6da-5dbd-8756-e3ca282aba35"
+testing_pr: 2619
+testing_sha: c7ecca8d926634ae730f525f72ee76e77bc6a8c6
 tags:
   - created_from_open_prs
   - rule_status_modified

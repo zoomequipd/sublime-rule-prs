@@ -87,6 +87,9 @@ detection_methods:
   - "Natural Language Understanding"
   - "Sender analysis"
 id: "fe54ea3f-d22d-57d5-9025-c488d3b0f994"
+og_id: "466c1680-b9ff-5bd0-baf8-e65cca99d18b"
+testing_pr: 2607
+testing_sha: 6afba258261a1874148256e85f5ef9ff3d01aa54
 tags:
   - created_from_open_prs
   - rule_status_modified
