@@ -50,19 +50,19 @@ OPEN_PR_TAG = os.getenv('OPEN_PR_TAG', 'created_from_open_prs')
 # Test-rules mode configuration
 
 # flag to enable filtering PRs by organization membership
-FILTER_BY_ORG_MEMBERSHIP = os.getenv('FILTER_BY_ORG_MEMBERSHIP', 'true').lower() == 'true'
+FILTER_BY_ORG_MEMBERSHIP = os.getenv('FILTER_BY_ORG_MEMBERSHIP', 'false').lower() == 'true'
 # organization name to filter by
 ORG_NAME = os.getenv('ORG_NAME', 'sublime-security')
 
 # flag to enable including PRs with specific comments
-INCLUDE_PRS_WITH_COMMENT = os.getenv('INCLUDE_PRS_WITH_COMMENT', 'true').lower() == 'true'
+INCLUDE_PRS_WITH_COMMENT = os.getenv('INCLUDE_PRS_WITH_COMMENT', 'false').lower() == 'true'
 # comment text that triggers inclusion
 COMMENT_TRIGGER = os.getenv('COMMENT_TRIGGER', '/update-test-rules')
 
 
 # flag to skip files containing specific text
 # this is due to test-rules not supporting specific functions
-SKIP_FILES_WITH_TEXT = os.getenv('SKIP_FILES_WITH_TEXT', 'true').lower() == 'true'
+SKIP_FILES_WITH_TEXT = os.getenv('SKIP_FILES_WITH_TEXT', 'false').lower() == 'true'
 # text to search for in files to skip
 SKIP_TEXT = os.getenv('SKIP_TEXT', 'ml.link_analysis')
 
