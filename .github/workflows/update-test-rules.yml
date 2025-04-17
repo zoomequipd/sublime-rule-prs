@@ -1,0 +1,59 @@
+name: Update Test Rules
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  update-test-rules:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Create and switch to test-rules branch
+      run: |
+        git fetch --all
+        if git show-ref --quiet refs/remotes/origin/test-rules; then
+          git checkout test-rules
+          git pull origin test-rules
+        else
+          git checkout -b test-rules
+        fi
+
+    - name: Run the script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SUBLIME_API_TOKEN: ${{ secrets.SUBLIME_API_TOKEN }}
+        SCRIPT_MODE: 'test-rules'
+        # Configure test-rules specific settings
+        FILTER_BY_ORG_MEMBERSHIP: 'true'
+        ORG_NAME: 'sublime-security'
+        INCLUDE_PRS_WITH_COMMENT: 'true'
+        COMMENT_TRIGGER: '/update-test-rules'
+        SKIP_FILES_WITH_TEXT: 'true'
+        SKIP_TEXT: 'ml.link_analysis'
+      run: python scripts/download_detection_rules.py
+
+    - name: Commit changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add detection-rules
+        git diff-index --quiet HEAD || git commit -m 'Update test rules from open PRs'
+        git push origin test-rules
