@@ -1,4 +1,4 @@
-name: "PR# 2601 - PayPal Invoice Abuse"
+name: "PayPal Invoice Abuse"
 description: |
   A fraudulent invoice/receipt found in the body of the message sent by exploiting Paypal's invoicing service.
   Callback Phishing is an attempt by an attacker to solicit the victim (recipient) to call a phone number. 
@@ -6,7 +6,6 @@ description: |
 type: "rule"
 references:
   - "https://anderegg.ca/2023/02/01/a-novel-paypal-scam"
-  - https://github.com/sublime-security/sublime-rules/pull/2601
 severity: "medium"
 source: |
   type.inbound
@@ -180,7 +179,3 @@ id: "a9f0e8c4-07a6-518c-b91e-12a6f29718fe"
 og_id: "0ff7a0d4-164d-5ff1-8765-783fa2008b0f"
 testing_pr: 2601
 testing_sha: 8fcacd5aad323f2519a08633c37265f9f977a1f2
-tags:
-  - created_from_open_prs
-  - rule_status_modified
-  - pr_author_aidenmitchell

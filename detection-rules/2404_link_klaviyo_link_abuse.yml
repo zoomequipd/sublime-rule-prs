@@ -1,4 +1,4 @@
-name: "PR# 2404 - Link: Klaviyo Link Abuse"
+name: "Link: Klaviyo Link Abuse"
 description: "Detects inbound messages containing exactly one Klaviyo tracking link (klclick domains) but lacking authentic Klaviyo email headers and sender patterns"
 type: "rule"
 severity: "low"
@@ -57,9 +57,3 @@ id: "1be532c2-1e67-5abe-b9cf-e33e03f314ea"
 og_id: "f3d46cfc-0ac3-5c09-ba89-3aafe150ad12"
 testing_pr: 2404
 testing_sha: c827208e23769907f6c6b60d58b714abde5e136e
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_zoomequipd
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2404

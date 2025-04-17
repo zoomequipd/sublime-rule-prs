@@ -1,4 +1,4 @@
-name: "PR# 2498 - Credential Phishing: Fake Security Login Alert (Generic)"
+name: "Credential Phishing: Fake Security Login Alert (Generic)"
 description: "Detects phishing attempts that claim suspicious login activity or unusual sign-in attempts regardless of brand"
 type: "rule"
 severity: "medium"
@@ -102,9 +102,3 @@ id: "4408c85e-1678-59ff-ae10-faaa2b87a4d4"
 og_id: "9fbdd60b-8f1b-52b2-9a55-c3f0b5e86c6d"
 testing_pr: 2498
 testing_sha: beb4ecb7cccf564c2bfc315a755dbf0244a48d51
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_morriscode
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2498

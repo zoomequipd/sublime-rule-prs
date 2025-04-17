@@ -1,4 +1,4 @@
-name: "PR# 2551 - Attachment: Fake Voicemail via PDF"
+name: "Attachment: Fake Voicemail via PDF"
 description: "Identifies inbound messages containing a single-page PDF attachment related to voicemail or missed call notifications that includes either a URL or QR code."
 type: "rule"
 severity: "medium"
@@ -41,9 +41,3 @@ id: "6a795287-596d-51de-b864-b2837a502b3e"
 og_id: "d3587209-a8e6-5209-8dfc-35646b6ccd23"
 testing_pr: 2551
 testing_sha: 0ac35afa8f282febf46c12eba48f9bf0f270473a
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_zoomequipd
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2551

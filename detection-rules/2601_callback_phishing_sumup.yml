@@ -1,4 +1,4 @@
-name: "PR# 2601 - Callback Phishing: SumUp Infrastructure Abuse"
+name: "Callback Phishing: SumUp Infrastructure Abuse"
 description: "A fraudulent invoice/receipt found in the body of the message sent by exploiting SumUp's receipt email service."
 type: "rule"
 severity: "high"
@@ -124,9 +124,3 @@ id: "ffe2a653-4421-5207-b132-b59c57c2f773"
 og_id: "1c41649e-d701-513e-a676-20f48e834a7b"
 testing_pr: 2601
 testing_sha: 8fcacd5aad323f2519a08633c37265f9f977a1f2
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_aidenmitchell
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2601

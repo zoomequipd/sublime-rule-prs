@@ -1,4 +1,4 @@
-name: "PR# 2168 - Brand Impersonation: The Better Business Bureau (BBB)"
+name: "Brand Impersonation: The Better Business Bureau (BBB)"
 description: "Detect impersonation of the Better Business Bureau (BBB) from unsolicited sender"
 type: "rule"
 severity: "medium"
@@ -65,9 +65,3 @@ id: "0cdc0e74-4bfe-5066-907c-6ee990ec4634"
 og_id: "76f54e5f-c937-5693-b8e7-3ced7dac61f9"
 testing_pr: 2168
 testing_sha: da41dd0b575efb8a96b139dbfe2408322d2fa35e
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_morriscode
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2168

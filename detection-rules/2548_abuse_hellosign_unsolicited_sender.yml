@@ -1,4 +1,4 @@
-name: "PR# 2548 - Service Abuse: HelloSign From an Unsolicited Sender Address"
+name: "Service Abuse: HelloSign From an Unsolicited Sender Address"
 description: "Detects messages from HelloSign in which the document originates from a newly observed email address.  The email address is extracted from across multiple message components, including HTML body templates and email header fields."
 type: "rule"
 severity: "low"
@@ -69,10 +69,7 @@ source: |
     )
   )
 tags:
-  - "Attack surface reduction"
-  - pr_author_zoomequipd
-  - created_from_open_prs
-  - rule_status_added
+ - "Attack surface reduction"
 attack_types:
   - "Credential Phishing"
 tactics_and_techniques:
@@ -87,5 +84,3 @@ id: "d672f437-114f-562d-95ce-447db410e7a0"
 og_id: "68ca0753-207f-56a0-9dba-3bbbad002bbf"
 testing_pr: 2548
 testing_sha: 1bb668c47ac44047014da5207ab5404cbfcb4763
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2548

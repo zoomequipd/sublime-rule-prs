@@ -1,4 +1,4 @@
-name: "PR# 2607 - Suspicious invoice reference with missing or image-only attachments"
+name: "Suspicious invoice reference with missing or image-only attachments"
 description: "This rule flags emails that reference invoices or payments but have suspicious characteristics: attachments are either missing or only images. It also checks for misleading links disguised as attachments and the presence of invoice-related keywords. The rule looks for potential credential theft or unusual requests, making it a strong indicator of phishing attempts."
 type: "rule"
 severity: "high"
@@ -90,9 +90,3 @@ id: "fe54ea3f-d22d-57d5-9025-c488d3b0f994"
 og_id: "466c1680-b9ff-5bd0-baf8-e65cca99d18b"
 testing_pr: 2607
 testing_sha: 6afba258261a1874148256e85f5ef9ff3d01aa54
-tags:
-  - created_from_open_prs
-  - rule_status_modified
-  - pr_author_peterdj45
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2607

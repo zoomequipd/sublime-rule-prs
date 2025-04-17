@@ -1,11 +1,10 @@
-name: "PR# 2615 - Brand impersonation: Amazon"
+name: "Brand impersonation: Amazon"
 description: |
   Impersonation of Amazon. These are most commonly fake shipping notifications.
   Amazon is the #2 most-impersonated brand (as of Q2 2020)
 references:
   - "https://www.pcmag.com/news/google-and-amazon-are-impersonated-the-most-in-phishing-scams"
   - "https://sellercentral.amazon.com/gp/help/external/32261?language=en-US"
-  - https://github.com/sublime-security/sublime-rules/pull/2615
 type: "rule"
 severity: "low"
 source: |
@@ -94,7 +93,3 @@ id: "99e262ed-5110-5360-8922-bb36c2510eb0"
 og_id: "13fc967d-4cc6-501d-9637-8c0761a1a354"
 testing_pr: 2615
 testing_sha: bbc0d12eef558f2dcd77822f62a92d98bddde643
-tags:
-  - created_from_open_prs
-  - rule_status_modified
-  - pr_author_aidenmitchell

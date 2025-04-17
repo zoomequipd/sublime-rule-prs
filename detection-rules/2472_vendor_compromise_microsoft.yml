@@ -1,4 +1,4 @@
-name: "PR# 2472 - Vendor Compromise: Microsoft Impersonation From Common Sender"
+name: "Vendor Compromise: Microsoft Impersonation From Common Sender"
 description: "Message contains suspicious links and Microsoft impersonation from a sender common to your environment. Indicative of vendor compromise."
 type: "rule"
 severity: "high"
@@ -89,9 +89,3 @@ id: "97c0dc15-dc0f-5830-b844-63ee3f79b433"
 og_id: "fb62d206-1674-565d-b579-9c57ea9f7c7e"
 testing_pr: 2472
 testing_sha: 02f07ca41294545eeb693c7d4fd4ae32b349201a
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_aidenmitchell
-references:
-  - https://github.com/sublime-security/sublime-rules/pull/2472
