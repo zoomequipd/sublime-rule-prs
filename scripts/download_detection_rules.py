@@ -7,40 +7,74 @@ from urllib.parse import quote
 
 import requests
 
+# Common configuration
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 SUBLIME_API_TOKEN = os.getenv('SUBLIME_API_TOKEN')
-REPO_OWNER = 'sublime-security'
-REPO_NAME = 'sublime-rules'
-OUTPUT_FOLDER = 'detection-rules'
-# flag to control adding the author name into the tag, allows for triage rules to be built on a per author basis
-# without having to modify the author value of the rule
-ADD_AUTHOR_TAG = True
-AUTHOR_TAG_PREFIX = "pr_author_"
+REPO_OWNER = os.getenv('REPO_OWNER', 'sublime-security')
+REPO_NAME = os.getenv('REPO_NAME', 'sublime-rules')
+OUTPUT_FOLDER = os.getenv('OUTPUT_FOLDER', 'detection-rules')
+
+# Script mode selection (default to 'standard' if not specified)
+# Possible values: 'standard', 'test-rules'
+SCRIPT_MODE = os.getenv('SCRIPT_MODE', 'standard')
+
+# Standard mode configuration (original behavior)
+# flag to control adding the author name into the tag
+ADD_AUTHOR_TAG = os.getenv('ADD_AUTHOR_TAG', 'true').lower() == 'true'
+AUTHOR_TAG_PREFIX = os.getenv('AUTHOR_TAG_PREFIX', 'pr_author_')
 
 # flag to control of an additional tag is created which
 # indicates the file status (modified vs added)
-ADD_RULE_STATUS_TAG = True
-RULE_STATUS_PREFIX = "rule_status_"
+ADD_RULE_STATUS_TAG = os.getenv('ADD_RULE_STATUS_TAG', 'true').lower() == 'true'
+RULE_STATUS_PREFIX = os.getenv('RULE_STATUS_PREFIX', 'rule_status_')
 
 # flag to control if a reference is added which links to the PR in the repo
-ADD_PR_REFERENCE = True
+ADD_PR_REFERENCE = os.getenv('ADD_PR_REFERENCE', 'true').lower() == 'true'
 
 # flag to modify the name of each rule to include the PR#
-INCLUDE_PR_IN_NAME = True
+INCLUDE_PR_IN_NAME = os.getenv('INCLUDE_PR_IN_NAME', 'true').lower() == 'true'
 # flag to enable creating a rule in the feed for net new rules
-INCLUDE_ADDED = True
+INCLUDE_ADDED = os.getenv('INCLUDE_ADDED', 'true').lower() == 'true'
 # flag to enable creating a rule in the feed for updated (not net new) rules
-INCLUDE_UPDATES = True
+INCLUDE_UPDATES = os.getenv('INCLUDE_UPDATES', 'true').lower() == 'true'
 # flag to enable the removing rules from the platform when the PR is closed
-DELETE_RULES_FROM_CLOSED_PRS = True
+DELETE_RULES_FROM_CLOSED_PRS = os.getenv('DELETE_RULES_FROM_CLOSED_PRS', 'true').lower() == 'true'
 # variable that controls when the rules from a closed PR should be deleted
 # this is in days
-DELETE_RULES_FROM_CLOSED_PRS_DELAY = 3
+DELETE_RULES_FROM_CLOSED_PRS_DELAY = int(os.getenv('DELETE_RULES_FROM_CLOSED_PRS_DELAY', '3'))
 
 # flag to add "created_from_open_prs" tag
-CREATE_OPEN_PR_TAG = True
-OPEN_PR_TAG = "created_from_open_prs"
+CREATE_OPEN_PR_TAG = os.getenv('CREATE_OPEN_PR_TAG', 'true').lower() == 'true'
+OPEN_PR_TAG = os.getenv('OPEN_PR_TAG', 'created_from_open_prs')
 
+# Test-rules mode configuration
+
+# flag to enable filtering PRs by organization membership
+FILTER_BY_ORG_MEMBERSHIP = os.getenv('FILTER_BY_ORG_MEMBERSHIP', 'true').lower() == 'true'
+# organization name to filter by
+ORG_NAME = os.getenv('ORG_NAME', 'sublime-security')
+
+# flag to enable including PRs with specific comments
+INCLUDE_PRS_WITH_COMMENT = os.getenv('INCLUDE_PRS_WITH_COMMENT', 'true').lower() == 'true'
+# comment text that triggers inclusion
+COMMENT_TRIGGER = os.getenv('COMMENT_TRIGGER', '/update-test-rules')
+
+
+# flag to skip files containing specific text
+# this is due to test-rules not supporting specific functions
+SKIP_FILES_WITH_TEXT = os.getenv('SKIP_FILES_WITH_TEXT', 'true').lower() == 'true'
+# text to search for in files to skip
+SKIP_TEXT = os.getenv('SKIP_TEXT', 'ml.link_analysis')
+
+# flag to check if required actions have completed
+# we should only include rules which have passed validation
+CHECK_ACTION_COMPLETION = os.getenv('CHECK_ACTION_COMPLETION', 'true').lower() == 'true'
+# name of the required workflow
+REQUIRED_CHECK_NAME = os.getenv('REQUIRED_CHECK_NAME', 'Rule Tests and ID Updated')
+# required conclusion of the workflow
+REQUIRED_CHECK_CONCLUSION = os.getenv('REQUIRED_CHECK_CONCLUSION', 'success')
+
+# Create output folder if it doesn't exist
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
 
@@ -48,6 +82,115 @@ headers = {
     'Authorization': f'token {GITHUB_TOKEN}',
     'Accept': 'application/vnd.github.v3+json'
 }
+
+
+def is_user_in_org(username, org_name):
+    """
+    Check if a user is a member of a specific organization.
+
+    Args:
+        username (str): GitHub username
+        org_name (str): Organization name
+
+    Returns:
+        bool: True if user is a member, False otherwise
+    """
+    url = f'https://api.github.com/orgs/{org_name}/members/{username}'
+    response = requests.get(url, headers=headers)
+    return response.status_code == 204
+
+
+def has_trigger_comment(pr_number, org_name, trigger_comment):
+    """
+    Check if a PR has a comment with the trigger text from a member of the specified org.
+
+    Args:
+        pr_number (int): Pull request number
+        org_name (str): Organization name to filter commenters
+        trigger_comment (str): Comment text to look for
+
+    Returns:
+        bool: True if a matching comment is found, False otherwise
+    """
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{pr_number}/comments'
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    comments = response.json()
+
+    for comment in comments:
+        # Check if comment contains the trigger and author is in the organization
+        if trigger_comment in comment['body'] and is_user_in_org(comment['user']['login'], org_name):
+            return True
+
+    return False
+
+
+def has_required_action_completed(pr_sha, action_name, required_status):
+    """
+    Check if a required GitHub Actions workflow has completed with the expected status for a PR.
+    Uses the GitHub Checks API to poll for check results.
+
+    Args:
+        pr_sha (str): SHA of the PR head commit
+        action_name (str): Name of the action/check to look for
+        required_status (str): Required status (success, failure, etc.)
+
+    Returns:
+        bool: True if the action has completed with the required status, False otherwise
+    """
+    # Use the GitHub Checks API to get all check runs for this commit
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/commits/{pr_sha}/check-runs'
+    custom_headers = headers.copy()
+    # Add the required Accept header for the Checks API
+    custom_headers['Accept'] = 'application/vnd.github.v3+json'
+
+    response = requests.get(url, headers=custom_headers)
+
+    if response.status_code != 200:
+        print(f"\tError checking action status: {response.status_code}")
+        return False
+
+    check_runs = response.json()
+
+    if 'check_runs' not in check_runs or len(check_runs['check_runs']) == 0:
+        print(f"\tNo check runs found for commit {pr_sha}")
+        return False
+
+    # Look for the specific action by name
+    for check in check_runs['check_runs']:
+        check_name = check['name']
+        check_conclusion = check['conclusion']
+        check_status = check['status']
+
+        if action_name.lower() in check_name.lower():
+
+            # Check if the action is complete
+            if check_status != 'completed':
+                print(f"\tCheck '{check_name}' is still in progress (status: {check_status})")
+                return False
+
+            # Check if the action has the required conclusion
+            if check_conclusion == required_status:
+                return True
+            else:
+                print(f"\tCheck '{check_name}' has conclusion '{check_conclusion}', expected '{required_status}'")
+                return False
+
+    print(f"\tNo check matching '{action_name}' found")
+    return False
+
+def contains_skip_text(content, skip_text):
+    """
+    Check if file content contains the text to skip.
+
+    Args:
+        content (str): File content
+        skip_text (str): Text to search for
+
+    Returns:
+        bool: True if content contains the skip text, False otherwise
+    """
+    return skip_text in content
 
 
 def generate_deterministic_uuid(seed_string):
@@ -73,26 +216,36 @@ def generate_deterministic_uuid(seed_string):
 def add_id_to_yaml(content, filename):
     """
     Adds or replaces an ID field in the YAML content.
+    Extracts the original ID if present.
 
     Args:
         content (str): The YAML content
         filename (str): The filename to use as seed for UUID generation
 
     Returns:
-        str: The modified YAML content with the UUID added or replaced
+        tuple: (modified_content, original_id) - The modified YAML content with the UUID added/replaced
+               and the original ID if found, otherwise None
     """
     # Use the filename directly as the seed for UUID generation
     # Generate a deterministic UUID based on the seed
     new_uuid = generate_deterministic_uuid(filename)
+    original_id = None
 
     # Check if 'id:' already exists in the content
     if 'id:' in content:
-        # Use regex to replace the existing ID value
-        # This pattern matches 'id:' followed by any characters until end of line
-        pattern = r'^\s*id:\s*[^\n]*'
+        # Extract the original ID
+        pattern = r'^\s*id:\s*([^\n]*)'
+        match = re.search(pattern, content, flags=re.MULTILINE)
+        if match:
+            original_id = match.group(1).strip()
+            if original_id.startswith('"') and original_id.endswith('"'):
+                original_id = original_id[1:-1]  # Remove surrounding quotes
+            elif original_id.startswith("'") and original_id.endswith("'"):
+                original_id = original_id[1:-1]  # Remove surrounding quotes
+
         # Replace with the new ID
         modified_content = re.sub(pattern, f'id: \"{new_uuid}\"', content, flags=re.MULTILINE)
-        return modified_content
+        return modified_content, original_id
     else:
         # If it doesn't exist, add it to the very end of the YAML file
         # Make sure we have a clean end to the file (no trailing whitespace)
@@ -101,7 +254,7 @@ def add_id_to_yaml(content, filename):
         # Add a newline and the ID field
         modified_content += f"\nid: \"{new_uuid}\""
 
-        return modified_content
+        return modified_content, original_id
 
 
 def search_sublime_rule_feed(rule_name):
@@ -353,8 +506,14 @@ def add_block(yaml_string, block_name, value):
 
 
 def handle_closed_prs():
+    """
+    Handle closed PRs by deleting rules from closed PRs after a delay period.
+
+    Returns:
+        set: Set of rule IDs that were deleted
+    """
     if not DELETE_RULES_FROM_CLOSED_PRS:
-        return
+        return set()
 
     closed_pr_header = [
         ' _____ _                    _   ______      _ _   ______                           _       ',
@@ -380,6 +539,7 @@ def handle_closed_prs():
         if closed_pr['base']['ref'] != "main":
             print(
                 f"\tSkipping non-main branch PR #{closed_pr['number']}: {closed_pr['title']} -- dest branch: {closed_pr['base']['ref']}")
+            continue
 
         # we only care about the delay if it's been merged
         if closed_pr['merged_at'] is not None:
@@ -428,8 +588,8 @@ def handle_closed_prs():
                     # found_rule won't have quotes around it, because it's taken from the json of the rule
                     if found_rule.get('name') == rule_name.strip('\'\"'):
                         print("\tFound Rule Name Match")
-                        if CREATE_OPEN_PR_TAG and 'created_from_open_prs' in found_rule.get('tags'):
-                            print("\tFound OPEN_PR tag match")
+                        if CREATE_OPEN_PR_TAG and OPEN_PR_TAG in found_rule.get('tags'):
+                            print(f"\tFound {OPEN_PR_TAG} tag match")
 
                             if ADD_AUTHOR_TAG and f"{AUTHOR_TAG_PREFIX}{closed_pr['user']['login']}" in found_rule.get(
                                     'tags'):
@@ -447,7 +607,7 @@ def handle_closed_prs():
                                 print(found_rule.get('tags'))
 
                         else:
-                            print("\tcreated_from_open_prs not found in: ")
+                            print(f"\t{OPEN_PR_TAG} not found in: ")
                             print(found_rule.get('tags'))
                     else:
                         print("\tRule not match not found: ")
@@ -462,26 +622,50 @@ def handle_closed_prs():
     return deleted_ids
 
 
-def handle_open_prs():
-    open_prs_header = [
-        ' _____                    ______      _ _   ______                           _       ',
-        '|  _  |                   | ___ \\    | | |  | ___ \\                         | |      ',
-        '| | | |_ __   ___ _ __    | |_/ /   _| | |  | |_/ /___  __ _ _   _  ___  ___| |_ ___ ',
-        '| | | | \'_ \\ / _ \\ \'_ \\   |  __/ | | | | |  |    // _ \\/ _\' | | | |/ _ \\/ __| __/ __|',
-        '\\ \\_/ / |_) |  __/ | | |  | |  | |_| | | |  | |\\ \\  __/ (_| | |_| |  __/\\__ \\ |_\\__ \\',
-        ' \\___/| .__/ \\___|_| |_|  \\_|   \\__,_|_|_|  \\_| \\_\\___|\\__, |\\__,_|\\___||___/\\__|___/',
-        '      | |                                                 | |                        ',
-        '      |_|                                                 |_|                        ',
-    ]
+def handle_pr_rules(mode):
+    """
+    Process open PRs to create rules based on the specified mode.
 
-    for line in open_prs_header:
+    This function handles both standard mode and test-rules mode processing.
+    In test-rules mode, it adds special fields required for test rules (og_id, testing_pr, testing_sha).
+
+    Args:
+        mode (str): Either 'standard' or 'test-rules'
+
+    Returns:
+        set: Set of filenames that were processed
+    """
+    # Display appropriate header based on mode
+    if mode == 'standard':
+        header = [
+            ' _____                    ______      _ _   ______                           _       ',
+            '|  _  |                   | ___ \\    | | |  | ___ \\                         | |      ',
+            '| | | |_ __   ___ _ __    | |_/ /   _| | |  | |_/ /___  __ _ _   _  ___  ___| |_ ___ ',
+            '| | | | \'_ \\ / _ \\ \'_ \\   |  __/ | | | | |  |    // _ \\/ _\' | | | |/ _ \\/ __| __/ __|',
+            '\\ \\_/ / |_) |  __/ | | |  | |  | |_| | | |  | |\\ \\  __/ (_| | |_| |  __/\\__ \\ |_\\__ \\',
+            ' \\___/| .__/ \\___|_| |_|  \\_|   \\__,_|_|_|  \\_| \\_\\___|\\__, |\\__,_|\\___||___/\\__|___/',
+            '      | |                                                 | |                        ',
+            '      |_|                                                 |_|                        ',
+        ]
+    else:  # test-rules mode
+        header = [
+            ' _____         _     ______      _          ',
+            '|_   _|       | |    | ___ \\    | |         ',
+            '  | | ___  ___| |_   | |_/ /   _| | ___  ___ ',
+            '  | |/ _ \\/ __| __|  |    / | | | |/ _ \\/ __|',
+            '  | |  __/\\__ \\ |_   | |\\ \\ |_| | |  __/\\__ \\',
+            '  \\_/\\___||___/\\__|  \\_| \\_\\__,_|_|\\___||___/',
+            '                                            ',
+        ]
+
+    for line in header:
         print(line)
 
     pull_requests = get_open_pull_requests()
-
     new_files = set()
 
     for pr in pull_requests:
+        # Common checks for all modes
         if pr['draft']:
             print(f"Skipping draft PR #{pr['number']}: {pr['title']}")
             continue
@@ -490,23 +674,49 @@ def handle_open_prs():
             continue
 
         pr_number = pr['number']
+
+        # Organization membership and comment trigger checks (for any mode if flags are set)
+        process_pr = True
+        if FILTER_BY_ORG_MEMBERSHIP:
+            author_in_org = is_user_in_org(pr['user']['login'], ORG_NAME)
+            has_comment = False
+
+            if INCLUDE_PRS_WITH_COMMENT:
+                has_comment = has_trigger_comment(pr['number'], ORG_NAME, COMMENT_TRIGGER)
+
+            if not (author_in_org or has_comment):
+                print(f"Skipping PR #{pr['number']}: Author not in {ORG_NAME} and no trigger comment found")
+                process_pr = False
+
+        if not process_pr:
+            continue
+
         print(f"Processing PR #{pr_number}: {pr['title']}")
+
+        # Get the latest commit SHA directly from the PR data
+        latest_sha = pr['head']['sha']
+        print(f"\tLatest commit SHA: {latest_sha}")
+
+        # Check if required checks have completed (if flag is set)
+        if CHECK_ACTION_COMPLETION:
+            if not has_required_action_completed(latest_sha, REQUIRED_CHECK_NAME, REQUIRED_CHECK_CONCLUSION):
+                print(
+                    f"\tSkipping PR #{pr_number}: Required check '{REQUIRED_CHECK_NAME}' has not completed with conclusion '{REQUIRED_CHECK_CONCLUSION}'")
+                continue
+
         files = get_files_for_pull_request(pr_number)
 
-        # loop through each file in the PR and see if we should include it in this feed
+        # Process files in the PR
         for file in files:
-
             print(f"\tStatus of {file['filename']}: {file['status']}")
             process_file = False
-            # has to be added, modified, or changed, within the detection-rules and a yml
+
+            # Common file type and status check
             if file['status'] in ['added', 'modified', 'changed'] and file['filename'].startswith(
                     'detection-rules/') and file['filename'].endswith('.yml'):
-
                 if file['status'] == "added" and INCLUDE_ADDED:
-                    # if including net new rules is enabled, we'll process this file
                     process_file = True
                 elif file['status'] in ['modified', 'changed'] and INCLUDE_UPDATES:
-                    # if including modified rules is enabled, we'll process this file
                     process_file = True
                 else:
                     print(
@@ -515,45 +725,64 @@ def handle_open_prs():
                 print(
                     f"\tSkipping {file['status']} file: {file['filename']} in PR #{pr['number']} -- unmanaged file status")
 
-            # if we can process this file
+            # If file should be processed, get content and apply mode-specific logic
             if process_file:
-                # go get it
                 content = get_file_contents(file['contents_url'])
 
-                # include the pr number in the filename to avoid duplicates
-                # use os.path.basename to drop the folder of the file, save_file uses OUTPUT_FOLDER anyway.
+                # Skip files with specific text if flag is set
+                if SKIP_FILES_WITH_TEXT and contains_skip_text(content, SKIP_TEXT):
+                    print(f"\tSkipping file {file['filename']}: contains {SKIP_TEXT}")
+                    continue
+
+                # Process file (common for both modes)
                 target_save_filename = f"{pr['number']}_{os.path.basename(file['filename'])}"
 
-                # Generate deterministic UUID and add/replace it in content
-                content = add_id_to_yaml(content, target_save_filename)
+                # Get the modified content and original ID
+                modified_content, original_id = add_id_to_yaml(content, target_save_filename)
 
-                # check the flags to modify the file
+                # Test-rules mode: add special fields
+                if mode == 'test-rules':
+                    # Store the original id
+                    if original_id:
+                        modified_content = modified_content.rstrip()
+                        modified_content += f"\nog_id: \"{original_id}\""
+
+                    # Add the PR number as testing_pr
+                    modified_content = modified_content.rstrip()
+                    modified_content += f"\ntesting_pr: {pr_number}"
+
+                    # Add the commit SHA as testing_sha
+                    modified_content = modified_content.rstrip()
+                    modified_content += f"\ntesting_sha: {latest_sha}"
+
+                # Common modifications based on flags
                 if ADD_AUTHOR_TAG:
-                    # inject the tags for test rules into the contents
-                    content = add_block(content, 'tags', f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
+                    modified_content = add_block(modified_content, 'tags', f"{AUTHOR_TAG_PREFIX}{pr['user']['login']}")
 
+                # Add open PR tag if flag is set
                 if CREATE_OPEN_PR_TAG:
-                    content = add_block(content, 'tags', f"{OPEN_PR_TAG}")
+                    modified_content = add_block(modified_content, 'tags', OPEN_PR_TAG)
 
                 if ADD_RULE_STATUS_TAG:
-                    content = add_block(content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
+                    modified_content = add_block(modified_content, 'tags', f"{RULE_STATUS_PREFIX}{file['status']}")
 
                 if ADD_PR_REFERENCE:
-                    content = add_block(content, 'references', pr['html_url'])
+                    modified_content = add_block(modified_content, 'references', pr['html_url'])
 
                 if INCLUDE_PR_IN_NAME:
-                    content = rename_rules(content, pr)
+                    modified_content = rename_rules(modified_content, pr)
 
-                # finally save it
-                save_file(target_save_filename, content)
+                # Save the file
+                save_file(target_save_filename, modified_content)
                 new_files.add(target_save_filename)
                 print(f"\tSaved: {target_save_filename}")
 
+    # Clean up files no longer in open PRs
     clean_output_folder(new_files)
+    return new_files
 
 
 if __name__ == '__main__':
-
     sublime_header = [
         ' ______     __  __     ______     __         __     __    __     ______    ',
         '/\\  ___\\   /\\ \\ /\\ \\   /\\  == \\   /\\ \\       /\\ \\   /\\ "-./  \\   /\\  ___\\   ',
@@ -566,5 +795,16 @@ if __name__ == '__main__':
     for line in sublime_header:
         print(line)
 
-    handle_open_prs()
-    handle_closed_prs()
+    # Determine which functions to run based on SCRIPT_MODE
+    if SCRIPT_MODE == 'standard':
+        print("Running in standard mode...")
+        handle_pr_rules('standard')
+        handle_closed_prs()
+
+    elif SCRIPT_MODE == 'test-rules':
+        print("Running in test-rules mode...")
+        handle_pr_rules('test-rules')
+
+    else:
+        print(f"Error: Unknown SCRIPT_MODE '{SCRIPT_MODE}'. Valid options are 'standard' or 'test-rules'.")
+        exit(1)
