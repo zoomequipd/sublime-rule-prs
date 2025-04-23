@@ -42,6 +42,11 @@ source: |
     any(ml.nlu_classifier(body.current_thread.text).intents, .name != "benign")
     or length(ml.nlu_classifier(body.current_thread.text).intents) == 0 // not benign but not malicious either
   )
+
+  //
+  // This rule makes use of a beta feature and is subject to change without notice
+  // using the beta feature in custom rules is not suggested until it has been formally released
+  //
   
    // reply-to address has never sent an email to the org
   and beta.profile.by_reply_to().prevalence == "new"
@@ -74,4 +79,4 @@ detection_methods:
 id: "3ded5b25-785e-5c72-be26-0a2543ef7929"
 og_id: "796c6f0f-7571-5b87-b53e-97948e8be474"
 testing_pr: 2646
-testing_sha: cdaab9c415c03320804e162b80e9577bc3beef71
+testing_sha: 33b991df0fc78d1b37b31884701b6702ce30ac4c
