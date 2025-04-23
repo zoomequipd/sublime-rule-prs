@@ -1,5 +1,5 @@
 name: "Brand Impersonation: Procore"
-description: "Detects messages containing Procore branding language that do not originate from legitimate Procore domains. This has been observed in phishing campaigns. "
+description: "Detects messages containing Procore branding language that do not originate from legitimate Procore domains. This has been observed in phishing campaigns."
 type: "rule"
 severity: "medium"
 source: |
@@ -19,4 +19,4 @@ detection_methods:
 id: "14c9de0f-1de1-56de-9352-a310d3a5382b"
 og_id: "74baa1e5-f1cd-5d15-b2f2-e863baf4a20f"
 testing_pr: 2645
-testing_sha: 23f711c3392ae33cac1c35b4bce395e7a09fa095
+testing_sha: a687ec235b4f6a9dad848d0846d3ed9d744b6175
