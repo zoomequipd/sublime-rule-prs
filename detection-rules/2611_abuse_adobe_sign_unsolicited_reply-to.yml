@@ -26,6 +26,8 @@ source: |
   // of a message that has been classified as benign
   and not beta.profile.by_reply_to().any_messages_benign
 
+tags:
+ - "Attack surface reduction"
 attack_types:
   - "BEC/Fraud"
   - "Callback Phishing"
@@ -39,4 +41,4 @@ detection_methods:
 id: "435244d1-d3f8-50ad-9546-528dfce056e4"
 og_id: "d00893ba-a65a-5b04-88d1-f35512eae291"
 testing_pr: 2611
-testing_sha: 2fa580888b6198cfe91d9c6feb45868cebf2733a
+testing_sha: 6175775530f6b1b870e1203b3ebcf67db93b1285
