@@ -121,13 +121,15 @@ source: |
     )
     // we've seen advertising "advice/recommendations"
     or (
-      any(beta.ml_topic(body.current_thread.text).topics,
-          .name == "Advertising and Promotions" and .confidence == "high"
+      all(beta.ml_topic(body.current_thread.text).topics,
+          .name in ("Advertising and Promotions", "Reminders and Notifications")
       )
       // Meta mention
       and (
         any(ml.nlu_classifier(body.current_thread.text).entities,
-            .name == "org" and regex.contains(.text, '\bMeta\b|Community Guidelines')
+            .name == "org"
+            and strings.icontains(.text, 'Community Guidelines')
+            
         )
         or regex.icontains(body.current_thread.text,
                            '(1 (Facebook|Meta)?\s*Way|1601 Willow Road), Menlo Park, CA 94025'
@@ -196,4 +198,4 @@ detection_methods:
 id: "85892594-5e36-5e54-bcde-195b9d918d31"
 og_id: "e38f1e3b-79be-5a59-b084-24a851daf6b9"
 testing_pr: 2629
-testing_sha: 9904957865a2c9d8276315ac9f5a23f0b10d995b
+testing_sha: b02acf278bc614cf6558ec04596773e77734fbc3
