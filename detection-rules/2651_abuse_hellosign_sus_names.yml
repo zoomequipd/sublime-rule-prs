@@ -35,7 +35,18 @@ source: |
   and (
     // contains the word dropbox
     // the subject is in the format of "<actor controlled title>(?: - Signature Requested by| is awaiting your signature) <actor controlled name>"
-    strings.icontains(subject.subject, 'dropbox')
+    (
+        strings.icontains(subject.subject, 'dropbox')
+        // negate where the sender is dropbox
+        and not any(headers.hops,
+              any(.fields,
+                  .name == "X-Mailgun-Variables"
+                  and regex.contains(.value,
+                                         '\"on_behalf_of_email": \"[^\"]+@dropbox.com\"'
+                          )
+                  )
+              )
+    )
     or strings.icontains(subject.subject, 'sharefile')
     or strings.icontains(subject.subject, 'helloshare')
   
@@ -48,7 +59,7 @@ source: |
       // HR/Payroll/Legal/etc
       or strings.icontains(sender.display_name, 'Compliance HR')
       or regex.icontains(sender.display_name,
-                         '(?:Compliance|Executive|Finance|\bHR\b|Human Resources|\bHR\b|\bIT\b|Legal|Payroll|Purchasing|Operations|Security|Training|Support).*(?:Department|Dept|Team)?'
+                         '(?:Compliance|Executive|\bHR\b|Human Resources|\bHR\b|\bIT\b|Legal|Payroll|Purchasing|Operations|Security|Support).*(?:Department|Dept|Team)?'
       )
       or strings.icontains(sender.display_name, 'Corporate Communications')
       or strings.icontains(sender.display_name, 'Employee Relations')
@@ -80,7 +91,7 @@ source: |
   
       // Invoice Themes
       or regex.icontains(subject.subject,
-                         '(Invoice|INV\b|Payment|ACH|Wire Confirmation|P[O0]\W+?\d+\"|P[O0](?:\W+?|\d+)|Purchase Order|receipt|Billing|statement|Past Due|Remit(?:tance)?|Settlement).*(?: - Signature Requested by| is awaiting your signature)'
+                         '(Invoice|INV\b|Payment|\bACH\b|Wire Confirmation|P[O0]\W+?\d+\"|P[O0](?:\W+?|\d+)|Purchase Order|receipt|Billing|Past Due|Remit(?:tance)?|Settlement).*(?: - Signature Requested by| is awaiting your signature)'
       )
   
       // contract language
