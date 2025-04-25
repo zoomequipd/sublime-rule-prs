@@ -32,6 +32,18 @@ source: |
                   )
               )
   )
+  // sometimes there isn't an on_behalf_of_email, so in those cases we can use the body to extract the sender
+  and not (
+    regex.icontains(body.html.raw,
+                    '<th class="action-item--action[^\>]+\>\s*[^\<]*\((?P<sender_email>[^\)]+)\).*?</th>'
+    )
+    // check that the sender email has not been observed previously
+    and all(regex.iextract(body.html.raw,
+                           '<th class="action-item--action[^\>]+\>\s*[^\<]*\((?P<sender_email>[^\"]+@(?P<sender_domain>[^\"]+))\).*?</th>'
+            ),
+            .named_groups["sender_domain"] not in $org_domains
+    )
+  )
   and (
     // contains the word dropbox
     // the subject is in the format of "<actor controlled title>(?: - Signature Requested by| is awaiting your signature) <actor controlled name>"
@@ -134,4 +146,4 @@ detection_methods:
 id: "c2bb2cc4-73eb-5aaa-b07d-5561ed6f1101"
 og_id: "464d98f3-38b4-5a72-b0d5-e3a148f88025"
 testing_pr: 2651
-testing_sha: 901b8fc12d13c49394f503145672ac5cdf8bb663
+testing_sha: 4642c2339506cb20cea3050381a12a348398c83a
