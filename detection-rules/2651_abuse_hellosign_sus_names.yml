@@ -41,7 +41,7 @@ source: |
     and all(regex.iextract(body.html.raw,
                            '<th class="action-item--action[^\>]+\>\s*[^\<]*\((?P<sender_email>[^\"]+@(?P<sender_domain>[^\"]+))\).*?</th>'
             ),
-            .named_groups["sender_domain"] not in $org_domains
+            .named_groups["sender_domain"] in $org_domains
     )
   )
   and (
@@ -135,4 +135,4 @@ detection_methods:
 id: "c2bb2cc4-73eb-5aaa-b07d-5561ed6f1101"
 og_id: "464d98f3-38b4-5a72-b0d5-e3a148f88025"
 testing_pr: 2651
-testing_sha: 0c858f446a2e44654bf95149907811c4e7354b1a
+testing_sha: 69d2cdcea7d70fd7b2698a4d01b7cb39f651a6d0
