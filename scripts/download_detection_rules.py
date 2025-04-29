@@ -18,7 +18,6 @@ OUTPUT_FOLDER = os.getenv('OUTPUT_FOLDER', 'detection-rules')
 # Possible values: 'standard', 'test-rules'
 SCRIPT_MODE = os.getenv('SCRIPT_MODE', 'standard')
 
-# Standard mode configuration (original behavior)
 # flag to control adding the author name into the tag
 ADD_AUTHOR_TAG = os.getenv('ADD_AUTHOR_TAG', 'true').lower() == 'true'
 AUTHOR_TAG_PREFIX = os.getenv('AUTHOR_TAG_PREFIX', 'pr_author_')
@@ -47,7 +46,10 @@ DELETE_RULES_FROM_CLOSED_PRS_DELAY = int(os.getenv('DELETE_RULES_FROM_CLOSED_PRS
 CREATE_OPEN_PR_TAG = os.getenv('CREATE_OPEN_PR_TAG', 'true').lower() == 'true'
 OPEN_PR_TAG = os.getenv('OPEN_PR_TAG', 'created_from_open_prs')
 
-# Test-rules mode configuration
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Start test-rules mode configuration options         #
+# The below options only apply when mode = test-rules #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # flag to enable filtering PRs by organization membership
 FILTER_BY_ORG_MEMBERSHIP = os.getenv('FILTER_BY_ORG_MEMBERSHIP', 'false').lower() == 'true'
@@ -59,6 +61,10 @@ INCLUDE_PRS_WITH_COMMENT = os.getenv('INCLUDE_PRS_WITH_COMMENT', 'false').lower(
 # comment text that triggers inclusion
 COMMENT_TRIGGER = os.getenv('COMMENT_TRIGGER', '/update-test-rules')
 
+# flag to enable applying labels to PRs
+ADD_TEST_RULES_LABELS = os.getenv('ADD_TEST_RULES_LABELS', 'false').lower() == 'true'
+# label to apply to PRs that have rules in test-rules
+IN_TEST_RULES_LABEL = os.getenv('IN_TEST_RULES_LABEL', 'in-test-rules')
 
 # flag to skip files containing specific text
 # this is due to test-rules not supporting specific functions
@@ -74,6 +80,10 @@ REQUIRED_CHECK_NAME = os.getenv('REQUIRED_CHECK_NAME', 'Rule Tests and ID Update
 # required conclusion of the workflow
 REQUIRED_CHECK_CONCLUSION = os.getenv('REQUIRED_CHECK_CONCLUSION', 'success')
 
+# # # # # # # # # # # # # # # # # # # # # # #
+# end test-rules mode configuration options #
+# # # # # # # # # # # # # # # # # # # # # # #
+
 # Create output folder if it doesn't exist
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
@@ -83,6 +93,46 @@ headers = {
     'Accept': 'application/vnd.github.v3+json'
 }
 
+def has_label(pr_number, label_name):
+    """
+    Check if a PR has a specific label.
+
+    Args:
+        pr_number (int): Pull request number
+        label_name (str): Label name to check for
+
+    Returns:
+        bool: True if PR has the label, False otherwise
+    """
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{pr_number}/labels'
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    labels = response.json()
+    
+    return any(label['name'] == label_name for label in labels)
+
+def apply_label(pr_number, label_name):
+    """
+    Apply a label to a PR.
+
+    Args:
+        pr_number (int): Pull request number
+        label_name (str): Label name to apply
+
+    Returns:
+        bool: True if label was applied successfully, False otherwise
+    """
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{pr_number}/labels'
+    payload = {'labels': [label_name]}
+    
+    response = requests.post(url, headers=headers, json=payload)
+    
+    if response.status_code == 200:
+        print(f"\tApplied label '{label_name}' to PR #{pr_number}")
+        return True
+    else:
+        print(f"\tFailed to apply label '{label_name}' to PR #{pr_number}: {response.status_code}")
+        return False
 
 def is_user_in_org(username, org_name):
     """
@@ -776,6 +826,15 @@ def handle_pr_rules(mode):
                 save_file(target_save_filename, modified_content)
                 new_files.add(target_save_filename)
                 print(f"\tSaved: {target_save_filename}")
+
+                # apply the label
+                if mode == 'test-rules' and ADD_TEST_RULES_LABELS:
+                    # Check if PR already has the label
+                    if not has_label(pr_number, IN_TEST_RULES_LABEL):
+                        print(f"\tPR #{pr_number} doesn't have the '{IN_TEST_RULES_LABEL}' label. Applying...")
+                        apply_label(pr_number, IN_TEST_RULES_LABEL)
+                    else:
+                        print(f"\tPR #{pr_number} already has the '{IN_TEST_RULES_LABEL}' label.")
 
     # Clean up files no longer in open PRs
     clean_output_folder(new_files)
