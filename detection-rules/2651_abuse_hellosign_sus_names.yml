@@ -106,12 +106,6 @@ source: |
                          '(Invoice|INV\b|Payment|\bACH\b|Wire Confirmation|P[O0]\W+?\d+\"|P[O0](?:\W+?|\d+)|Purchase Order|receipt|Billing|Past Due|Remit(?:tance)?|Settlement).*(?: - Signature Requested by| is awaiting your signature)'
       )
   
-      // contract language
-      or regex.icontains(subject.subject,
-                         'Pr[0o]p[0o]sal.*(?: - Signature Requested by| is awaiting your signature)',
-                         'Claim Doc.*(?: - Signature Requested by| is awaiting your signature)'
-      )
-  
       // Payroll/HR
       or regex.icontains(subject.subject,
                          '(?:Payroll|Employee Pay\b|Salary|Benefit Enrollment|Employee Handbook|Reimbursement Approved).*(?: - Signature Requested by| is awaiting your signature)'
@@ -120,11 +114,6 @@ source: |
       // shared files/extenstion/urgency/CTA
       or regex.icontains(subject.subject,
                          '(?:Urgent|Important|Immediate|Secure|Encrypt|shared|\bsent\b|protected|Validate|Action Required|Final Notice|Review(?: and| & |\s+)?Sign|Download PDF).*(?: - Signature Requested by| is awaiting your signature)'
-      )
-  
-      // all caps filename allowing for numbers, punct and spaces, and an optional file extenstion
-      or regex.contains(subject.subject,
-                        '[A-Z0-9[:punct:]\s]+(?:\.[a-zA-Z]{3,5}).*(?: - Signature Requested by| is awaiting your signature)'
       )
   
       // MFA theme
@@ -146,4 +135,4 @@ detection_methods:
 id: "c2bb2cc4-73eb-5aaa-b07d-5561ed6f1101"
 og_id: "464d98f3-38b4-5a72-b0d5-e3a148f88025"
 testing_pr: 2651
-testing_sha: 4642c2339506cb20cea3050381a12a348398c83a
+testing_sha: 0c858f446a2e44654bf95149907811c4e7354b1a
