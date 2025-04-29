@@ -83,7 +83,7 @@ source: |
       or regex.icontains(sender.display_name,
                          'IT Support',
                          'Information Technology',
-                         '(?:Network|System)? Admin(?:istrator)?',
+                         '(?:Network|System) Admin(?:istrator)?',
                          'Help Desk',
                          'Tech(?:nical) Support'
       )
@@ -135,4 +135,4 @@ detection_methods:
 id: "c2bb2cc4-73eb-5aaa-b07d-5561ed6f1101"
 og_id: "464d98f3-38b4-5a72-b0d5-e3a148f88025"
 testing_pr: 2651
-testing_sha: 69d2cdcea7d70fd7b2698a4d01b7cb39f651a6d0
+testing_sha: a3e84fd9a7b7769fbd88525c05e2296ab2ffc0a4
