@@ -45,7 +45,7 @@ source: |
     )
   )
   
-  // and the sender is not in org_domains or from tiktok domains and passes auth
+  // and the sender is not in org_domains or from Mailchimp domains and passes auth
   and not (
     sender.email.domain.root_domain in $org_domains
     or (
@@ -53,6 +53,7 @@ source: |
       and headers.auth_summary.dmarc.pass
     )
   )
+  and not strings.ends_with(headers.message_id, ".mailchimp.com>")
   // and the sender is not from high trust sender root domains
   and (
     (
@@ -78,4 +79,4 @@ detection_methods:
 id: "9cf4bdf4-10a9-55ae-9bda-ffc9c2e28c39"
 og_id: "48b454c7-fcd7-54d4-b460-5dfec2c1a3e2"
 testing_pr: 2600
-testing_sha: 0e81bbb105c1d4c39a13528b30e31fb274adcb4d
+testing_sha: 2f240e27b55aee2bc5ad12f4e5a626ef561e9335
