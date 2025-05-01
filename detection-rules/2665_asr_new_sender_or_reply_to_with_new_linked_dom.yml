@@ -1,4 +1,4 @@
-name: "New Sender or Reply-To with New Linked Domain"
+name: "Newly Registered Sender or Reply-To Domain with Newly Registered Linked Domain"
 description: "This rule detects inbound emails that contain links and a reply-to address, where either the sender domain or the reply-to domain is newly registered (≤30 days old), and at least one linked domain is also very new (≤14 days old). It flags potential phishing or business email compromise attempts that use recently created infrastructure and reply-to mismatch tactics to bypass trust and impersonate legitimate contacts."
 type: "rule"
 severity: "medium"
@@ -32,4 +32,4 @@ detection_methods:
 id: "fd12debb-829e-5aea-a737-0d651e866af2"
 og_id: "e5b6a81f-8587-585f-957a-712987ad9884"
 testing_pr: 2665
-testing_sha: 6b1e4f5e851b8e793d12b00746e2621bccd1a65b
+testing_sha: 15cc5bd4be48bec48de8d9deda18745fbfa7a285
