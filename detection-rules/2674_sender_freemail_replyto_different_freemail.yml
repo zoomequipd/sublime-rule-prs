@@ -3,7 +3,8 @@ description: "Detects when a sender using a free email provider includes a reply
 type: "rule"
 severity: "medium"
 source: |
-  sender.email.domain.root_domain in $free_email_providers
+  type.inbound
+  and sender.email.domain.root_domain in $free_email_providers
   and length(headers.reply_to) > 0
   and any(headers.reply_to,
           .email.domain.root_domain in $free_email_providers
@@ -22,4 +23,4 @@ detection_methods:
 id: "8b9eddbe-2ed3-5bb0-9b13-75cb721b5337"
 og_id: "fcd831d0-9e03-5c9a-aa2f-af37d3a8c156"
 testing_pr: 2674
-testing_sha: 4ab0a21a0a599703caaf1f75ac73183a491fc3dd
+testing_sha: c3694ae8c697ce58a471bf495f1cf3105fc58dc8
