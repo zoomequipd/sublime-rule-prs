@@ -310,6 +310,8 @@ source: |
           or strings.icontains(.display_text, "document")
           or strings.icontains(.display_text, "docusign")
           or strings.icontains(.display_text, "Review on Docusign")
+          or (strings.icontains(.display_text, "Sign") and strings.icontains(.display_text, "Now"))
+
         )
         and not .href_url.domain.root_domain in ("docusign.com", "docusign.net")
         and not (
@@ -398,4 +400,4 @@ detection_methods:
 id: "7d67690c-0d5c-5903-ab0b-65977eb5ca5c"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2549
-testing_sha: 0f34d998edf1a6080a0532db652cb97863ab58bc
+testing_sha: c4d99eba424d36712258a3cdd2f1c87d15d0ecaa
