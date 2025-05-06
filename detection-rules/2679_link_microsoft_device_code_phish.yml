@@ -1,0 +1,58 @@
+name: "PR# 2679 - Microsoft Device Code Phishing"
+description: |
+  An attacker may generate a user code and send it to a target mailbox. With an appropriate lure, the targeted user may action the device code login and provide an attacker with the means to take over their account.
+
+  This rule looks for the presence of the Microsoft device login portal link, as well as mentions of 'device code' or a 9 character alphanumeric device code value.
+type: "rule"
+authors:
+  - twitter: "ajpc500"
+references:
+  - "https://aadinternals.com/post/phishing/"
+  - "https://0xboku.com/2021/07/12/ArtOfDeviceCodePhish.html"
+  - "https://www.inversecos.com/2022/12/how-to-detect-malicious-oauth-device.html"
+  - "https://www.volexity.com/blog/2025/02/13/multiple-russian-threat-actors-targeting-microsoft-device-code-authentication/"
+  - https://github.com/sublime-security/sublime-rules/pull/2679
+severity: "medium"
+source: |
+  type.inbound
+
+  // Not from MS as the device code will be generated and sent by the attacker
+  and sender.email.domain.root_domain not in~ ("microsoft.com", "microsoftonline.com")
+
+  // Link to the device code MS pages
+  and any(body.links,
+          (
+            .href_url.url == "https://microsoft.com/devicelogin"
+            or .href_url.url == "https://login.microsoftonline.com/common/oauth2/deviceauth"
+            or .href_url.url == "https://aka.ms/devicelogin"
+          )
+  )
+
+  // Body text references device codes
+  and (
+    strings.icontains(body.html.display_text, "device code")
+    or 
+    // A nine character string containing a combination of letters and characters
+    regex.icontains(body.html.display_text, '[\W]([A-Z0-9]{9})[\W]')
+  )
+  and (
+    not profile.by_sender().solicited
+    or (
+      profile.by_sender().any_messages_malicious_or_spam
+      and not profile.by_sender().any_false_positives
+    )
+  )
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Sender analysis"
+  - "URL analysis"
+id: "f0e11139-2da8-5dc4-8561-e538ae17461c"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
