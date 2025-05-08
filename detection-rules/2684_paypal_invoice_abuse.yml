@@ -75,8 +75,10 @@ source: |
             or regex.icontains(.display_text, "didn['’]t (?:ma[kd]e|place) this")
             or regex.icontains(.display_text, "[wh]as.*placed by you")
             or regex.icontains(.display_text, "was.*made by you")
-            or strings.icontains(.display_text, "Fruad Alert")
-            or strings.icontains(.display_text, "Fraud Alert")
+            or (
+              strings.icontains(.display_text, "Fraud")
+              and strings.icontains(.display_text, "Alert")
+            )
             or strings.icontains(.display_text, "fraudulent")
             or strings.icontains(.display_text, "using your PayPal")
             or strings.icontains(.display_text, "subscription")
@@ -145,4 +147,4 @@ detection_methods:
 id: "58eae247-bf10-585a-b898-5f65e300d663"
 og_id: "0ff7a0d4-164d-5ff1-8765-783fa2008b0f"
 testing_pr: 2684
-testing_sha: 78f160ea6feb088530643309300d53447142bbfd
+testing_sha: 49d461e159401b64083a0bd314fa1d5d8ce5f2d4
