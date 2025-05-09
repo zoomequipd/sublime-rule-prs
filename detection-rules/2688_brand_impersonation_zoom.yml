@@ -51,15 +51,43 @@ source: |
             .href_url.domain.tld in $suspicious_tlds
             // country code second-level domain
             or strings.istarts_with(.href_url.domain.tld, "com.")
-            // blocked by a Cloudflare CAPTCHA
-            or strings.icontains(ml.link_analysis(.).final_dom.raw,
-                                 'https://challenges.cloudflare.com/turnstile/',
+            or (
+              (
+                length(ml.link_analysis(.).files_downloaded) > 0
+                // Zoom logo on page
+                or ml.link_analysis(.).credphish.brand.name == "Zoom"
+                // blocked by a Cloudflare CAPTCHA
+                or strings.icontains(ml.link_analysis(.).final_dom.raw,
+                                     'https://challenges.cloudflare.com/turnstile/',
+                )
+              )
+              and ml.link_analysis(.).effective_url.domain.root_domain not in (
+                "zoom.us",
+                "zoom.com"
+              )
             )
-            or length(ml.link_analysis(.).files_downloaded) > 0
-            // Zoom logo on page
-            or ml.link_analysis(.).credphish.brand.name == "Zoom"
           )
       )
+    )
+  )
+
+  and not (
+    (
+      strings.istarts_with(subject.subject, "RE:")
+      or strings.istarts_with(subject.subject, "R:")
+      or strings.istarts_with(subject.subject, "ODG:")
+      or strings.istarts_with(subject.subject, "答复:")
+      or strings.istarts_with(subject.subject, "AW:")
+      or strings.istarts_with(subject.subject, "TR:")
+      or strings.istarts_with(subject.subject, "FWD:")
+      or regex.imatch(subject.subject, '(\[[^\]]+\]\s?){0,3}(re|fwd?)\s?:')
+      or regex.imatch(subject.subject,
+                      '^\[?(EXT|EXTERNAL)\]?[: ]\s*(RE|FWD?|FW|AW|TR|ODG|答复):.*'
+      )
+    )
+    and (
+      length(headers.references) > 0
+      or any(headers.hops, any(.fields, strings.ilike(.name, "In-Reply-To")))
     )
   )
   
