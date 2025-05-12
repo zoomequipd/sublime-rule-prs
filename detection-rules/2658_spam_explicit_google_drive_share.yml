@@ -18,7 +18,7 @@ source: |
   and any([subject.subject, body.current_thread.text],
           // this regex should be kept in sync between the Google Group and the Looker Studio rules
           regex.icontains(.,
-                          '(?:sex|horny|cock|fuck|\bass\b|pussy|dick|tits|\bcum\b|girlfriend|boyfriend|naked|porn|video|webcam|masturbate|orgasm|breasts|penis|vagina|strip|suck|blowjob|hardcore|xxx|nudes?|sexting|cheating|affair|erotic|lust|desire|intimate|explicit|fetish|kinky|seduce|adult\s*(?:\w+\s+){0,2}\s*community|cam shows|local (?:girls?|women|single)|hook.?up|bed partner)'
+                          '(?:sex|horny|cock|fuck|\bass\b|pussy|dick|tits|\bcum\b|girlfriend|boyfriend|naked|porn|masturbate|orgasm|breasts|penis|vagina|strip|suck|blowjob|hardcore|\bxxx\b|nudes?|sexting|cheating|affair|erotic|lust|desire|intimate|explicit|fetish|kinky|seduce|adult\s*(?:\w+\s+){0,2}\s*community|cam shows|local (?:girls?|women|single)|hook.?up|bed partner)'
           )
   )
 attack_types:
@@ -32,4 +32,4 @@ detection_methods:
 id: "531ac06a-6230-5d83-80c2-ee49adfaac35"
 og_id: "3f951c06-ea85-5e35-8b1c-57cc4fd8996e"
 testing_pr: 2658
-testing_sha: 87cb3955c821a5dd7a8dfab5b7df98e3c6e6fe0c
+testing_sha: 055b2c5469f7b8b126f55da251af90ebeb9c200d
