@@ -243,6 +243,11 @@ source: |
     // contains HTML and wording from the sharepoint template
     or (
       (
+        // 
+        // This rule makes use of a beta feature and is subject to change without notice
+        // using the beta feature in custom rules is not suggested until it has been formally released
+        // 
+                    
         // alt text for the global icon
         length(beta.html_xpath(body.html, '//img[@alt="permission globe icon"]').nodes
         ) > 0
@@ -328,4 +333,4 @@ tactics_and_techniques:
 id: "ac56f61f-a707-5cc3-9cff-011782993bd2"
 og_id: "ff8b296b-aa0d-5df0-b4d2-0e599b688f6a"
 testing_pr: 2695
-testing_sha: 4d35f87161d8af5e253740d237055042ff8baf4b
+testing_sha: 7bcdf95067df824d5352a3ab97adf485ebcd25f6
