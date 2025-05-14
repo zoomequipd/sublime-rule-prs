@@ -14,11 +14,6 @@ source: |
           )
           and strings.icontains(.href_url.fragment, 'fullscreen')
   )
-  and (
-    not profile.by_sender_email().solicited
-    or profile.by_sender_email().days_since.last_contact > 14
-    or profile.by_sender_email().any_messages_malicious_or_spam
-  )
   and not profile.by_sender_email().any_messages_benign
 tags:
  - "Attack surface reduction"
@@ -34,4 +29,4 @@ detection_methods:
 id: "ff65ec31-783a-5d35-873d-ebc092f0c71a"
 og_id: "9e9bc972-d4e1-5bd0-96bc-b8b10e74b02a"
 testing_pr: 2691
-testing_sha: 6659fe30ed743badd4f5d7c05763809b573ecec6
+testing_sha: 2222d9fe5b75845b6c8337b65e5e7fbb949607e0
