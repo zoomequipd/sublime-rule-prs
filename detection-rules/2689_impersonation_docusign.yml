@@ -308,6 +308,7 @@ source: |
             and not (
               strings.icontains(.display_text, "Review Us")
               or strings.icontains(.display_text, "leave us a review")
+              or regex.icontains(.display_text, '\bReviews\b')
             )
           )
           or strings.icontains(.display_text, "document")
@@ -396,4 +397,4 @@ detection_methods:
 id: "c1e24ad3-349a-5080-a6bf-d1b67f43583b"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2689
-testing_sha: 2ec6cf190d6f4613d16edb87a7eca8e526f30cea
+testing_sha: ed8a696eeb5634fb32af87cc9e08534e1ea7774f
