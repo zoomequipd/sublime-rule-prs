@@ -305,7 +305,10 @@ source: |
           or strings.ilevenshtein(.display_text, "Review and Sign") <= 3
           or (
             strings.icontains(.display_text, "Review")
-            and not strings.icontains(.display_text, "Review Us")
+            and not (
+              strings.icontains(.display_text, "Review Us")
+              or strings.icontains(.display_text, "leave us a review")
+            )
           )
           or strings.icontains(.display_text, "document")
           or strings.icontains(.display_text, "docusign")
@@ -400,4 +403,4 @@ detection_methods:
 id: "e72c8e10-597f-5e6e-aec2-13b84d221881"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2704
-testing_sha: d0fee79b43469800df496440c338751668494503
+testing_sha: d36028b4dc458433459e25ff30bd54d03da097f4
