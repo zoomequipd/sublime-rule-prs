@@ -1,4 +1,4 @@
-name: "PR# 2697 - Link: Ludus Presentation With Credential Phishing Indicators"
+name: "PR# 2697 - Link: Multistage Landing - Ludus Presentation"
 description: "Detects when a standalone Ludus document link contains embedded links that are suspicious, particularly those targeting Microsoft services through various evasion techniques. The rule analyzes both the presentation content and linked destinations for suspicious patterns and redirects."
 type: "rule"
 severity: "medium"
@@ -61,22 +61,6 @@ source: |
                    .name == "cred_theft" and .confidence != "low"
             )
           )
-  )
-  and (
-    (
-      headers.auth_summary.spf.pass
-      and headers.auth_summary.dmarc.pass
-      and (
-        not profile.by_sender().solicited
-        or profile.by_sender().any_messages_malicious_or_spam
-        or profile.by_sender_email().days_since.last_contact > 14
-      )
-      and not profile.by_sender().any_messages_benign
-    )
-    or not headers.auth_summary.spf.pass
-    or headers.auth_summary.spf.pass is null
-    or not headers.auth_summary.dmarc.pass
-    or headers.auth_summary.dmarc.pass is null
   )
   // negate highly trusted sender domains unless they fail DMARC authentication
   and (
