@@ -66,6 +66,7 @@ source: |
       )
     )
   )
+  // keep in sync with https://github.com/sublime-security/sublime-rules/blob/main/detection-rules/callback_phishing_sumup.yml
   and (
     (
       // icontains a phone number
@@ -178,4 +179,4 @@ detection_methods:
 id: "5992d55a-8557-58ea-8676-22c1bd176226"
 og_id: "0ff7a0d4-164d-5ff1-8765-783fa2008b0f"
 testing_pr: 2627
-testing_sha: a9dae6533615f1d15c52e2f718b62d630fb1c076
+testing_sha: 6caad4e892f50771718eedf4a49566a23905fef2
