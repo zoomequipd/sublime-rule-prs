@@ -136,7 +136,7 @@ source: |
           )
           or strings.icontains(.display_text, "kindly")
           or regex.icontains(strings.replace_confusables(.display_text),
-                             '(?:call|cᴀʟʟ|reach|contact|get in touch|inform|let us know)'
+                             '(?:call|cᴀʟʟ|reach|contact|get in touch|\binform\b|let us know)'
           )
   )
 attack_types:
@@ -152,4 +152,4 @@ detection_methods:
 id: "58eae247-bf10-585a-b898-5f65e300d663"
 og_id: "0ff7a0d4-164d-5ff1-8765-783fa2008b0f"
 testing_pr: 2684
-testing_sha: d0742edb24bc54bb5cd8b8a7808bb385ba5b5025
+testing_sha: cb4694aadc8d1f43577ae0dba950a4f2f7d45201
