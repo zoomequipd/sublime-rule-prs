@@ -68,6 +68,8 @@ source: |
                  and not strings.icontains(.display_text, '844-896-4937')
                  // pay in 4 number
                  and not strings.icontains(.display_text, '(800) 504-7534')
+                 // debt collections for PayPal
+                 and not strings.icontains(.display_text, '866-380-1798')
                  // often the transcation id looks like a phone number and matches the regex
                  and not regex.icontains(.display_text, "Transaction (date|ID)\n")
                  // this segment can include phone numbers, but the wording is not actor controlled and shows up "under the fold" in the templates
@@ -152,4 +154,4 @@ detection_methods:
 id: "58eae247-bf10-585a-b898-5f65e300d663"
 og_id: "0ff7a0d4-164d-5ff1-8765-783fa2008b0f"
 testing_pr: 2684
-testing_sha: cb4694aadc8d1f43577ae0dba950a4f2f7d45201
+testing_sha: 5cd275ab3af9f2986f6c97463d7733b1594a9d67
