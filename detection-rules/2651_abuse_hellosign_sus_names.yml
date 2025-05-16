@@ -91,6 +91,20 @@ source: |
                          'Tech(?:nical) Support'
       )
     )
+
+    // NLU/Logo Detection on message from the sender/message body 
+    or any(html.xpath(body.html,
+                   '//table[not(@class)]/tbody/tr/th[2]/p[@class="subhead"][2]/parent::th'
+        ).nodes,
+        any(ml.nlu_classifier(.display_text).intents,
+            .name == "callback_scam" and .confidence == "high"
+        )
+    )
+    // callback logos
+    or any(ml.logo_detect(beta.message_screenshot()).brands,
+           .name in ("PayPal", "Norton", "GeekSquad", "Ebay", "McAfee", "AT&T")
+    )
+
     // filename analysis
     // the filename is also contianed in the subject line
     or (
@@ -142,4 +156,4 @@ detection_methods:
 id: "c2bb2cc4-73eb-5aaa-b07d-5561ed6f1101"
 og_id: "464d98f3-38b4-5a72-b0d5-e3a148f88025"
 testing_pr: 2651
-testing_sha: e22a33b468624b7e70c6d453301d3ad9674a145b
+testing_sha: c5ecd2aa4e6084253d6f9fdf108e0b84a35d1cd9
