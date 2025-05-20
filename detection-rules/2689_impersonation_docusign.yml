@@ -321,14 +321,15 @@ source: |
           "docusign.com",
           "docusign.net",
           'docusign.co.uk',
-          'docusign.com.br'
+          'docusign.com.br',
+          'docusign.fr',
         )
         and not (
           .href_url.domain.root_domain == "mimecastprotect.com"
           and (
             .href_url.query_params is not null
             and regex.icontains(.href_url.query_params,
-                                'domain=(?:\w+.)?docusign.(?:net|com|co\.uk|com\.br)'
+                                'domain=(?:\w+.)?docusign.(?:net|com|co\.uk|com\.br|fr)'
             )
           )
         )
@@ -397,4 +398,4 @@ detection_methods:
 id: "c1e24ad3-349a-5080-a6bf-d1b67f43583b"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2689
-testing_sha: a57e5b4142b63d42beedfbdb073d6ee3280480aa
+testing_sha: 9594cbe9e60dfdd74d402766b417973dde4ddf0e
