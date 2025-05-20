@@ -167,7 +167,9 @@ source: |
             "clixsign.com",
             "esignlive.com",
             "clickcontracts.com",
-            "sadq.sa"
+            "sadq.sa",
+            "vasion.com",
+            "chubb.com", // insurance company
           )
         )
         or (
@@ -398,4 +400,4 @@ detection_methods:
 id: "c1e24ad3-349a-5080-a6bf-d1b67f43583b"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2689
-testing_sha: 9594cbe9e60dfdd74d402766b417973dde4ddf0e
+testing_sha: d973e79ce8b9a45df74828fc211a7c1d2b4bab53
