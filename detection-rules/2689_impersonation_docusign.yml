@@ -302,26 +302,33 @@ source: |
   // this should always be a known docusign domain,
   // even with branded docusign subdomains
   and (
-    any(body.links,
-        // we've observed invisible characters in the display name
-        // such as U+034f(look carefully): "Revi͏ew Now"
-        (
-          strings.ilevenshtein(.display_text, "Review Now") <= 3
-          or strings.ilevenshtein(.display_text, "Review and Sign") <= 3
-          or (
-            strings.icontains(.display_text, "Review")
-            and not (
-              strings.icontains(.display_text, "Review Us")
-              or strings.icontains(.display_text, "leave us a review")
-              or regex.icontains(.display_text, '\bReviews\b')
-            )
-          )
-          or strings.icontains(.display_text, "document")
-          or strings.icontains(.display_text, "docusign")
-          or strings.icontains(.display_text, "Review on Docusign")
-          or (strings.icontains(.display_text, "Sign") and strings.icontains(.display_text, "Now"))
-        )
-        and not .href_url.domain.root_domain in (
+    any(
+        // filter links that match docusign wording
+        filter(body.links,
+               // we've observed invisible characters in the display name
+               // such as U+034f(look carefully): "Revi͏ew Now"
+               (
+                 strings.ilevenshtein(.display_text, "Review Now") <= 3
+                 or strings.ilevenshtein(.display_text, "Review and Sign") <= 3
+                 or (
+                   strings.icontains(.display_text, "Review")
+                   and not (
+                     strings.icontains(.display_text, "Review Us")
+                     or strings.icontains(.display_text, "leave us a review")
+                     or regex.icontains(.display_text, '\bReviews\b')
+                   )
+                 )
+                 or strings.icontains(.display_text, "document")
+                 or strings.icontains(.display_text, "docusign")
+                 or strings.icontains(.display_text, "Review on Docusign")
+                 or (
+                   strings.icontains(.display_text, "Sign")
+                   and strings.icontains(.display_text, "Now")
+                 )
+               )
+        ),
+        // ensure those links aren't legit
+        not .href_url.domain.root_domain in (
           "docusign.com",
           "docusign.net",
           'docusign.co.uk',
@@ -332,7 +339,8 @@ source: |
           "clixsign.com",
           "esignlive.com",
           "clickcontracts.com",
-          "adobesign.com"
+          "adobesign.com",
+          "hellosign.com",
         )
         and not (
           .href_url.domain.root_domain == "mimecastprotect.com"
@@ -341,7 +349,7 @@ source: |
             and regex.icontains(.href_url.query_params,
                                 'domain=(?:\w+\.)?docusign.(?:net|com|co\.uk|com\.br|fr)',
                                 // other e-signature companies
-                                'domain=(?:\w+\.)?(?:insuresign\.com|clixsign\.com|esignlive\.com|clickcontracts\.com|adobesign\.com)'
+                                'domain=(?:\w+\.)?(?:insuresign\.com|clixsign\.com|esignlive\.com|clickcontracts\.com|adobesign\.com|hellosign\.com)'
             )
           )
         )
@@ -410,4 +418,4 @@ detection_methods:
 id: "c1e24ad3-349a-5080-a6bf-d1b67f43583b"
 og_id: "4d29235c-08b9-5f9b-950e-60b05c4691fb"
 testing_pr: 2689
-testing_sha: a9a748b0759a8a9d3dc32a6bef6b413a237eec67
+testing_sha: 842bc2f7f108477aa2c15d739dc3e437a9245557
