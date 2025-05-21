@@ -136,7 +136,7 @@ source: |
         )
       )
       and any(ml.nlu_classifier(body.current_thread.text).entities,
-              .name == "urgency"
+              .name in ("request", "urgency")
       )
     )
   )
@@ -199,4 +199,4 @@ detection_methods:
 id: "332ad3b2-3209-5361-88c1-43bc17947e46"
 og_id: "e38f1e3b-79be-5a59-b084-24a851daf6b9"
 testing_pr: 2727
-testing_sha: 2ad02f1a7eda582c8a63ae4c58a73cff4a1c9575
+testing_sha: f5af686765b14975d226b464b4d49007e10864b5
