@@ -1,0 +1,44 @@
+name: "PR# 2722 - Attachment: Encrypted Microsoft Access Database from Non-Trusted Sources"
+description: "Detects encrypted Microsoft Access database files (.accdb) from senders outside trusted domains or from trusted domains that fail DMARC authentication"
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  and any(attachments,
+          (
+            strings.iends_with(.file_name, ".accdb")
+            or .content_type == "application/msaccess"
+            or .content_type == "application/x-msaccess"
+            or .content_type == "application/vnd.ms-access"
+            or .file_type == "msaccess"
+          )
+          and any(file.explode(.),
+                  any(.flavors.yara, . == 'encrypted_msaccess_database')
+          )
+  )
+  // Negating high-trust sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+tags:
+  - "Attack surface reduction"
+  - pr_author_brycampbell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Encryption"
+  - "Evasion"
+detection_methods:
+  - "File analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "YARA"
+id: "7d8786d6-70df-5cef-b018-9accbd6fdc0e"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2722
