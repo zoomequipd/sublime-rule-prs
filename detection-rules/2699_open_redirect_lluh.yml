@@ -1,0 +1,39 @@
+name: "PR# 2699 - Open redirect: giving.lluh.org"
+description: "Message contains use of the giving.lluh.org redirect. This redirection has been abused by threat actors in the wild."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          .href_url.domain.domain == "giving.lluh.org"
+          and .href_url.path =~ "/site/UserLogin"
+          and strings.icontains(.href_url.query_params, 'nexturl=')
+  )
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+  - "Open redirect"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
+id: "fb95bc32-4ed9-5db3-9ce1-72c0e0524ad6"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
