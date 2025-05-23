@@ -1,0 +1,33 @@
+name: "Open Redirect: LearningApps"
+description: |
+  Message contains use of the LearningApps open redirect. This has been exploited in the wild.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+      .href_url.domain.root_domain == 'learningapps.org'
+      and strings.icontains(.href_url.path, 'setLanguage.php')
+    and strings.icontains(.href_url.query_params, 'return=')
+  )
+
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "037291d5-1c71-540c-997e-0b2daf57476f"
+og_id: "071b5b55-8d4f-5c94-98e4-3e68b57395ae"
+testing_pr: 2699
+testing_sha: c4b7321be843f2bea198b4f58913eabd13a10bb3
