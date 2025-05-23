@@ -6,13 +6,7 @@ source: |
   type.inbound
   and sender.email.domain.root_domain == "zoom.us"
   and sender.display_name == "Zoom Docs"
-  
-  // 
-  // This rule makes use of a beta feature and is subject to change without notice
-  // using the beta feature in custom rules is not suggested until it has been formally released
-  // 
-  
-  and any(beta.html_xpath(body.html, '//h2').nodes,
+  and any(html.xpath(body.html, '//h2').nodes,
           // extract the sender email out of the message body
           any(regex.iextract(.display_text,
                              '^(?P<sender_display_name>[^\(]+)\((?P<sender_email>[^\)]+@(?P<sender_domain>[^\)]+))\)'
@@ -42,4 +36,4 @@ detection_methods:
 id: "c7cde194-1d95-5c0d-bfc7-0e747417a170"
 og_id: "064b2594-d24d-5857-8571-43ff2e8267c9"
 testing_pr: 2666
-testing_sha: 40ba0ff7eff82c2a7f9c9ed8e1647455181d7535
+testing_sha: c9ef2c11de272e7b7d96af22e240d826577e8523
