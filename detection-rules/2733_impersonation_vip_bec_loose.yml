@@ -39,7 +39,8 @@ source: |
   )
 
   and not profile.by_sender().any_false_positives
-
+tags:
+  - "Attack surface reduction"
 attack_types:
   - "BEC/Fraud"
 tactics_and_techniques:
@@ -52,4 +53,4 @@ detection_methods:
 id: "33c9a708-8d74-56e6-9c57-e1a58fc82c58"
 og_id: "303081da-6850-5ba6-9589-c3dc7673320e"
 testing_pr: 2733
-testing_sha: 05f300cd02449707ae77d14bb8c4bb3afc520aa1
+testing_sha: b14a6f7406a56ebaa3db3912667d077d3e131154
