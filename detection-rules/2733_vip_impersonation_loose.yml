@@ -9,7 +9,7 @@ description: |
 
   Additional rule logic can be added to look for suspicious subjects, suspicious links, etc.
 type: "rule"
-severity: "high"
+severity: "medium"
 source: |
   type.inbound
   and any($org_vips,
@@ -62,4 +62,4 @@ detection_methods:
 id: "c60376e4-248b-575f-82de-8fe7ca9fdc0e"
 og_id: "487f93a7-3ca4-5ec2-bf15-6f6b1633bd36"
 testing_pr: 2733
-testing_sha: 04241c8fce6b056c208b46353b78c794ae825df5
+testing_sha: 86671b10a51f0c9ea461175ed38653c61fcc2f39
