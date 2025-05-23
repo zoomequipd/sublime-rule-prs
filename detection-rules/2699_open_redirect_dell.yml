@@ -1,0 +1,37 @@
+name: "PR# 2699 - Open redirect: Dell"
+description: |
+  Message contains use of the Dell open redirect, but the sender is not Dell.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          .href_url.domain.domain == 't.em.home.dell.com'
+          and .href_url.path =~ '/r/'
+  )
+  and sender.email.domain.root_domain not in ('dell.com', 'dell.ca')
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+tags:
+  - "Attack surface reduction"
+  - pr_author_zoomequipd
+  - created_from_open_prs
+  - rule_status_modified
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "f1b77f4c-730b-5f83-8ed2-03b4bfcd3005"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
