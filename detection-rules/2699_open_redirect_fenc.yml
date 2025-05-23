@@ -1,0 +1,39 @@
+name: "PR# 2699 - Open Redirect: fenc.com"
+description: |
+  Message contains use of the fenc.com open redirect. This has been exploited in the wild.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          .href_url.domain.root_domain == "fenc.com"
+          and .href_url.path =~ "/redirector.aspx"
+          and regex.icontains(.href_url.query_params, 'y=(?:https?|(?:\/|%2f)(?:\/|%2f))')
+          and not regex.icontains(.href_url.query_params, 'y=[^\&]*fenc\.com') 
+  
+  )
+  and not sender.email.domain.root_domain == "fenc.com"
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "64cd9585-dc9d-50aa-a46a-7af30a0b68b7"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
