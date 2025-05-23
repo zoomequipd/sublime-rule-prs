@@ -1,0 +1,36 @@
+name: "PR# 2699 - Open Redirect: artkaderne"
+description: |
+  Message contains use of an open redirect on artkaderne.dk. This has been exploited in the wild.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+      .href_url.domain.root_domain == "artkaderne.dk"
+      and strings.icontains(.href_url.query_params, "refurl=")
+  )
+  and not sender.email.domain.root_domain == "artkaderne.dk"
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "6e53c798-f536-59a4-b95d-70431b57ce05"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
