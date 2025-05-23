@@ -1,0 +1,43 @@
+name: "PR# 2699 - Open Redirect: Club-OS"
+description: |
+  Message contains use of the Club-OS open redirect. This has been exploited in the wild.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+      .href_url.domain.root_domain == "club-os.com"
+      and strings.icontains(.href_url.path, 'click')
+      and strings.icontains(.href_url.query_params, 'target=')
+      // negate hash lookup targets (not actor controlled)
+      and not (
+        regex.icontains(.href_url.query_params, 'target=[a-f0-9]{40}(?:$|&)')
+        and strings.icontains(.href_url.query_params, '&hashLookup=true')
+      )
+      // negate urls that go back to club-os
+      and not regex.icontains(.href_url.query_params, 'target=[^\&]*club-os.com/')   
+  )
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "d5889abe-c86b-5518-a3e5-83b6ae3174e9"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
