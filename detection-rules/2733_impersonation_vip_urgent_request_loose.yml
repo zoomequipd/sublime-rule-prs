@@ -4,7 +4,7 @@ description: |
 
   Detects potential Business Email Compromise (BEC) attacks by analyzing text within email body from untrusted senders.
 type: "rule"
-severity: "high"
+severity: "medium"
 source: |
   type.inbound
   and any($org_vips,
@@ -63,4 +63,4 @@ detection_methods:
 id: "f78b87ea-2b53-5f76-812d-5b98f4b1b8dd"
 og_id: "303081da-6850-5ba6-9589-c3dc7673320e"
 testing_pr: 2733
-testing_sha: 04241c8fce6b056c208b46353b78c794ae825df5
+testing_sha: 86671b10a51f0c9ea461175ed38653c61fcc2f39
