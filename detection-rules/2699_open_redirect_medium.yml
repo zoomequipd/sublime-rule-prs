@@ -1,0 +1,40 @@
+name: "PR# 2699 - Open Redirect: Medium"
+description: |
+  Message contains use of the Medium open redirect. This has been exploited in the wild.
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+      .href_url.domain.root_domain == "medium.com"
+      and strings.icontains(.href_url.path, "/global-identity-2")
+      and strings.icontains(.href_url.query_params, "redirectUrl=")
+      // negate redirects to medium.com
+      and not regex.icontains(.href_url.query_params,
+                              'redirectUrl=(?:(?:https?(?:%3a|:))?(?:%2f|\/){2})?(?:[a-z0-9]+\.)*medium\.com'
+      )
+  )
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Open redirect"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "efc4d26b-f278-5668-bab6-f86499ee6ad3"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2699
