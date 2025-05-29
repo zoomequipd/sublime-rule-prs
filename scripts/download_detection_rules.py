@@ -170,11 +170,11 @@ def has_trigger_comment(pr_number, org_name, trigger_comment):
     for comment in comments:
         # Check if comment contains the trigger and author is in the organization
         if trigger_comment in comment['body']:
-            print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment found")
+            print(f"\tPR #{pr['number']}: Author not in {ORG_NAME} and trigger comment found")
             if is_user_in_org(comment['user']['login'], org_name):
-                print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is a {ORG_NAME} member")
+                print(f"\tPR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is a {ORG_NAME} member")
                 return True
-            print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is NOT a {ORG_NAME} member")
+            print(f"\tPR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is NOT a {ORG_NAME} member")
 
     return False
 
@@ -731,6 +731,8 @@ def handle_pr_rules(mode):
 
         # Organization membership and comment trigger checks (for any mode if flags are set)
         process_pr = True
+        print(f"Processing PR #{pr_number}: {pr['title']}")
+
         if FILTER_BY_ORG_MEMBERSHIP:
             author_in_org = is_user_in_org(pr['user']['login'], ORG_NAME)
             has_comment = False
@@ -739,13 +741,12 @@ def handle_pr_rules(mode):
                 has_comment = has_trigger_comment(pr['number'], ORG_NAME, COMMENT_TRIGGER)
 
             if not (author_in_org or has_comment):
-                print(f"Skipping PR #{pr['number']}: Author not in {ORG_NAME} and no trigger comment found")
+                print(f"\tSkipping PR #{pr['number']}: Author not in {ORG_NAME} and no trigger comment found")
                 process_pr = False
 
         if not process_pr:
             continue
 
-        print(f"Processing PR #{pr_number}: {pr['title']}")
 
         # Get the latest commit SHA directly from the PR data
         latest_sha = pr['head']['sha']
