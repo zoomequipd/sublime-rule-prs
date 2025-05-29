@@ -169,8 +169,12 @@ def has_trigger_comment(pr_number, org_name, trigger_comment):
 
     for comment in comments:
         # Check if comment contains the trigger and author is in the organization
-        if trigger_comment in comment['body'] and is_user_in_org(comment['user']['login'], org_name):
-            return True
+        if trigger_comment in comment['body']:
+            print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment found")
+            if is_user_in_org(comment['user']['login'], org_name):
+                print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is a {ORG_NAME} member")
+                return True
+            print(f"Processing PR #{pr['number']}: Author not in {ORG_NAME} and trigger comment from {comment['user']['login']} is NOT a {ORG_NAME} member")
 
     return False
 
