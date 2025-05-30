@@ -1,0 +1,34 @@
+name: "Attachment: HTML smuggling with eval and atob via calendar invite"
+description: "Scans calendar invites (.ics files) to detect HTML smuggling techniques."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and any(attachments,
+          (
+            .file_extension =~ "ics"
+            or .content_type == "text/calendar"
+          )
+          and any(file.explode(.),
+                  // usage: onerror="eval(atob('
+                  any(.scan.strings.strings,
+                      regex.imatch(., ".*eval.{1,4}atob.*")
+                  )
+          )
+  )
+
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+  - "HTML smuggling"
+  - "Scripting"
+detection_methods:
+  - "File analysis"
+  - "HTML analysis"
+  - "Javascript analysis"
+id: "74a47bf9-ca54-5c93-b97e-fedd54215262"
+og_id: "597c2edd-ff97-5ef6-bcf4-8957011edd9c"
+testing_pr: 2758
+testing_sha: 6dd55201de530a18bc87f8ea956779d95184b15e
