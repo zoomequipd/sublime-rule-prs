@@ -90,6 +90,9 @@ source: |
     any(body.links,
         network.whois(.href_url.domain).registrant_country_code == "CN"
     ),
+
+    // Alibaba infrastructure
+    any(headers.domains, .root_domain in ("aliyun.com", "aliyun-inc.com")),
   
     // sender domain and body link domains do not match, but have the same registration details
     (
@@ -126,4 +129,4 @@ detection_methods:
 id: "a6495255-1313-56c4-96e3-3a5e056299bd"
 og_id: "263ca56b-d31b-5b38-b00e-c1c45e5e96bb"
 testing_pr: 2734
-testing_sha: 51caea0de4884523af8248796184bfd9e9d457c2
+testing_sha: e0a7d9028718b5db83746f264e3b88de0fa5e033
