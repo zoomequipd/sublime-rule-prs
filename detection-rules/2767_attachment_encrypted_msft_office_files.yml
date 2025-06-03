@@ -57,7 +57,8 @@ source: |
       )
       or sender.email.domain.root_domain not in $high_trust_sender_root_domains
     )
-
+tags:
+ - "Attack surface reduction"
 attack_types:
   - "BEC/Fraud"
   - "Callback Phishing"
@@ -75,4 +76,4 @@ detection_methods:
 id: "9dcf554e-4395-5cdb-aea4-805f36426bc6"
 og_id: "eb7b26e7-2e74-5b25-8ecf-7fd401969e03"
 testing_pr: 2767
-testing_sha: c2d23e8d87c2c89916e65f3dfe02b09366ecedef
+testing_sha: d0c055891b2cce45c0718618fd24c6a6688c4c40
