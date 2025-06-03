@@ -21,7 +21,7 @@ source: |
       strings.icontains(body.current_thread.text, "adobe")
       and length(beta.ml_topic(body.current_thread.text).topics) == 1
       and all(beta.ml_topic(body.current_thread.text).topics,
-              .name == "File Sharing and Cloud Services"
+              .name == "File Sharing and Cloud Services" and .confidence == "high"
       )
       and length(body.current_thread.text) < 2000
     )
@@ -121,4 +121,4 @@ detection_methods:
 id: "8b6bfa1c-2c13-5099-8ac7-b3f956bd2088"
 og_id: "32cc8bf1-f4d7-549f-a970-eade24b7c6ae"
 testing_pr: 2690
-testing_sha: d67188cc774cd43fa83c48d393dcf1910dcda54a
+testing_sha: 1ba67889e5140187970392b86fc0db67f902d93e
