@@ -8,6 +8,8 @@ severity: "high"
 source: |
   any(body.links, regex.icontains(.href_url.url, ':/\\'))
   or regex.icontains(body.plain.raw, 'https?:\\\\[^\\s]+')
+tags:
+ - "Attack surface reduction"
 attack_types:
   - "Credential Phishing"
   - "Malware/Ransomware"
@@ -18,4 +20,4 @@ detection_methods:
 id: "fc76ddd2-6fda-5051-96c6-9f54879e9f73"
 og_id: "4e659d28-53fa-51ca-888d-a7cab1e4bcad"
 testing_pr: 2723
-testing_sha: a0065ff8653aec021c105fe6e0112511d9ce469a
+testing_sha: 0ec49fd02de44fa0fcb31bad0e5c7a519b9247c0
