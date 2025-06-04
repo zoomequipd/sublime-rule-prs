@@ -854,7 +854,7 @@ if __name__ == '__main__':
     # Determine which functions to run based on SCRIPT_MODE
     if SCRIPT_MODE == 'standard':
         print("Running in standard mode...")
-        #handle_pr_rules('standard')
+        handle_pr_rules('standard')
         handle_closed_prs()
 
     elif SCRIPT_MODE == 'test-rules':
