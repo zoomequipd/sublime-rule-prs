@@ -58,7 +58,6 @@ jobs:
         # Disable adding tags that aren't useful
         ADD_RULE_STATUS_TAG: 'false'
         ADD_PR_REFERENCE: 'false'
-        INCLUDE_PR_IN_NAME: 'false'
         ADD_AUTHOR_TAG: 'false'
         CREATE_OPEN_PR_TAG: 'false'
 
