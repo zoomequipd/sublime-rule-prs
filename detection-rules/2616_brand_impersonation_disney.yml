@@ -112,7 +112,8 @@ source: |
         "disneyadvertising.com",
         "disneydestinations.com",
         "hulu.com",
-        "hulumail.com"
+        "hulumail.com",
+        "canarytechnologies.com" // domain used by a disney resort - hotel mgmt software company
       )
       and headers.auth_summary.dmarc.pass
     )
@@ -145,4 +146,4 @@ detection_methods:
 id: "4c90130a-543a-50ae-8ffd-b442b27dbc01"
 og_id: "bf90b8fb-3f6e-5831-9b3c-1d05b2a4a863"
 testing_pr: 2616
-testing_sha: 048db4af860835a0210d4bce5eb21eb8477fc768
+testing_sha: ec5744921fa746a531ee4bb14a118c8191edc81b
