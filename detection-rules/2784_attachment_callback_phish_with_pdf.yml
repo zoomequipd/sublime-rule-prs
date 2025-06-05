@@ -33,7 +33,14 @@ source: |
             .file_extension == "pdf"
             // get the length of the attached pdf
             and any(file.explode(.),
-                    .depth == 0 and .scan.exiftool.page_count < 3
+                    .depth == 0
+                    and .scan.exiftool.page_count < 3
+                    and not (
+                      strings.istarts_with(.scan.exiftool.producer,
+                                           "Aspose.Words for Java"
+                      )
+                      and .scan.exiftool.creator == "Anusha T"
+                    )
             )
             // check that any _single_ result in the file.explode matches these conditions
             // a second file.explode is required because the OCR is generated at a different depth within 
@@ -87,13 +94,6 @@ source: |
                       strings.icontains(.scan.ocr.raw, "direct debit"),
                       strings.icontains(.scan.ocr.raw, "interest"),
                       strings.icontains(.scan.ocr.raw, "account balance"),
-                    )
-                    // QuickBooks invoices look like this
-                    or (
-                      strings.istarts_with(.scan.exiftool.producer,
-                                           "Aspose.Words for Java"
-                      )
-                      and .scan.exiftool.creator == "Anusha T"
                     )
                   )
               )
@@ -153,4 +153,4 @@ detection_methods:
 id: "5a534671-cb45-5058-bcd6-98eb246c5769"
 og_id: "ac33f097-af20-554c-b29a-56f21be1b285"
 testing_pr: 2784
-testing_sha: 6fdd434340d8d419a4e504f55840b590193c9e6b
+testing_sha: dd40b3cf02313293a0a8f6cc75e009f2e305adf7
