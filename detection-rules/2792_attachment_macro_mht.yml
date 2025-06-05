@@ -1,0 +1,29 @@
+name: "PR# 2792 - Attachment: Macro Files Containing MHT Content"
+description: "Detects macro-enabled files that contain embedded MHT (MIME HTML) content, which is commonly used to hide malicious code through file format manipulation."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(attachments,
+          .file_extension in $file_extensions_macros
+          and any(file.explode(.), .file_extension == "mht")
+  )
+tags:
+  - "Attack surface reduction"
+  - pr_author_zoomequipd
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Malware/Ransomware"
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+  - "Macros"
+  - "Scripting"
+detection_methods:
+  - "Archive analysis"
+  - "File analysis"
+  - "Macro analysis"
+id: "94bb08a5-854f-5fc1-a008-07d96dea70d8"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2792
