@@ -108,17 +108,6 @@ source: |
                       strings.icontains(.scan.ocr.raw, "account balance"),
                     )
                   )
-                  and not (
-                      any(beta.ml_topic(.scan.ocr.raw).topics,
-                        .name == "Professional and Career Development"
-                        and .confidence == "high"
-                        )
-                  )
-                  and 
-                    any(beta.ml_topic(body.html.display_text).topics,
-                      .name == "Professional and Career Development"
-                      and .confidence == "high"
-                    )
               )
               // this section is synced with attachment_callback_phish_with_img.yml and body_callback_phishing_no_attachment.yml
               or any(ml.logo_detect(.).brands,
