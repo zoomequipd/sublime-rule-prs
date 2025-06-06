@@ -1,5 +1,5 @@
-name: "Link: Form Abuse - Pattern Triple-Asterisk PHP Index Link "
-description: "Detects messages containing a specific pattern of triple asterisks surrounding HTTP links that point to PHP index pages with query parameters, indicating potential malicious behavior. This specific pattern has been observed within "
+name: "Link: /index.php Enclosed in Three Asterisks"
+description: "Detects messages containing a specific pattern of triple asterisks surrounding HTTP links that point to PHP index pages with query parameters, indicating potential malicious behavior. This specific pattern has been observed within messages leading to FakeAV/Tech Support scams."
 type: "rule"
 severity: "medium"
 source: |
@@ -19,4 +19,4 @@ detection_methods:
 id: "375b4c5e-1b3d-58ac-9904-a1a6c11d884b"
 og_id: "aa4bbafc-85ac-5e40-a467-e8fc745332be"
 testing_pr: 2739
-testing_sha: 26632a3437c18c2ad1395682a8b14971253f03a6
+testing_sha: 6249c3b0256c456173578a30b5f69bff8a64d441
