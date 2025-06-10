@@ -49,11 +49,6 @@ source: |
             )
           )
   )
-  // negate replies
-  and not (
-    length(headers.references) > 0
-    or any(headers.hops, any(.fields, strings.ilike(.name, "In-Reply-To")))
-  )
   // exclude bounce backs & read receipts
   and not strings.like(sender.email.local_part,
                        "*postmaster*",
@@ -90,4 +85,4 @@ detection_methods:
 id: "bcc29e9d-eb2a-587c-bc1b-82668b4e998e"
 og_id: "00e06af1-d67e-513c-b53e-b9548db8c65e"
 testing_pr: 2817
-testing_sha: 10869223d084c98f4e1a907e6ea498cd1a49c066
+testing_sha: 3e6697b5f7df438b409f0bb7d74e3aa3033928e9
