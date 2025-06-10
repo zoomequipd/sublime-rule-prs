@@ -24,7 +24,9 @@ source: |
                   '\bethereum\b',
                   '\bbinance\b',
                   '\bgemini\b',
-                  '\bwallet\b'
+                  '\bwallet\b',
+                  '\bkraken\b',
+                  '\bsolana\b'
     )
     // token name, e.g. $USDT
     or regex.contains(body.current_thread.text, '\s\$[A-Z]{3,4}\s')
@@ -40,4 +42,4 @@ detection_methods:
 id: "5926b744-902d-593d-8a80-f22a21e4b919"
 og_id: "80a2e2fd-6ba1-5989-b9c5-d1e515f3dc82"
 testing_pr: 2736
-testing_sha: 7bc9bb4465fffc3fac23a0d7696931a6f91ad9e7
+testing_sha: f16f0aa752466d978b7d7938fd3c2fedd467e221
