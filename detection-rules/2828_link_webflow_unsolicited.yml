@@ -1,0 +1,46 @@
+name: "PR# 2828 - Link: Webflow Link from Unsolicited Sender"
+description: "This detection rule matches on messaging containing at least one link to webflow.io from an unsolicited sender.  Webflow.io provides a free plan enabling users to create custom websites and file hosting.  This services has been abused by threat actors to host landing pages directing victims to a next stage of credential phishing."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          // webflow link
+          .href_url.domain.root_domain == 'webflow.io'
+          and .href_url.domain.subdomain != ""
+          and .href_url.domain.subdomain != "www"
+          and .href_url.path == "/"
+  )
+  // not solicited or from malicious/spam user with no FPs
+  and (
+    not profile.by_sender_email().solicited
+    or (
+      profile.by_sender_email().any_messages_malicious_or_spam
+      and not profile.by_sender_email().any_messages_benign
+    )
+  )
+  
+  // not from high trust sender root domains
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+attack_types:
+  - "Callback Phishing"
+tactics_and_techniques:
+  - "Free file host"
+  - "Free subdomain host"
+detection_methods:
+  - "Content analysis"
+  - "URL analysis"
+  - "Sender analysis"
+id: "12320768-6685-5ada-8967-ad6d4e567a1a"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_IndiaAce
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2828
