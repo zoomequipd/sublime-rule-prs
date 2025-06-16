@@ -40,7 +40,7 @@ source: |
    )
     and headers.auth_summary.dmarc.pass
   )
-  
+  and ml.nlu_classifier(body.current_thread.text).language == "english"
   // and the sender is not from high trust sender root domains
   and (
     (
@@ -64,4 +64,4 @@ detection_methods:
 id: "0cdc0e74-4bfe-5066-907c-6ee990ec4634"
 og_id: "76f54e5f-c937-5693-b8e7-3ced7dac61f9"
 testing_pr: 2168
-testing_sha: da41dd0b575efb8a96b139dbfe2408322d2fa35e
+testing_sha: a024affa57eed83ff1d75925e4f8b6ab62783a65
