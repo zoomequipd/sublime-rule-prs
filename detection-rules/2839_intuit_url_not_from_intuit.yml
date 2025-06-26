@@ -11,10 +11,10 @@ source: |
   and any(ml.nlu_classifier(body.current_thread.text).intents,
           .name in ("cred_theft")
           and .confidence != "low"
-          and length(body.current_thread.text) < 1750
   )
+  and length(body.current_thread.text) < 1750
   //check to see if the topic is File Sharing & Cloud Services 
-  and any(beta.ml_topic(body.current_thread.text, display_name=sender.display_name, subject=subject.subject).topics,
+  and any(beta.ml_topic(body.current_thread.text).topics,
       .name == "File Sharing and Cloud Services"
       and .confidence != "low"
   )
@@ -31,4 +31,4 @@ detection_methods:
 id: "0d38b92d-db34-5c71-a325-3b6f54038f4b"
 og_id: "cd15cc34-76b3-5993-bade-053e05b2ad48"
 testing_pr: 2839
-testing_sha: e4f0240d0f484e8300e4670313055e6335c29f7b
+testing_sha: 40f678193fa12014a51a32b232d951aae3b1776c
