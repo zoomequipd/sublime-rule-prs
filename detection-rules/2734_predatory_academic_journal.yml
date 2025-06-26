@@ -117,6 +117,9 @@ source: |
     // Alibaba infrastructure
     any(headers.domains, .root_domain in ("aliyun.com", "aliyun-inc.com")),
   
+    // Known predatory journals that we've observed and matched to beallslist.net
+    sender.email.domain.root_domain in ("iris-research.net", "irispublishers.com"),
+  
     // sender domain and body link domains do not match, but have the same registration details
     (
       length(body.links) > 0
@@ -152,4 +155,4 @@ detection_methods:
 id: "a6495255-1313-56c4-96e3-3a5e056299bd"
 og_id: "263ca56b-d31b-5b38-b00e-c1c45e5e96bb"
 testing_pr: 2734
-testing_sha: e95b9b84a590ce6850ec3e7e1a5234f57f896245
+testing_sha: 186132a4dd8bd7b6547ca2590e6fe13427f12cfe
