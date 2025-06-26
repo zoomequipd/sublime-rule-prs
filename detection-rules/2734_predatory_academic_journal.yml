@@ -56,7 +56,7 @@ source: |
                     '(short\s+notice|busy\s+schedule|quick\s+turnaround|urgent\s+deadline|limited\s+slots)',
   
                     // "No charge" red flags
-                    '(no\s+charge|free\s+of\s+charge|waived\s+fee|complimentary|at\s+no\s+cost)\s+(for\s+you|since\s+you|because\s+you)',
+                    '(no\s+charge|free\s+of\s+charge|waived\s+fee|complimentary|at\s+no\s+cost)',
   
                     // Vague topic promises
                     '(topic\s+of\s+your\s+choice|any\s+topic\s+related|broad\s+range\s+of\s+topics|multidisciplinary\s+approach)',
@@ -104,8 +104,7 @@ source: |
     strings.contains(headers.message_id, "@DESKTOP-"),
   
     // requesting a manuscript review
-    length(attachments) > 0
-    and strings.ilike(body.current_thread.text, "*review*")
+    strings.ilike(body.current_thread.text, "*review*")
     and strings.ilike(body.current_thread.text, "*manuscript*", "*submission*"),
   
     // Chinese registrant country
@@ -118,7 +117,11 @@ source: |
     any(headers.domains, .root_domain in ("aliyun.com", "aliyun-inc.com")),
   
     // Known predatory journals that we've observed and matched to beallslist.net
-    sender.email.domain.root_domain in ("iris-research.net", "irispublishers.com"),
+    sender.email.domain.root_domain in (
+      "iris-research.net",
+      "irispublishers.com",
+      "lidsen.com"
+    ),
   
     // sender domain and body link domains do not match, but have the same registration details
     (
@@ -155,4 +158,4 @@ detection_methods:
 id: "a6495255-1313-56c4-96e3-3a5e056299bd"
 og_id: "263ca56b-d31b-5b38-b00e-c1c45e5e96bb"
 testing_pr: 2734
-testing_sha: 186132a4dd8bd7b6547ca2590e6fe13427f12cfe
+testing_sha: 8a34cdd07b39b2fbbc17ac36ee58c0c4ac08fd0f
