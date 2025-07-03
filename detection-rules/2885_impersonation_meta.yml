@@ -14,6 +14,7 @@ source: |
       regex.icontains(sender.display_name,
                     'facebook ?ads',
                     'facebook ?business',
+                    'meta ?account',
                     'meta ?support',
                     'meta ?business',
                     'meta ?for ?business',
@@ -181,4 +182,4 @@ detection_methods:
 id: "7d39e00c-fa90-5ca0-8272-e4c97b934334"
 og_id: "e38f1e3b-79be-5a59-b084-24a851daf6b9"
 testing_pr: 2885
-testing_sha: 00f64397e7c84fb21454e83feacb3affb9e28107
+testing_sha: 5db3c13796dbbc887efefb85713b233b7ef173f0
