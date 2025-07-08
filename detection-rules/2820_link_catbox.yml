@@ -1,0 +1,35 @@
+name: "PR# 2820 - Catbox.moe Link From Untrusted Source"
+description: "Detects messages containing links to catbox.moe file hosting service from senders who either aren't in highly trusted domains or failed DMARC authentication"
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          .href_url.domain.root_domain == "catbox.moe"
+          and not strings.iends_with(.href_url.path, ".json")
+          // negate highly trusted sender domains unless they fail DMARC authentication
+          and (
+            (
+              sender.email.domain.root_domain in $high_trust_sender_root_domains
+              and not headers.auth_summary.dmarc.pass
+            )
+            or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+          )
+  )
+tags:
+  - "Attack surface reduction"
+  - pr_author_brycampbell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Free file host"
+  - "Social engineering"
+detection_methods:
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
+id: "33e33160-752b-559c-956e-4f0eeeff212c"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2820
