@@ -1,0 +1,60 @@
+name: "PR# 2921 - Job Scam (unsolicited sender)"
+description: |
+  Detects job scam attempts by analyzing the message body text from an unsolicited sender.
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  and (
+    any(ml.nlu_classifier(body.current_thread.text).intents,
+        .name in ("job_scam") and .confidence == "high"
+    )
+  )
+  and (
+    any(ml.nlu_classifier(body.current_thread.text).entities,
+        .name == "financial"
+    )
+    or strings.icontains(body.current_thread.text, "salary package")
+    or strings.icontains(body.current_thread.text, "kindly")
+    or (
+      any(ml.nlu_classifier(body.current_thread.text).entities,
+          .name in ("greeting", "salutation")
+      )
+      and (
+        (
+          length(recipients.to) == 0
+          or length(recipients.bcc) > 0
+          or (
+            all(recipients.to, .email.domain.valid == false)
+            and all(recipients.cc, .email.domain.valid == false)
+          )
+        )
+      )
+    )
+  )
+  // negating income / job verification senders
+  and not (
+    sender.email.domain.root_domain in ('loandepot.com')
+    and headers.auth_summary.dmarc.pass
+  )
+  and (
+    not profile.by_sender().solicited
+    or profile.by_sender().any_messages_malicious_or_spam
+  )
+  and not profile.by_sender().any_false_positives
+attack_types:
+  - "BEC/Fraud"
+tactics_and_techniques:
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Natural Language Understanding"
+  - "Sender analysis"
+id: "e894fed3-f75f-5e42-9e50-66a61c09ec3c"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_markmsublime
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2921
