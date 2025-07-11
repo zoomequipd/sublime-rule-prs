@@ -13,6 +13,7 @@ source: |
   // action word
   and (
     strings.like(body.current_thread.text, '*airdrop*')
+    or strings.ilike(subject.base, '*airdrop*')
     or regex.icontains(body.current_thread.text, 'receive \$\d{2,5} worth')
     or regex.icontains(body.current_thread.text, 'claim your (allocation|airdrop|bonus|share|\$\d{2,5})')
   )
@@ -42,4 +43,4 @@ detection_methods:
 id: "5926b744-902d-593d-8a80-f22a21e4b919"
 og_id: "80a2e2fd-6ba1-5989-b9c5-d1e515f3dc82"
 testing_pr: 2736
-testing_sha: f16f0aa752466d978b7d7938fd3c2fedd467e221
+testing_sha: 8526c0959ac344b5c6314b4b401061b65673d7d5
