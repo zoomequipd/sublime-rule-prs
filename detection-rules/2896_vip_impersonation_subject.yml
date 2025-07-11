@@ -54,7 +54,7 @@ source: |
     )
     or (
       profile.by_sender().any_messages_malicious_or_spam
-      and not profile.by_sender().any_false_positives
+      and not profile.by_sender().any_messages_benign
     )
   )
   
@@ -75,8 +75,6 @@ source: |
     )
     or sender.email.domain.root_domain not in $high_trust_sender_root_domains
   )
-  
-  and not profile.by_sender().any_false_positives
 
 tags:
   - "Attack surface reduction"
@@ -90,4 +88,4 @@ detection_methods:
 id: "4b27357d-2c88-5f5f-a2ba-77daa910e65f"
 og_id: "0a641fe5-70b9-5f4e-9c34-0d70eac11fae"
 testing_pr: 2896
-testing_sha: a67d89f0266ec2b5e957b2d8e46dabf8e06c2353
+testing_sha: 653c85e1f8e85199bfdb09c8337868c5422dd9a4
