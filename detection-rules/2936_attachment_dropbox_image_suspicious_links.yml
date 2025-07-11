@@ -1,0 +1,40 @@
+name: "PR# 2936 - Attachment: Dropbox image lure with no Dropbox domains in links"
+description: "Detects Dropbox phishing emails with no Dropbox links with image attachments from an untrusted sender."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and length(filter(attachments, .file_type not in $file_types_images)) == 0
+  and any(body.links,
+          not strings.ilike(.href_url.domain.root_domain, "dropbox.*")
+  )
+  and any(attachments,
+          .file_type in $file_types_images
+          and any(file.explode(.),
+                  strings.ilike(.scan.ocr.raw, "*dropbox*")
+                  and strings.ilike(.scan.ocr.raw, "*review*", "*sign*")
+          )
+  )
+  and (
+    not profile.by_sender().solicited
+    or profile.by_sender().any_messages_malicious_or_spam
+  )
+  and not profile.by_sender().any_messages_benign 
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "File analysis"
+  - "Header analysis"
+  - "Optical Character Recognition"
+  - "Sender analysis"
+id: "194bdcf9-9991-5ebe-bdf5-e5be2db8328c"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_IndiaAce
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2936
