@@ -9,18 +9,20 @@ source: |
         .href_url.domain.root_domain in (
           "ovh.net",
           "secureserver.net",
-          "kundenserver.de"
+          "kundenserver.de",
+          "hetzner.de"
         )
         or strings.icontains(.href_url.domain.domain, "vps-")
     ),
     any(headers.domains,
-        .root_domain in ("ovh.net", "secureserver.net", "kundenserver.de")
+        .root_domain in ("ovh.net", "secureserver.net", "kundenserver.de", "hetzner.de",)
         or strings.icontains(.domain, "vps-")
     ),
     headers.return_path.domain.root_domain in (
       "ovh.net",
       "secureserver.net",
-      "kundenserver.de"
+      "kundenserver.de",
+      "hetzner.de"
     ),
     strings.icontains(headers.return_path.domain.domain, "vps-"),
     length(body.ips) > 0
@@ -39,4 +41,4 @@ detection_methods:
 id: "042fd7bc-59c8-579c-9783-f0b0764bb5d4"
 og_id: "eef205c3-2511-5bed-aab3-ea04546547b2"
 testing_pr: 2914
-testing_sha: e362891bb8889cc4bea3de80e852a9f3be41efad
+testing_sha: 7a2845203107dadea467223797219d060be524d3
