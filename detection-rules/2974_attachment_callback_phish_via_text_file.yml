@@ -38,6 +38,7 @@ source: |
                           )
                           and any(..scan.strings.strings,
                                   regex.icontains(.,
+                                                  '\b\+?(\d{1}.)?\(?\d{3}?\)?.~?.?\d{3}.?~?.\d{4}\b',
                                                   '\+?([ilo0-9]{1}.)?\(?[ilo0-9]{3}?\)?.[ilo0-9]{3}.?[ilo0-9]{4}',
                                                   '\+?([ilo0-9]{1,2})?\s?\(?\d{3}\)?[\s\.\-⋅]{0,5}[ilo0-9]{3}[\s\.\-⋅]{0,5}[ilo0-9]{4}'
                                   )
@@ -76,4 +77,4 @@ detection_methods:
 id: "44e6cc25-34e7-5190-ac06-fa7dd67d2c63"
 og_id: "ca39c83a-b308-532d-894b-528bdaef2748"
 testing_pr: 2974
-testing_sha: 64b26db3e68c49323e9d36c7fe5e24a1fcbececf
+testing_sha: 93ffbb47b8c08e1a45f97b9fb7a72b254c4d6d81
