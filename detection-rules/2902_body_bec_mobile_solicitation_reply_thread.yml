@@ -1,4 +1,4 @@
-name: "Business Email Compromise: request for mobile number via reply thread hijacking"
+name: "Business Email Compromise: Request For Mobile Number Via Reply Thread Hijacking"
 description: "This rule detects BEC attacks that use reply threads to solicit mobile numbers, evading detection rules that exclude RE: subjects."
 type: "rule"
 severity: "medium"
@@ -64,4 +64,4 @@ detection_methods:
 id: "d01e462d-2f84-5e03-84d2-0f5f5d056aea"
 og_id: "0282f346-7175-5d9c-9b10-a3e99462d263"
 testing_pr: 2902
-testing_sha: e48f7779bfe5d7db92ac3e3152d124f20abfb745
+testing_sha: 286dd87dd17e7a95aa878b4f0a140abbd5cb3395
