@@ -32,10 +32,15 @@ source: |
         "bluebbb.org", // official BBB site
         "thebbb.org", // official BBB site        
         "thefirstbbb.org",
-        "bbbnp.org" // unrelated domain that sends with BBB within the display name
+        "bbbnp.org", // unrelated domain that sends with BBB within the display name
+        "lasvbbb.org", // lasvegas
+        "bbbhou.org", // houston
+        "bbbemail.org", // legit domain
+        "bbbarkansas.org" // arkansas
       )
      or sender.email.domain.domain in (
-        "bbbwisegivingalliance.ccsend.com" // official BBB comms for events
+        "bbbwisegivingalliance.ccsend.com", // official BBB comms for events
+        "betterbeveragebureau.ccsend.com" //unrelated but uses BBB
      )
    )
     and headers.auth_summary.dmarc.pass
@@ -64,4 +69,4 @@ detection_methods:
 id: "0cdc0e74-4bfe-5066-907c-6ee990ec4634"
 og_id: "76f54e5f-c937-5693-b8e7-3ced7dac61f9"
 testing_pr: 2168
-testing_sha: f8b4e3ed0c64a75c775d222af678b6f1e8da3391
+testing_sha: e03a1ebe310cb06fd584d63a2f39ce0e78f798ca
