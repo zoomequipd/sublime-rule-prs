@@ -28,7 +28,7 @@ source: |
     profile.by_sender().prevalence in ("new", "outlier")
     or (
       profile.by_sender().any_messages_malicious_or_spam
-      and not profile.by_sender().any_false_positives
+      and not profile.by_sender().any_messages_benign
     )
   )
 attack_types:
@@ -42,4 +42,4 @@ detection_methods:
 id: "de1f1ffb-e136-5c50-bfba-d82423147950"
 og_id: "b7797e4c-f2d7-5330-8a16-7123fe9bb6a8"
 testing_pr: 2783
-testing_sha: 036aec2ec8f6beb4eeed71863b346ee84d204bff
+testing_sha: 4fb585974b59a5aead298b2792c2459f9b029280
