@@ -58,7 +58,7 @@ source: |
             and .href_url.domain.root_domain not in $org_domains
             and .href_url.domain.valid
             and regex.icontains(.display_text,
-                                "(go.?to|view|show|display|access|open.?in) (team|planner|group|task|browser)"
+                                "(go.?to|view|show|display|access|open.?in|review.?on) (teams?|planner|group|task|browser)"
             )
     )
     
@@ -133,10 +133,10 @@ source: |
       not profile.by_sender().solicited
       or (
         profile.by_sender().any_messages_malicious_or_spam
-        and not profile.by_sender().any_false_positives
+        and not profile.by_sender().any_messages_benign
       )
     )
-    and not profile.by_sender().any_false_positives
+    and not profile.by_sender().any_messages_benign
     
     // exclude marketing jargon from ms partners
     and not regex.icontains(body.current_thread.text,
@@ -159,4 +159,4 @@ detection_methods:
 id: "d129016a-74e8-5149-b020-0cb1cffda8a3"
 og_id: "ea363c08-479f-5437-9b5d-3d9e07098200"
 testing_pr: 2783
-testing_sha: 036aec2ec8f6beb4eeed71863b346ee84d204bff
+testing_sha: 4fb585974b59a5aead298b2792c2459f9b029280
