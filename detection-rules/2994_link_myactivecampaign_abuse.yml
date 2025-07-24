@@ -1,0 +1,28 @@
+name: "PR# 2994 - Link: MyActiveCampaign Link Abuse"
+description: "Detects messages from myactivecampaign.com containing links and suspicious language that do not exclusively point to activehosted.com domains."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and 0 < length(body.links) < 10
+  and sender.email.domain.root_domain == "myactivecampaign.com"
+  and any(ml.nlu_classifier(body.current_thread.text).intents,
+          .name == "cred_theft" and .confidence == "high"
+  )
+  and not all(body.links, .href_url.domain.root_domain == "activehosted.com")
+tags:
+  - "Attack surface reduction"
+  - pr_author_aidenmitchell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Social engineering"
+detection_methods:
+  - "Natural Language Understanding"
+  - "URL analysis"
+  - "Sender analysis"
+id: "719bfdf7-27f4-5cfa-9c57-02a6f8e19fa0"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/2994
