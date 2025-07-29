@@ -9,6 +9,7 @@ source: |
     (
       strings.icontains(subject.subject, 'salary')
       or regex.icontains(subject.subject, '\bpay(?:roll|\b)')
+      or strings.icontains(subject.subject, 'remuneration')
       or strings.icontains(subject.subject, 'bonus')
       or strings.icontains(subject.subject, 'incentive')
       or strings.icontains(subject.subject, 'merit')
@@ -29,6 +30,7 @@ source: |
       or strings.icontains(subject.subject, 'change')
       or strings.icontains(subject.subject, 'modification')
       or strings.icontains(subject.subject, 'distribution')
+      or strings.icontains(subject.subject, 'details')
       or regex.icontains(subject.subject, 'revis(?:ed|ion)')
       or regex.icontains(subject.subject, 'amend(?:ed|ment)')
       or regex.icontains(subject.subject, 'update(?:d| to)')
@@ -62,6 +64,7 @@ source: |
             or strings.icontains(.file_name, 'distribution')
             or regex.icontains(.file_name, 'revis(?:ed|ion)')
             or regex.icontains(.file_name, 'amend(?:ed|ment)')
+            or regex.icontains(.file_name, 'adjust(?:ed|ment)')
             or regex.icontains(.file_name, 'update(?:d| to)')
             or (
               // file name contains recipient's email
