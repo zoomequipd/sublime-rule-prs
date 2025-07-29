@@ -1,5 +1,5 @@
 name: "Attachment: Suspicious Employee Policy Update Document Lure"
-description: "Inbound message containing subject line and attachments related to handbook, compensation, or policy updates. Attachments are limited to Microsoft Word documents and match similar update-related terminology.  This pattern has been observed used to delivery credential phishing via QR codes."
+description: "Inbound message containing subject line and attachments related to handbook, compensation, or policy updates. Attachments are limited to Microsoft Word documents and PDF files that match similar update-related terminology.  This pattern has been observed used to deliver credential phishing via QR codes."
 type: "rule"
 severity: "medium"
 source: |
@@ -92,4 +92,4 @@ detection_methods:
 id: "0491d470-5c75-58c6-a84f-9492b6574f6d"
 og_id: "a8bf1fd1-d9fa-572d-8957-51d6025a5248"
 testing_pr: 3005
-testing_sha: 092571c3284d5dde736e6f763d9d2eb943889c6a
+testing_sha: d4d461cfb787419db641b546339a9b4de30ecb3a
