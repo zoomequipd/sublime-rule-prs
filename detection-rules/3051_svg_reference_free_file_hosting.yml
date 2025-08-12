@@ -31,6 +31,11 @@ source: |
                       strings.iends_with(..href_url.url, strings.concat('.', .))
           )
   )
+  and not (
+    strings.icontains(body.current_thread.text, "Modify my alert settings")
+    or strings.icontains(body.current_thread.text, "Requested resource")
+    or strings.icontains(body.current_thread.text, "against company policy")
+  )
 
 attack_types:
   - "Credential Phishing"
@@ -46,4 +51,4 @@ detection_methods:
 id: "1f66ce88-3222-5200-8e07-e7d758917de4"
 og_id: "13c1bb93-f4b8-5ba1-b49b-5783eda7dca0"
 testing_pr: 3051
-testing_sha: 32a9a8c800a71fce8b674bd81d97197e8ae062d8
+testing_sha: 403fd99874761dd04b538575f220fec15457e0a8
