@@ -3,7 +3,6 @@ description: "Detects messages where the sender's display name contains emoji ch
 type: "rule"
 severity: "low"
 source: |
-  // Hunt for emails with emoji in sender display name and financial symbols in subject
   type.inbound
   // Check for emoji in sender display name using Unicode ranges
   and regex.contains(sender.display_name,
@@ -12,11 +11,11 @@ source: |
   // Check for financial symbols in subject
   and regex.contains(subject.subject, '[\$£€¥₿]')
   
-    and (
-      headers.auth_summary.dmarc.pass is null
-      or headers.auth_summary.dmarc.pass == false
-    )
-    and sender.email.domain.root_domain not in $alexa_1m
+  and (
+    headers.auth_summary.dmarc.pass is null
+    or headers.auth_summary.dmarc.pass == false
+  )
+  and sender.email.domain.root_domain not in $alexa_1m
 
 attack_types:
   - "BEC/Fraud"
