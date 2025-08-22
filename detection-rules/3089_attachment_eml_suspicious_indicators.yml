@@ -16,15 +16,7 @@ source: |
       ) == 1
       and length(filter(attachments,
                         .file_type in $file_types_images
-                        and 
-                        (
-                          any(regex.extract(.content_id, '^<(?P<cid>.*)\>$'),
-                            strings.icontains(body.html.raw,
-                                              .named_groups["cid"]
-                            )
-                          )
-                          or strings.icontains(body.html.raw, .content_id)
-                        )
+                        and strings.icontains(body.html.raw, .content_id)
                  )
       ) == length(attachments) - 1
     )
@@ -96,4 +88,4 @@ detection_methods:
 id: "c1c49554-df9c-53c5-842e-6e026d946300"
 og_id: "deb5d08d-92b7-5f7b-a7b0-e5053221c2f5"
 testing_pr: 3089
-testing_sha: 4e1d6fa9f3dbb8ff4e45cef1401026f153e9c84a
+testing_sha: 34d6e6c7279ef9f0424f908a08467c1e74de288e
