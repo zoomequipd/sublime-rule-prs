@@ -1,0 +1,32 @@
+source: |-
+  type.inbound
+  and length(attachments) > 0
+  and any(attachments,
+          (
+            .file_type in $file_extensions_common_archives
+            or strings.contains(.file_name, "{")
+          )
+          and any(beta.expand_archives(.).files,
+                  strings.contains(.file_name, "{")
+                  and any(beta.scan_base64(.file_name), length(.) > 1)
+          )
+  )
+type: rule
+name: 'PR# 3113 - Attachment: Base64 encoded bash command in filename'
+authors:
+  - twitter: "vector_sec"
+description: This rule detects a fileless attack technique where a malicious payload
+  is encoded directly into a filename. This technique, used by threats like VShell.
+  The rule is designed to find these malicious filenames both in direct attachments
+  and within archived files (like .zip, .rar, etc.).
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3113
+- https://www.trellix.com/blogs/research/the-silent-fileless-threat-of-vshell/
+tags:
+  - pr_author_vector-sec
+  - created_from_open_prs
+  - rule_status_added
+- Suspicious Attachment
+- Malware
+severity: high
+id: "0fb1974d-8fd6-556b-a352-d3c43e1259b1"
