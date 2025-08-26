@@ -1,0 +1,41 @@
+name: "PR# 3129 - Brand impersonation: Google Careers"
+description: "Detects messages impersonating Google Careers or job opportunities in multiple languages that contain links to domains other than Google's legitimate domains, from senders not authenticated as Google."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and (
+    strings.icontains(body.current_thread.text, 'Google Careers')
+    // Spanish
+    or strings.icontains(body.current_thread.text, 'Google Carreras')
+    // German Norwegian
+    or strings.icontains(body.current_thread.text, 'Google Karriere')
+    // Swedish
+    or strings.icontains(body.current_thread.text, 'Google Karriär')
+    // Dutch
+    or strings.icontains(body.current_thread.text, 'Google Carrières')
+    // Turkish
+    or strings.icontains(body.current_thread.text, 'Google Kariyer')
+  )
+  and not any(body.links, .href_url.domain.root_domain in ("google.com", "c.gle"))
+  and not (
+    sender.email.domain.root_domain in ("google.com")
+    and headers.auth_summary.dmarc.pass
+  )
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
+id: "b3e3f139-db8f-548c-9c8b-eab1ce9a069e"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3129
