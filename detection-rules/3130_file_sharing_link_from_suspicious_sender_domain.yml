@@ -16,7 +16,7 @@ source: |
           )
   )
   and sender.email.domain.tld in $suspicious_tlds
-  and not sender.email.domain.root_domain in ("notion.so")
+  and not sender.email.domain.root_domain in ("notion.so", "cribl.cloud")
   and (
     not profile.by_sender().solicited
     or (
@@ -38,4 +38,4 @@ detection_methods:
 id: "539bdd0e-4c8f-5a7e-888e-bd1692f2792a"
 og_id: "95f20354-3091-537e-9fe0-80ea8b64913b"
 testing_pr: 3130
-testing_sha: 642870b8bb254615a46489d3360c99cd2c6dde56
+testing_sha: 3976afce867212d0e34fb48266ac2670218794d0
