@@ -37,17 +37,23 @@ source: |
     )
   )
 
-attack_types:
-  - "Reconnaissance"
-  - "Credential Access"
-detection_methods:
-  - "Content analysis" 
-  - "Sender analysis"
 tags:
   - "Attack surface reduction"
   - pr_author_morriscode
   - created_from_open_prs
   - rule_status_added
+attack_types:
+  - "BEC/Fraud"
+  - "Credential Phishing"
+  - "Spam"
+tactics_and_techniques:
+  - "Free email provider"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
 id: "13f8c96a-3e95-5597-a127-b0090a7e04d4"
 references:
   - https://github.com/sublime-security/sublime-rules/pull/3119
