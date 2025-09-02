@@ -37,14 +37,20 @@ source: |
   and not (
     sender.email.domain.root_domain in $org_domains
     or (
-      sender.email.domain.root_domain in (
-        "mastercard.com",
-        "mastercardservices.com",
-        "synchrony.com",
-        "concoracredit.com",
-        "atlasfin.com",
-        "breadfinancial.com",
-        "aspire.com"
+      (
+        sender.email.domain.root_domain in (
+          "mastercard.com",
+          "mastercardservices.com",
+          "synchrony.com",
+          "concoracredit.com",
+          "atlasfin.com",
+          "breadfinancial.com",
+          "aspire.com",
+          "blazecc.com",
+          "sebkortbank.com",
+          "imprint.co"
+        )
+        or sender.email.domain.domain in ("mastercardidcheck.jackhenry.com")
       )
       and headers.auth_summary.dmarc.pass
     )
@@ -74,4 +80,4 @@ detection_methods:
 id: "f9a84d33-83f2-529a-b78b-984538765fb9"
 og_id: "85acbbfd-f119-5337-a421-8e2d5771e213"
 testing_pr: 2937
-testing_sha: c0a2d903f37b6d67eeb3575268f797406657490e
+testing_sha: 7ac0a14ec4acef1a7cb8946370e6408b8bd0e740
