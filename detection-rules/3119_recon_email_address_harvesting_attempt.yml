@@ -5,7 +5,7 @@ type: "rule"
 severity: "medium"
 source: |
   type.inbound
-  and length(subject.subject) <= 15
+  and length(subject.base) <= 15
   // detect email addresses in body text
   and (
     regex.imatch(body.current_thread.text, '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
@@ -14,7 +14,7 @@ source: |
   and sender.email.domain.root_domain in $free_email_providers
   // no attachments but allow one link  
   and length(attachments) == 0
-  and length(body.links) == 1
+  and length(body.current_thread.links) == 1
   // negate sender profiles completely if auth is failing
   and (
     (
