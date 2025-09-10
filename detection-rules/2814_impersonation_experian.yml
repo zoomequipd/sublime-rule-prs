@@ -15,7 +15,9 @@ source: |
     'serasaexperian.com.br',
     'mpv.com',
     'experian-ems.com',
-    'experianhealth.com'
+    'experianhealth.com',
+    'experiancreditcenter.com', // Experian owned credit center website
+    'membershipmail.net' // Experian associated domain based on MX record
   )
   
   // and not if the sender.display.name contains "via" and dmarc pass from experian.com
