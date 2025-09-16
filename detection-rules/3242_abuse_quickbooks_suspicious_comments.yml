@@ -25,9 +25,7 @@ source: |
           html.xpath(body.html, '//div[@class="mlr22"]').nodes,
           html.xpath(body.html, '//td[@class="itemDesc"]//div').nodes,
           html.xpath(body.html, '//td[@class="shippingContent"]//div').nodes,
-          html.xpath(body.html,
-                     '//table[@class="shippingAndCustomLayout width100"]'
-          ).nodes
+          html.xpath(body.html, '//table[@class="shippingAndCustomLayout width100"]').nodes
         ],
         any(.,
             regex.icontains(.inner_text,
@@ -53,4 +51,4 @@ detection_methods:
 id: "d573a3fe-9a72-583b-aa5b-2eff85f6ec4b"
 og_id: "a23d0950-9117-5199-bc74-7192217b80ff"
 testing_pr: 3242
-testing_sha: b7e4eb8348c9956848dd98d1f61bb81eaeec4b1b
+testing_sha: 50dc6fc6af09e5c1feef254ca331e9d2ea3e829a
