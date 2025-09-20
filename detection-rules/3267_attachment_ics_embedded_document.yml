@@ -1,0 +1,36 @@
+name: "PR# 3267 - Attachment: ICS with embedded document"
+description: |
+  ICS invite contains an embedded document.
+references:
+  - "https://delivr.to/payloads?id=2212f8db-5a21-4b36-a15e-4097adbc136d"
+  - https://github.com/sublime-security/sublime-rules/pull/3267
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  and any(attachments,
+          .file_extension == "ics"
+          and strings.ilike(file.parse_text(.).text,
+                            '*ATTACH;ENCODING=*;VALUE=BINARY*'
+          )
+          and (
+            strings.ilike(file.parse_text(.).text, '*FILENAME=*.doc*')
+            or strings.ilike(file.parse_text(.).text, '*FILENAME=*.dot*')
+            or strings.ilike(file.parse_text(.).text, '*FILENAME=*.pp*')
+            or strings.ilike(file.parse_text(.).text, '*FILENAME=*.wbk*')
+            or strings.ilike(file.parse_text(.).text, '*FILENAME=*.xl*')
+            or strings.ilike(file.parse_text(.).text, '*FILENAME=*.html*')
+          )
+  )
+
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "File analysis"
+id: "eee67164-45ef-50dd-b2ee-f2c8ce26f170"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
