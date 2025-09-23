@@ -1,5 +1,5 @@
-name: "PR# 2711 - Body HTML: Recipient SLD In HTML Class"
-description: "Detects when there is a a single recipient within $org_domains where the domain SLD is concealed within HTML class attributes. The message comes from either an unauthenticated trusted sender or an untrusted source."
+name: "PR# 2711 - Body HTML: Recipient SLD in HTML class"
+description: "Detects when there is a single recipient within $org_domains where the domain SLD is concealed within HTML class attributes. The message comes from either an unauthenticated trusted sender or an untrusted source."
 type: "rule"
 severity: "medium"
 source: |
@@ -16,7 +16,7 @@ source: |
     and all(recipients.to, .email.domain.domain in $org_domains)
   )
   
-  // there are more than 30 class attributes containinging the recipient's SLD
+  // there are more than 30 class attributes containing the recipient's SLD
   and length(filter(html.xpath(body.html, '//@class').nodes,
                     any(recipients.to,
                         // the class name is the same
