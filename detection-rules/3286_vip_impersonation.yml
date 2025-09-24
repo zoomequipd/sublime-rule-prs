@@ -16,7 +16,9 @@ source: |
     any($org_vips, .display_name =~ sender.display_name)
     or (
       any($org_vips, strings.istarts_with(sender.display_name, .display_name))
-      and profile.by_sender().prevalence == "new"
+      and any(ml.nlu_classifier(body.current_thread.text).intents,
+              .name == "bec" and .confidence == "high"
+      )
     )
   )
   and (
@@ -70,4 +72,4 @@ detection_methods:
 id: "9ea2c74c-868e-5287-9d7b-6c0f68950913"
 og_id: "e42c84b7-9d50-5870-9a5d-311670a14bc1"
 testing_pr: 3286
-testing_sha: bca19851730906b69079f26f541d390ffe8f9247
+testing_sha: 1897f172c309a3c3d8db508422b676c779a99cfd
