@@ -1,0 +1,29 @@
+name: "PR# 3313 - Brand impersonation: Punchbowl"
+description: "Detects messages impersonating Punchbowl invitations not originating from legitimate Punchbowl domain."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and strings.icontains(beta.ocr(file.message_screenshot()).text, "punchbowl")
+  // Phrasing is typically "You're invited"
+  and strings.icontains(body.current_thread.text, "you're invited")
+  // Legitimate sender will be from punchbowl
+  and sender.email.email != "mail@mail.punchbowl.com"
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Computer Vision"
+  - "Content analysis"
+  - "Optical Character Recognition"
+  - "Sender analysis"
+id: "a2729c45-3343-5d1e-aee4-5dd558d1d24a"
+tags:
+  - created_from_open_prs
+  - rule_status_added
+  - pr_author_missingn0pe
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3313
