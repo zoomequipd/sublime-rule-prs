@@ -1,0 +1,45 @@
+name: "PR# 3324 - Non-RFC compliant calendar files from unsolicited sender"
+description: "Detects calendar (.ics) files that do not follow RFC standards by lacking required UID identifiers while containing specific calendar components (VTODO, VJOURNAL, VFREEBUSY, or VEVENT). Forged ICS calendar invites can be spoofed to seemingly originate from any sender."
+type: "rule"
+severity: "medium"
+references:
+  - "https://mrd0x.com/spoofing-calendar-invites-using-ics-files/"
+  - https://github.com/sublime-security/sublime-rules/pull/3324
+source: |
+  type.inbound
+  and any(attachments,
+          (
+            .file_extension in $file_extensions_common_archives
+            or .file_extension == "ics"
+            or .content_type == "text/calendar"
+          )
+          and any(file.explode(.),
+                  (.file_extension == "ics" or .flavors.mime == "text/calendar")
+                  and any(.scan.ics.calendars,
+                          any(.components,
+                              .uid is null
+                              and .type in (
+                                'VEVENT',
+                                'VJOURNAL',
+                                'VFREEBUSY',
+                                'VTODO'
+                              )
+                          )
+                  )
+          )
+  )
+  and not profile.by_sender_email().any_messages_benign
+tags:
+  - "Attack surface reduction"
+  - pr_author_zoomequipd
+  - created_from_open_prs
+  - rule_status_modified
+tactics_and_techniques:
+  - "Evasion"
+  - "Social engineering"
+detection_methods:
+  - "Archive analysis"
+  - "Content analysis"
+  - "File analysis"
+  - "Sender analysis"
+id: "ccca3c82-2e75-5379-93c3-820c8b89f694"
