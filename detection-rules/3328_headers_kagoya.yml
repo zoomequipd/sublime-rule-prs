@@ -1,0 +1,22 @@
+name: "PR# 3328 - Headers: Kagoya domain in routing"
+description: "Message contains kagoya.net domain in the email headers, indicating routing through Kagoya Internet Routing services."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(headers.domains, .root_domain == "kagoya.net")
+tags:
+  - "Attack surface reduction"
+  - pr_author_markmsublime
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "Header analysis"
+id: "ee2ad621-8573-5eed-a68b-cb3494d5e575"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3328
