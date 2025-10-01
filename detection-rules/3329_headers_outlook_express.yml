@@ -1,0 +1,24 @@
+name: "PR# 3329 - Headers: Outlook Express mailer"
+description: "Detects emails claiming to be sent from Outlook Express, which is a legacy email client that is no longer supported or commonly used."
+type: "rule"
+severity: "medium"
+source: |
+  strings.icontains(headers.mailer, 'Outlook Express')
+  and not profile.by_sender_email().any_messages_benign
+tags:
+  - "Attack surface reduction"
+  - pr_author_markmsublime
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "BEC/Fraud"
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+  - "Spoofing"
+detection_methods:
+  - "Header analysis"
+id: "77a805a0-f409-51e2-9870-ba20be35cc96"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3329
