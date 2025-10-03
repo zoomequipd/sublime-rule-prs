@@ -5,8 +5,12 @@ severity: "low"
 source: |
   type.inbound
   and sender.email.email not in $recipient_emails
-  and strings.icontains(body.current_thread.text, "waiting for your reply")
-  and any(
+  and any([body.current_thread], 
+      strings.icontains(.text, "waiting for your reply")
+      or strings.icontains(.text, "issues on your website")
+      or strings.icontains(.text, "quick screenshot")
+  )
+  or any(
       body.previous_threads, strings.icontains(.text, "errors on your web")
       or strings.icontains(.text, "errors report")
       or (
@@ -14,6 +18,7 @@ source: |
       )
       or strings.icontains(.text, "OK-SEND")
   )
+
 
 tags:
   - "Attack surface reduction"
@@ -25,4 +30,4 @@ detection_methods:
 id: "d2be22f6-3fab-542f-8ce2-c3f583d5fff4"
 og_id: "122ea794-f619-5f29-acb2-83261d8f81fc"
 testing_pr: 3339
-testing_sha: e77db162c547a585576a909ee63a3b8d3efdc948
+testing_sha: 01920f213ad3eab9e96110c409c8aded67dbd887
