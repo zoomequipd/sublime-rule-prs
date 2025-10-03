@@ -1,4 +1,4 @@
-name: "PR# 3342 - Spam: Lowe's giveaway spam"
+name: "PR# 3342 - Spam: Lowe's giveaway"
 description: "This detection rule matches Lowe's survey giveaway or a chance to win an item for completing a survey."
 type: "rule"
 severity: "low"
