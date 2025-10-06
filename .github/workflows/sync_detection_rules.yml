@@ -28,6 +28,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SUBLIME_API_TOKEN:  ${{ secrets.SUBLIME_API_TOKEN }}
+        DELETE_RULES_FROM_CLOSED_PRS_DELAY: 0
       run: python scripts/download_detection_rules.py
 
     - name: Commit changes
