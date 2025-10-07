@@ -1,0 +1,37 @@
+name: "PR# 3374 - Link: GoPhish default rid value"
+description: "Detects links containing a 7-character alphanumeric 'rid' query parameter, commonly used in tracking and targeting systems for malicious purposes."
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  // few body links
+  and length(body.links) < 50
+  and any(body.links,
+          // the rid value present
+          length(.href_url.query_params_decoded["rid"]) == 1
+          // the RID value is 7 bytes
+          and length(.href_url.query_params_decoded["rid"][0]) == 7
+          // contains letters and numbers
+          and regex.imatch(.href_url.query_params_decoded["rid"][0],
+                           '^[a-z0-9]{7}$'
+          )
+          // not just numbers
+          and not regex.imatch(.href_url.query_params_decoded["rid"][0],
+                           '^[0-9]{7}$'
+          )
+  )
+
+attack_types:
+  - "Credential Phishing"
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "URL analysis"
+id: "5d7e1718-37ee-5fb4-96f2-8587d1a893bd"
+tags:
+  - created_from_open_prs
+  - rule_status_added
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3374
