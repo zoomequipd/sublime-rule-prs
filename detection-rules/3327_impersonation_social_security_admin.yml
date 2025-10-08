@@ -10,7 +10,7 @@ source: |
     regex.contains(sender.display_name, '^SSA\b')
     or strings.icontains(sender.display_name, "Social Security Administration")
     or any([sender.display_name, subject.subject],
-           regex.icontains(., 'Social (?:benefits|security)', )
+           regex.icontains(strings.replace_confusables(.), 'Social (?:benefits|security)', )
     )
   )
   
@@ -28,7 +28,7 @@ source: |
     or strings.icontains(body.current_thread.text, "SSA Statement Viewer")
     or strings.icontains(body.current_thread.text, "Social Security Statement")
     or regex.icontains(body.current_thread.text,
-                       "(?:view|open) (?:your|the).{0,8} statement"
+                       "(?:view|open) (?:your|the).{0,8} (statement|document)"
     )
     // real SSA phone number
     or strings.icontains(body.current_thread.text, "1-800-772-1213")
