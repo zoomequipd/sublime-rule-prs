@@ -23,5 +23,6 @@ detection_methods:
   - "HTML analysis"
   - "Content analysis"
 id: "b6009874-2aeb-5cef-a4c8-10353bacb0f7"
+og_id: "334fa244-4e95-5f1b-9dcf-c80bd491d70f"
 testing_pr: 3136
-testing_sha: 012ef33ee774f072b09b69894ca757f87e8da5f4
+testing_sha: eebc10bdca9e87e2c6dd9b7a1542d29db36b207f
