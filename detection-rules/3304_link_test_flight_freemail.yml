@@ -1,0 +1,33 @@
+name: "PR# 3304 - Link: Apple TestFlight from free email provider"
+description: "Detects messages containing links to Apple TestFlight domains sent from free email providers, indicating potential service abuse of Apple's beta testing service."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(body.links,
+          .href_url.domain.domain in ('testflight.apple.com')
+          or (
+            .href_url.domain.root_domain == "mimecastprotect.com"
+            and any(.href_url.query_params_decoded['domain'],
+                    . in ("testflight.apple.com")
+            )
+          )
+  )
+  
+  and sender.email.domain.domain in $free_email_providers
+tags:
+  - "Attack surface reduction"
+  - pr_author_missingn0pe
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Free email provider"
+  - "Evasion"
+detection_methods:
+  - "Sender analysis"
+  - "URL analysis"
+id: "0658c185-b988-5b3f-b960-bc9ea9c95040"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3304
