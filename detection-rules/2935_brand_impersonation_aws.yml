@@ -1,4 +1,4 @@
-name: "PR# 2935 - Brand Impersonation: Amazon Web Services (AWS)"
+name: "PR# 2935 - Brand impersonation: Amazon Web Services (AWS)"
 description: "Detects messages impersonating AWS through similar display names combined with security-themed content and authentication failures. Excludes legitimate AWS communications and trusted senders."
 type: "rule"
 severity: "medium"
@@ -13,7 +13,7 @@ source: |
         .name in ("Security and Authentication", "Secure Message")
         and .confidence == "high"
     )
-    or any(ml.nlu_classifier(beta.ocr(beta.message_screenshot()).text).topics,
+    or any(ml.nlu_classifier(beta.ocr(file.message_screenshot()).text).topics,
            .name in ("Security and Authentication", "Secure Message")
            and .confidence == "high"
            and beta.ocr(file.message_screenshot()).text != ""
@@ -21,7 +21,7 @@ source: |
     or any(ml.nlu_classifier(body.current_thread.text).intents,
            .name == "cred_theft" and .confidence == "high"
     )
-    or any(ml.nlu_classifier(beta.ocr(beta.message_screenshot()).text).intents,
+    or any(ml.nlu_classifier(beta.ocr(file.message_screenshot()).text).intents,
            .name == "cred_theft" and .confidence == "high"
     )
   )
