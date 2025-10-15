@@ -76,7 +76,9 @@ source: |
         "tdinsurance.com",
         "tdautofinance.com",
         "tdautofinance.ca",
-        "email-td.com"
+        "email-td.com",
+        "feedback-td.com",
+        "interac.ca"
       )
       and headers.auth_summary.dmarc.pass
     )
@@ -110,4 +112,4 @@ detection_methods:
 id: "e6b71da0-2bab-5721-940d-a7c359860005"
 og_id: "2dc16a55-32c0-5731-85bd-08131aa535ab"
 testing_pr: 3399
-testing_sha: 52106223d4e50966542f14dca0fbc47939d642a9
+testing_sha: c39c3ce1822b9f6098fc2ea6b73e701b3e571e3f
