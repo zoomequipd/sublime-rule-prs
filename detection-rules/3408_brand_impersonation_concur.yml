@@ -1,0 +1,44 @@
+name: "PR# 3408 - Brand Impersonation: SAP Concur"
+description: |
+  Detects SAP Concur brand impersonation emails claiming to be expense report
+  notifications or approval requests. Attackers spoof concursolutions.com sender
+  addresses and use Concur branding to trick recipients into clicking malicious
+  links for credential theft.
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and (
+    // Sender display name or domain contains Concur
+    regex.icontains(sender.display_name, '\bconcur\b')
+    or strings.ilevenshtein(strings.replace_confusables(sender.display_name),
+                            'concur'
+    ) <= 2
+    or strings.icontains(sender.email.domain.domain, 'concur')
+    or strings.ilevenshtein(sender.email.domain.sld, 'concur') <= 2
+  )
+
+  // Not from legitimate Concur domain with valid auth
+  and not (
+    sender.email.domain.root_domain in~ ('concursolutions.com', 'concur.com', 'sap.com', 'concurcdc.cn')
+    and headers.auth_summary.dmarc.pass
+  )
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Header analysis"
+  - "Sender analysis"
+  - "URL analysis"
+  - "Machine Learning"
+id: "14785ff4-f4bf-583e-a280-81c0075cdb2e"
+tags:
+  - created_from_open_prs
+  - rule_status_added
+  - pr_author_morriscode
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3408
