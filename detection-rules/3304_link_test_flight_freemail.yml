@@ -4,7 +4,7 @@ type: "rule"
 severity: "medium"
 source: |
   type.inbound
-  and any(body.links,
+  and any(body.current_thread.links,
           .href_url.domain.domain in ('testflight.apple.com')
           or (
             .href_url.domain.root_domain == "mimecastprotect.com"
@@ -35,4 +35,4 @@ detection_methods:
 id: "0658c185-b988-5b3f-b960-bc9ea9c95040"
 og_id: "9b447f1f-4091-517d-a2b8-2a869aa46301"
 testing_pr: 3304
-testing_sha: c883392eb6160a6e349687bf811e74d66ad9d5ab
+testing_sha: 2c8bc894f651ebfc6f535ff9d3f6c428f34db733
