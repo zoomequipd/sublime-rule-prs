@@ -5,10 +5,16 @@ severity: "low"
 source: |
   type.inbound
   // few body links
-  and length(body.links) < 50
+  and length(body.links) < 20
   and any(body.links,
           // not a common marketing url rewriter
           not .href_url.domain.root_domain == "vtiger.com"
+          and not strings.icontains(.href_url.url, "vtiger.com")
+          // myshopify return tracking numbers
+          and not (
+            length(.href_url.query_params_decoded["tracking_number"]) == 1
+            and length(.href_url.query_params_decoded["rid"]) == 1
+          )
           // the rid value present
           and length(.href_url.query_params_decoded["rid"]) == 1
           // the RID value is 7 bytes
@@ -17,11 +23,21 @@ source: |
           and regex.imatch(.href_url.query_params_decoded["rid"][0],
                            '^[a-z0-9]{7}$'
           )
-          // not just numbers
-          and not regex.imatch(.href_url.query_params_decoded["rid"][0],
-                           '^[0-9]{7}$'
+          and not regex.match(.href_url.query_params_decoded["rid"][0],
+                              // not just numbers - ~0.00046% chance of being all numbers
+                              '^[0-9]{7}$',
+                              // not just lower case letters ~0.31% chance of all lowercase
+                              '^[a-z]{7}$',
+                              // not just upper case letters ~0.31% chance of being all uppercase
+                              '^[A-Z]{7}$'
           )
   )
+  // not high trust sender domains
+  and not (
+    sender.email.domain.root_domain in $high_trust_sender_root_domains
+    and headers.auth_summary.dmarc.pass
+  )
+  and not profile.by_sender_email().any_messages_benign
 attack_types:
   - "Credential Phishing"
   - "Malware/Ransomware"
@@ -32,4 +48,4 @@ detection_methods:
 id: "5d7e1718-37ee-5fb4-96f2-8587d1a893bd"
 og_id: "6d2b9c8a-ec51-562c-88f5-58605b1e5a6e"
 testing_pr: 3374
-testing_sha: 00b054a8c66493d803b4bfca9590066b9d43cdf0
+testing_sha: c26117e4eb4fff9294fb3b6a70edc3661399945e
