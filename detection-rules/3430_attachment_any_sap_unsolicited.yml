@@ -1,0 +1,39 @@
+name: "PR# 3430 - Attachment: Any .sap file (unsolicited)"
+description: "SAP shortcut files can be abused to run unsanctioned code on endpoints. Use if receiving .sap files is not normal behavior in your environment."
+references:
+  - "https://onapsis.com/blog/sap-shortcut-phishing-threat/"
+  - https://github.com/sublime-security/sublime-rules/pull/3430
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  and any(attachments, .file_extension == "sap")
+  and (
+    not profile.by_sender().solicited
+    or profile.by_sender().any_messages_malicious_or_spam
+  )
+  and not profile.by_sender().any_messages_benign
+  
+  // negate highly trusted sender domains unless they fail DMARC authentication
+  and (
+    (
+      sender.email.domain.root_domain in $high_trust_sender_root_domains
+      and not headers.auth_summary.dmarc.pass
+    )
+    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
+  )
+tags:
+  - "Attack surface reduction"
+  - pr_author_aidenmitchell
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+  - "Scripting"
+detection_methods:
+  - "File analysis"
+  - "Header analysis"
+  - "Sender analysis"
+id: "ec45494b-6dc9-5ae6-b182-4980b9530a62"
