@@ -1,0 +1,23 @@
+name: "PR# 3443 - Service abuse: Facebook business with action required subject"
+description: "Detects messages from the Facebook business domain containing 'action required' in the subject line, commonly used to create urgency in impersonation attacks."
+type: "rule"
+severity: "medium"
+source: |
+  strings.icontains(subject.subject, "action required")
+  and sender.email.email == "noreply@business.facebook.com"
+tags:
+  - "Attack surface reduction"
+  - pr_author_IndiaAce
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "Sender analysis"
+id: "eda7e455-3904-5c92-b7ee-907783230093"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3443
