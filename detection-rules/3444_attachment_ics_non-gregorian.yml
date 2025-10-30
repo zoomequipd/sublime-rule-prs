@@ -1,0 +1,27 @@
+name: "PR# 3444 - Attachment: ICS file with non-Gregorian calendar scale"
+description: "Detects ICS calendar attachments that use a non-standard calendar scale other than GREGORIAN, which may indicate malicious calendar files attempting to exploit calendar parsing vulnerabilities or bypass security filters."
+type: "rule"
+severity: "medium"
+source: |
+  type.inbound
+  and any(attachments,
+          (
+            .file_extension in~ ('ics')
+            or .content_type in ("application/ics", "text/calendar")
+          )
+          and beta.file.parse_ics(.).scale != "GREGORIAN"
+  )
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "File analysis"
+  - "Content analysis"
+id: "445deda6-2623-55ec-a800-4b6a1e4631a5"
+tags:
+  - created_from_open_prs
+  - rule_status_added
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3444
