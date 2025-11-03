@@ -5,7 +5,13 @@ severity: "medium"
 source: |
   type.inbound
   and (
-    strings.icontains(sender.display_name, "AARP")
+    (
+      strings.icontains(sender.display_name, "AARP")
+      and any(ml.nlu_classifier(body.current_thread.text).entities,
+              .name in ("request", "financial")
+              and regex.icontains(.text, "(?:gift|win|free)")
+      )
+    )
     or 2 of (
       strings.icontains(body.current_thread.text, 'AARP'),
       strings.icontains(body.current_thread.text, '601 E Street NW'),
@@ -19,11 +25,25 @@ source: |
       )
     )
   )
+  // negate job postings related to AARP and newsletters containing AARP
+  and not any(ml.nlu_classifier(body.current_thread.text).topics,
+              .name in (
+                "Professional and Career Development",
+                "Newsletters and Digests"
+              )
+              and .confidence == "high"
+  )
   // and the sender is not in org_domains or from AARP domains and passes auth
   and not (
     sender.email.domain.root_domain in $org_domains
     or (
-      sender.email.domain.root_domain in ("aarp.org")
+      sender.email.domain.root_domain in (
+        "aarp.org",
+        "proofpointessentials.com",
+        "expedia.com",
+        "eventbrite.com",
+        "zixcorp.com"
+      )
       and headers.auth_summary.dmarc.pass
     )
   )
@@ -41,4 +61,4 @@ detection_methods:
 id: "6777f5e6-e5ec-5f36-bd9b-ae1e7813bb8e"
 og_id: "561a7f87-0af7-5f34-8d5d-86bdc0fe213d"
 testing_pr: 3367
-testing_sha: 476525a1de7a2a20710c20452ce97f8ea338c593
+testing_sha: f735e155432b9f69866d39a98aef9182c8a5c12d
