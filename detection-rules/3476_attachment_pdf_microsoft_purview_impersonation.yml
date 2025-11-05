@@ -5,12 +5,10 @@ severity: "medium"
 source: |
   type.inbound
   and any(filter(attachments, .file_extension == 'pdf'),
-          any(filter(file.explode(.), .file_name == 'text'),
-              any(.scan.strings.strings,
-                  any(ml.nlu_classifier(.).topics, .name == 'Secure Message')
-                  and strings.icontains(., "Microsoft Purview Message")
-              )
+          any(ml.nlu_classifier(beta.ocr(.).text).topics,
+              .name == 'Secure Message' and .confidence == 'high'
           )
+          and strings.icontains(beta.ocr(.).text, "Microsoft Purview Message")
   )
 
 attack_types:
@@ -20,7 +18,6 @@ tactics_and_techniques:
   - "PDF"
   - "Social engineering"
 detection_methods:
-  - "Archive analysis"
   - "File analysis"
   - "Natural Language Understanding"
   - "Content analysis"
