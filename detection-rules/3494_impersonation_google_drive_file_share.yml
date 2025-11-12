@@ -199,6 +199,14 @@ source: |
     all(headers.references, strings.ends_with(., '@docs-share.google.com'))
     and headers.return_path.domain.domain == "doclist.bounces.google.com"
   )
+  // negate first threads that are a legitimate Google Drive share
+  and not (
+    length(body.previous_threads) != 0
+    and length(body.previous_threads[length(body.previous_threads) - 1].links) != 0
+    and all(body.previous_threads[length(body.previous_threads) - 1].links,
+            .href_url.domain.root_domain == "google.com"
+    )
+  )
   
   // negate highly trusted sender domains unless they fail DMARC authentication
   and (
@@ -231,4 +239,4 @@ tactics_and_techniques:
 id: "7eaed966-1a90-5082-b0bd-9f89fb0fbca4"
 og_id: "b424a941-2623-50f5-a3be-e90130e538d2"
 testing_pr: 3494
-testing_sha: b3e97b4d375468dfad9f2d57ca44d82d92cc5126
+testing_sha: f0c12451fb1a23dd35e0ffe6492c87998e8229db
