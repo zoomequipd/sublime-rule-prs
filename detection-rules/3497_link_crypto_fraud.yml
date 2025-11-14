@@ -1,4 +1,4 @@
-name: "PR# 3497 - Link: Cryptocurrency fraud with suspicious domains and script analysis"
+name: "PR# 3497 - Link: Cryptocurrency fraud with suspicious links"
 description: "Detects messages containing financial communications about cryptocurrency or bitcoin with links to suspicious domains, URL shorteners, newly registered domains, or domains with known cryptocurrency fraud indicators. The rule analyzes link behavior including redirects, specific abuse patterns, and JavaScript configurations commonly used in cryptocurrency scams. Excludes legitimate cryptocurrency platforms with proper authentication."
 type: "rule"
 severity: "high"
@@ -37,6 +37,11 @@ source: |
                 strings.ilike(.path, "/payouts/img/*", "/img/coins/*")
                 // abused service to fetch coin prices
                 or .domain.domain == "api.coingecko.com"
+                // suspicious TLD that isn't the original link domain
+                or (
+                  .domain.tld in $suspicious_tlds
+                  and .domain.root_domain != ..href_url.domain.root_domain
+                )
             )
             or any(ml.link_analysis(., mode="aggressive").redirect_history,
                    // traversed a domain that is not the body link domain OR the effective domain
