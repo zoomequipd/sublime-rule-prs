@@ -1,0 +1,37 @@
+name: "PR# 3587 - Link: Telegram bot API redirect with recipient targeting"
+description: "Detects messages containing links that redirect through Telegram's bot API where the recipient's email address is embedded in query parameters, indicating targeted attacks using Telegram infrastructure."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and any(body.links,
+          strings.icontains(ml.link_analysis(., mode="aggressive").final_dom.raw,
+                            "https://api.telegram.org/bot"
+          )
+          and length(recipients.to) >= 1
+          and any(ml.link_analysis(., mode="aggressive").redirect_history,
+                  any(recipients.to,
+                      .email.email != ""
+                      and strings.icontains(..query_params,
+                                            strings.concat("a=", .email.email)
+                      )
+                  )
+          )
+  )
+  
+tags:
+  - "Attack surface reduction"
+  - pr_author_MSAdministrator
+  - created_from_open_prs
+  - rule_status_added
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Open redirect"
+  - "Social engineering"
+detection_methods:
+  - "URL analysis"
+  - "Header analysis"
+id: "b103ed7f-3c82-5cd3-a15f-bd9239dc4822"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3587
