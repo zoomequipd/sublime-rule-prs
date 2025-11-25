@@ -8,6 +8,7 @@ source: |
   and length(recipients.to) == 1
   and length(recipients.cc) == 0
   and sender.email.email == recipients.to[0].email.email
+  and not (sender.email.domain.domain in $org_domains and headers.auth_summary.spf.pass)
   // org name in the subject
   and any(filter(ml.nlu_classifier(body.current_thread.text).entities,
                  .name == "org"
@@ -50,4 +51,4 @@ detection_methods:
 id: "a626d5bf-0492-55da-afe3-3d18be7e162f"
 og_id: "bfa9aa08-ed3b-5e4a-a83c-192efd126530"
 testing_pr: 3568
-testing_sha: 360829a2aa847ba0b13ee22880f60af6c25703cc
+testing_sha: 094d91537192ce733baf038ddf54ddfa7a606b90
