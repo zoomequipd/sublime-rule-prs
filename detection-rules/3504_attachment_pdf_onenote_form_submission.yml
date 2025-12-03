@@ -14,7 +14,7 @@ source: |
                                                        sender.email.local_part
                                         )
                       )
-                      or strings.icontains(.path, "/:o:/g/personal")
+                      or strings.icontains(.path, "/:o:/g/personal/")
                   )
           )
   )
@@ -29,4 +29,4 @@ detection_methods:
 id: "95b987c0-112f-5371-bcf5-1aa8349f4387"
 og_id: "0675bbc5-b322-5bd6-a4ea-61dc5346d603"
 testing_pr: 3504
-testing_sha: 9edc521b2f58cfa6949c599283b5f4db883d959f
+testing_sha: 0c192a48332f19f5b5c243090be764287ca60d34
