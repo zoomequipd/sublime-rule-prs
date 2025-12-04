@@ -1,5 +1,5 @@
-name: "PR# 3616 - Subject and sender display name contain matching 32-character alphanumeric string"
-description: "Detects messages where both the subject line and sender display name contain identical 32-character alphanumeric strings, which may indicate automated generation or coordination between these fields for malicious purposes."
+name: "PR# 3616 - Subject and sender display name contains matching long alphanumeric string"
+description: "Detects messages where both the subject line and sender display name contain identical alphanumeric strings that are between 32 and 64 characters, which may indicate automated generation or coordination between these fields for malicious purposes."
 type: "rule"
 severity: "low"
 source: |
@@ -7,21 +7,12 @@ source: |
   and any(regex.iextract(subject.subject, '[^a-z0-9](?P<string>[a-z0-9]{32,64})(?:$|[^a-z0-9])'),
          strings.contains(sender.display_name, .full_match)
   )
-  and (
-    any(ml.nlu_classifier(body.current_thread.text).intents,
-        .name == 'cred_theft' and .confidence == 'high'
-    )
-    or strings.contains(body.current_thread.text, "\u{200F}")
-  )
-  // negate highly trusted sender domains unless they fail DMARC authentication
-  and (
-    (
-      sender.email.domain.root_domain in $high_trust_sender_root_domains
-      and not headers.auth_summary.dmarc.pass
-    )
-    or sender.email.domain.root_domain not in $high_trust_sender_root_domains
-  )
 
+tags:
+  - "Attack surface reduction"
+  - pr_author_D-Bolton
+  - created_from_open_prs
+  - rule_status_added
 attack_types:
   - "Malware/Ransomware"
   - "Credential Phishing"
@@ -33,9 +24,5 @@ detection_methods:
   - "Header analysis"
   - "Sender analysis"
 id: "da5cb864-7ca5-5d52-84af-9f3b4e841197"
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_D-Bolton
 references:
   - https://github.com/sublime-security/sublime-rules/pull/3616
