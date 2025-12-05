@@ -7,9 +7,9 @@ source: |
   and (
     strings.ilike(strings.replace_confusables(sender.display_name), "Carta")
     or strings.ilike(sender.display_name, "*via Carta*")
-    // or  any(ml.logo_detect(file.message_screenshot()).brands,
-    //           .name == "Carta"
-    // )
+    or  any(ml.logo_detect(file.message_screenshot()).brands,
+              .name == "Carta"
+    )
     or (
       (
         any([subject.subject, sender.display_name],
@@ -88,4 +88,4 @@ detection_methods:
 id: "42223709-8832-56d5-87ea-149d3bf5f7b9"
 og_id: "a19f890b-2155-50f3-92f8-af0730f9f6ee"
 testing_pr: 3490
-testing_sha: 60678b0690920623de9db6321075f03298a169db
+testing_sha: efc2b850a33c37c5e42ed66a1aafad13492796d2
