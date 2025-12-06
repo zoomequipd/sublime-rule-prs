@@ -22,19 +22,19 @@ source: |
                           ".*(hi|hello|hey)"
       )
       and regex.icontains(strings.replace_confusables(body.current_thread.text),
-                          ".*(error|report|issues)"
+                          ".*(error|report|issues|repair|redesign|upgrade)"
       )
       and regex.icontains(strings.replace_confusables(body.current_thread.text),
                           ".*(site|website|page)"
       )
       and (
         regex.icontains(strings.replace_confusables(subject.subject),
-                        ".*(proposal|cost|estimate|error|bug|audit|screenshot|strategy|rankings|issues|fix|website)"
+                        ".*(proposal|cost|estimate|error|bug|audit|screenshot|strategy|rankings|issues|fix|website|design)"
         )
         or (
           regex.icontains(strings.replace_confusables(subject.subject), "report")
           and regex.icontains(strings.replace_confusables(body.current_thread.text),
-                              "(free|send you|can i send)"
+                              "(free|send you|can i send|may i send|let me know|interested|get back to me|reply back)"
           )
         )
         or length(subject.subject) < 5
@@ -57,19 +57,19 @@ source: |
                           ".*(hi|hello|hey)"
       )
       and regex.icontains(strings.replace_confusables(body.current_thread.text),
-                          ".*(error|report|issues|website)"
+                          ".*(error|report|issues|website|repair|redesign|upgrade)"
       )
       and regex.icontains(strings.replace_confusables(body.current_thread.text),
                           ".*(site|website|page)"
       )
       and (
         regex.icontains(strings.replace_confusables(subject.subject),
-                        ".*(proposal|cost|estimate|error|bug|audit|screenshot|strategy|rankings|issues|fix|website)"
+                        ".*(proposal|cost|estimate|error|bug|audit|screenshot|strategy|rankings|issues|fix|website|design)"
         )
         or (
           regex.icontains(strings.replace_confusables(subject.subject), "report")
           and regex.icontains(strings.replace_confusables(body.current_thread.text),
-                              "(free|send you|can i send)"
+                              "(free|send you|can i send|may i send|let me know|interested|get back to me|reply back)"
           )
         )
         or length(subject.subject) < 5
@@ -120,4 +120,4 @@ detection_methods:
 id: "d521085c-0998-5695-bc21-ac30b18c52c6"
 og_id: "122ea794-f619-5f29-acb2-83261d8f81fc"
 testing_pr: 3614
-testing_sha: 7b241592756c9d42e52f07c58309539ef2abc0f6
+testing_sha: ce15d2c1f1470fccab5ef681e97a9b36bf814632
