@@ -1,0 +1,24 @@
+name: "PR# 3633 - Link: Display text with excessive right-to-left mark characters"
+description: "Detects links where the display text contains a high concentration of Unicode right-to-left mark characters (U+200F), which may be used to obfuscate or manipulate the visual representation of the link text to deceive recipients."
+type: "rule"
+severity: "low"
+source: |
+  type.inbound
+  and any(body.links,
+      (strings.count(.display_text, "\u{200F}") / (length(.display_text) * 1.0) >= 0.5)
+  )
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "Content analysis"
+  - "URL analysis"
+id: "d66e4b2a-34f7-5223-8f39-317e40d71275"
+tags:
+  - created_from_open_prs
+  - rule_status_added
+  - pr_author_D-Bolton
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3633
