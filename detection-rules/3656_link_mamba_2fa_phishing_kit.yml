@@ -1,0 +1,54 @@
+name: "PR# 3656 - Link: Mamba 2FA phishing kit"
+description: "Detects links containing base64-encoded parameters characteristic of the Mamba 2FA phishing kit, specifically looking for 'sv=o365' and '&uid=USER' patterns in redirect history."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and length(body.links) < 10
+  and (
+    any(ml.nlu_classifier(body.current_thread.text).intents,
+        .name == 'cred_theft' and .confidence == 'high'
+    )
+    or (
+      length(recipients.to) == 1
+      and any(recipients.to,
+              strings.icontains(body.current_thread.text, .email.email)
+      )
+      and regex.icontains(body.current_thread.text,
+                          '(invoice|document|docusign|past due|confirm receipt)'
+      )
+    )
+    or (
+      sender.email.domain.domain == 'icloud.com'
+      and any(attachments, .file_name == 'invite.ics')
+    )
+  )
+  and any(body.links,
+          any(ml.link_analysis(., mode="aggressive").redirect_history,
+              (
+                // sv=o365 to base64
+                strings.contains(.url, 'c3Y9bzM2NV')
+                // &uid=USER base64 offsets
+                and (
+                  strings.contains(.url, 'JnVpZD1VU0VS')
+                  or strings.contains(.url, 'Z1aWQ9VVNFU')
+                  or strings.contains(.url, 'mdWlkPVVTRV')
+                )
+              )
+          )
+  )
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+  - "Social engineering"
+detection_methods:
+  - "URL analysis"
+id: "1989c942-803f-5456-a0ee-c5617699fe4b"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_D-Bolton
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3656
