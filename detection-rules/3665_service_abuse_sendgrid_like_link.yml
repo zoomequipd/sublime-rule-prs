@@ -1,0 +1,31 @@
+name: "PR# 3665 - Service abuse: SendGrid-formatted link with actor-controlled fragment"
+description: "Detects messages containing SendGrid or SendGrid-like links with base64-encoded zlib-compressed JSON in the URL fragment, indicating potential abuse of legitimate email services for malicious purposes."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and length(body.links) < 10
+  and any(body.links,
+          // SendGrid or SendGrid-like links have been abused
+          (
+            .href_url.path == "/ls/click"
+            or any(.href_url.query_params_decoded['upn'], . is not null)
+          )
+  )
+  and length(html.xpath(body.html, "//img[contains(@src, '/wf/open?upn=')]").nodes) == 1
+
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Evasion"
+  - "Social engineering"
+detection_methods:
+  - "Content analysis"
+  - "URL analysis"
+id: "8e115451-1394-52af-bf93-a2e9cc27d6be"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_MSAdministrator
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3665
