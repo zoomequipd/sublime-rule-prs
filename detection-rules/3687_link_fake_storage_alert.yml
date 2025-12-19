@@ -73,7 +73,7 @@ source: |
     or strings.icontains(subject.subject, "be deleted")
     or strings.icontains(subject.subject, "action required")
     or strings.icontains(subject.subject, "undelivered messages")
-    or regex.icontains(subject.subject, "(review|account) storage")
+    or regex.icontains(subject.subject, "(?:review|account) storage")
     or regex.icontains(subject.subject, "upgrade (today|now)")
   )
   
@@ -163,4 +163,4 @@ detection_methods:
 id: "88a54002-9bbc-54b9-8ad4-3d11fb74afd8"
 og_id: "750f04d6-f68a-564c-9e41-c1e5a58df28f"
 testing_pr: 3687
-testing_sha: 5da05a0a47664881e71b3890754bc274f4febcd6
+testing_sha: 4139db08a7aaa0d1b258799d14b97878bf18843c
