@@ -15,6 +15,8 @@ attack_types:
   - "Callback Phishing"
   - "Credential Phishing"
   - "Malware/Ransomware"
+tags:
+ - "Attack surface reduction"
 tactics_and_techniques:
   - "PDF"
   - "Evasion"
@@ -24,4 +26,4 @@ detection_methods:
 id: "6849b48c-4c79-5d86-ae9a-5e1b7b4f9889"
 og_id: "64e6c8a8-b75b-5c43-acb8-765ce05dca36"
 testing_pr: 3658
-testing_sha: 2c97a262a03c125160dad3ae8f6b8ddb52845c8c
+testing_sha: d9a2edf353bc86217e7181e653a238bdb387ed6e
