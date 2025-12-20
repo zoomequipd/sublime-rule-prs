@@ -32,7 +32,9 @@ source: |
   
     // Impersonation of Progress, ShareFile's parent org
     // https://www.techzine.eu/news/collaboration/124207/progress-buys-old-citrix-service-sharefile-with-an-eye-on-moveit/
-    or regex.icontains(body.current_thread.text, '© 20\d\d (ShareFile|\bProgress\b)')
+    or regex.icontains(body.current_thread.text,
+                       '© 20\d\d (ShareFile|\bProgress\b)'
+    )
     or (
       strings.ilike(body.current_thread.text, "*Progress*", "*ShareFile*")
       and 3 of (
@@ -88,8 +90,8 @@ source: |
       sender.email.domain.root_domain in (
         'sf-notifications.com',
         'sharefile.com',
-        'cloud.com', // cloud.com is the former parent org of ShareFile
-        'progress.com' // progress.com is the current parent org of ShareFile
+        'cloud.com', // previous parent org of ShareFile
+        'progress.com' // progress.com is the parent org of ShareFile
       )
       or network.whois(sender.email.domain).registrant_company == "Progress Software Corporation"
     )
