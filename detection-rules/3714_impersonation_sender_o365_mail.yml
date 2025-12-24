@@ -1,0 +1,34 @@
+name: "PR# 3714 - Brand impersonation: Office 365 mail service"
+description: "Detects messages from domains containing both 'o365' and 'mail' in the second-level domain, commonly used to impersonate legitimate Microsoft Office 365 mail services."
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and (
+    strings.icontains(sender.email.domain.sld, 'o365')
+    or strings.icontains(sender.email.domain.sld, 'outlook')
+    or strings.icontains(sender.email.domain.sld, 'office')
+  )
+  and strings.icontains(sender.email.domain.sld, 'mail')
+  // not benign use cases
+  and not (
+    sender.email.domain.root_domain in (
+      "agentofficemail.com" // mandrill app addone
+    )
+    and headers.auth_summary.dmarc.pass
+  )
+attack_types:
+  - "Credential Phishing"
+tactics_and_techniques:
+  - "Impersonation: Brand"
+  - "Lookalike domain"
+  - "Social engineering"
+detection_methods:
+  - "Sender analysis"
+id: "a76e1336-dae6-5fe5-b2a8-e22a89cd9bae"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_zoomequipd
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3714
