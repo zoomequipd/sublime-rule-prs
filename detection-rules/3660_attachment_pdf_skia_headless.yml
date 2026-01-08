@@ -29,7 +29,11 @@ source: |
     )
     and coalesce(headers.auth_summary.dmarc.pass, false)
   )
-
+tags:
+  - pr_author_JFarina5
+  - created_from_open_prs
+  - rule_status_added
+- "Attack surface reduction"
 attack_types:
   - "Credential Phishing"
   - "Malware/Ransomware"
@@ -40,9 +44,5 @@ detection_methods:
   - "File analysis"
   - "Exif analysis"
 id: "43e3fe31-d02c-553c-830a-2152e7f227cb"
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_JFarina5
 references:
   - https://github.com/sublime-security/sublime-rules/pull/3660
