@@ -4,13 +4,14 @@ type: "rule"
 severity: "low"
 source: |
   type.inbound
-  and not any(ml.nlu_classifier(body.current_thread.text).topics,
-              .name in ('Advertising and Promotions', 'Events and Webinars')
-              and .confidence != 'low'
-  )
   and any(filter(body.links, 'wix' in .href_url.rewrite.encoders),
           .href_url.domain.root_domain in $bulk_mailer_url_root_domains
   )
+tags:
+  - "Attack surface reduction"
+  - pr_author_D-Bolton
+  - created_from_open_prs
+  - rule_status_added
 attack_types:
   - "Credential Phishing"
   - "Malware/Ransomware"
@@ -21,9 +22,5 @@ detection_methods:
   - "URL analysis"
   - "Sender analysis"
 id: "075168c8-21a1-55ff-ae44-b25e0485f15e"
-tags:
-  - created_from_open_prs
-  - rule_status_added
-  - pr_author_D-Bolton
 references:
   - https://github.com/sublime-security/sublime-rules/pull/3590
