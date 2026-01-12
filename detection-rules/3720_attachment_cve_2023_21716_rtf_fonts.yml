@@ -1,0 +1,45 @@
+name: "PR# 3720 - Attachment: CVE-2023-21716 - Microsoft Office Remote Code Execution Vulnerability"
+description: |
+  Attachment contains an RTF file with a font table defining an excessive number of fonts, used to exploit CVE-2023-21716.
+references:
+  - "https://delivr.to/payloads?id=0a465e03-82a7-42c1-9ded-b0b6b046c86d"
+  - "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-21716"
+  - "https://twitter.com/jduck/status/1632471544935923712"
+  - "https://github.com/gyaansastra/CVE-2023-21716"
+  - https://github.com/sublime-security/sublime-rules/pull/3720
+type: "rule"
+severity: "high"
+source: |
+  type.inbound
+  and any(attachments,
+          (
+            .file_extension in~ ("rtf", "doc", "docx")
+            or .file_extension in~ $file_extensions_common_archives
+            or .file_extension in~ $file_extensions_macros
+            or (
+              .file_extension is null
+              and .file_type == "unknown"
+              and .content_type == "application/octet-stream"
+              and .size < 100000000
+            )
+          )
+          and any(file.explode(.),
+                  any(.scan.strings.strings, strings.ilike(., '*\fonttbl*'))
+                  and length(filter(.scan.strings.strings,
+                                    strings.ilike(., '{\f*;}')
+                             )
+                  ) > 10000
+          )
+  )
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Exploit"
+detection_methods:
+  - "Content analysis"
+  - "File analysis"
+id: "de73fe6e-8ae5-59a9-a252-5648749e2bab"
+tags:
+  - created_from_open_prs
+  - rule_status_modified
+  - pr_author_MSAdministrator
