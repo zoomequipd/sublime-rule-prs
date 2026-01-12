@@ -1,0 +1,28 @@
+name: "PR# 3708 - Attachment: 7z Archive Containing RAR File"
+description: "Detects 7z archive attachments that contain RAR files, which may be used to evade detection by nesting compressed file formats."
+type: "rule"
+severity: "medium"
+source: |
+    type.inbound
+    and any(attachments,
+            (
+              .file_extension in~ $file_extensions_common_archives
+              and .file_type == "7z"
+            )
+            and any(file.expand_archives(.).files, .file_type == "rar")
+    )
+tags:
+  - "Attack surface reduction"
+  - pr_author_MSAdministrator
+  - created_from_open_prs
+  - rule_status_modified
+attack_types:
+  - "Malware/Ransomware"
+tactics_and_techniques:
+  - "Evasion"
+detection_methods:
+  - "Archive analysis"
+  - "File analysis"
+id: "513852fe-76fc-5b60-a75b-b9abb3eb17fe"
+references:
+  - https://github.com/sublime-security/sublime-rules/pull/3708
