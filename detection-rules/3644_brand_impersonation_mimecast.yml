@@ -4,7 +4,6 @@ type: "rule"
 severity: "medium"
 source: |
   type.inbound
-  and sender.email.domain.root_domain not in $tranco_50k
   and any(html.xpath(body.html, "//table/@class").nodes,
           strings.count(.raw, "mc-e-") > 3
   )
@@ -36,7 +35,12 @@ source: |
            )
     )
   )
-  and not all(body.links, .href_url.domain.root_domain in ("mimecast.com"))
+  and not all(body.links,
+              .href_url.domain.root_domain in (
+                "mimecast.com",
+                "mimecastprotect.com"
+              )
+  )
 attack_types:
   - "Credential Phishing"
 tactics_and_techniques:
