@@ -58,7 +58,6 @@ detection_methods:
   - "Content analysis"
   - "Sender analysis"
   - "URL analysis"
-  - "Whois"
 id: "813c4820-6d55-5c33-8ee0-86d6de9c042f"
 tags:
   - created_from_open_prs
